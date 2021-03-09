@@ -32,3 +32,5 @@ src/main/resources/l.hibernate.cfg.xml
 /targe/tenor.api_key
 /targe/token.bot
 /targe/YTKey.bot
+/target/
+src/main/resources/s.hibernate.cfg.xml
