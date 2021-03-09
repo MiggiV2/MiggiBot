@@ -36,6 +36,7 @@ import de.mymiggi.discordbot.server.reaction.role.newconfig.StartListening;
 import de.mymiggi.discordbot.server.tenor.gif.PostRandomGitAction;
 import de.mymiggi.discordbot.server.untis.reminder.manager.NewReminderChannel;
 import de.mymiggi.discordbot.server.untis.timetable.TimeTableCore;
+import de.mymiggi.discordbot.tools.UpdateDBToNewObject;
 import de.mymiggi.discordbot.tools.util.MessageCoolDown;
 
 public class CommandHandler
@@ -261,6 +262,9 @@ public class CommandHandler
 				break;
 			case "ping":
 				new PingTest().run(event);
+				break;
+			case "convert":
+				new UpdateDBToNewObject().run(event);
 				break;
 		}
 		for (Command temp : list)

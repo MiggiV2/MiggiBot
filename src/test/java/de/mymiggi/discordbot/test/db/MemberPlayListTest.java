@@ -16,6 +16,7 @@ import de.mymiggi.discordbot.tools.database.util.MemberPlayListInfo;
 import de.mymiggi.discordbot.tools.database.util.MemberPlayListInfoNew;
 import de.mymiggi.discordbot.tools.database.util.NewMemberPlaylistSong;
 
+@SuppressWarnings("deprecation")
 class MemberPlayListTest
 {
 	private UniversalHibernateClient client = new UniversalHibernateClient();
@@ -44,7 +45,7 @@ class MemberPlayListTest
 	private void convert()
 	{
 		List<MemberPlayListInfo> oldPlaylists = client.getList(MemberPlayListInfo.class);
-		List<MemberPlayListInfoNew> convertedPlaylists = new ArrayList();
+		List<MemberPlayListInfoNew> convertedPlaylists = new ArrayList<MemberPlayListInfoNew>();
 		for (MemberPlayListInfo temp : oldPlaylists)
 		{
 			MemberPlayListInfoNew newPlaylist = new MemberPlayListInfoNew()
