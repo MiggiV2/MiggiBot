@@ -1,5 +1,6 @@
 package de.mymiggi.discordbot.server.member.playlist.actions;
 
+import java.awt.Color;
 import java.util.List;
 
 import org.javacord.api.entity.message.Message;
@@ -9,6 +10,7 @@ import org.javacord.api.event.message.MessageCreateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbot.server.member.playlist.actions.helpers.LastEmbedMaps;
 import de.mymiggi.discordbot.server.member.playlist.core.embed.PlaylistSongsEmbed;
 import de.mymiggi.discordbot.server.member.playlist.core.embed.ReactionEventHandler;
@@ -72,12 +74,35 @@ public class ViewUsersPlaylistAction
 				else
 				{
 					logger.warn("Playlist not found!" + context[2]);
+					EmbedBuilder embed = new EmbedBuilder()
+						.setTitle("Playlist not found!")
+						.setColor(Color.ORANGE)
+						.setDescription("Use " + BotMainCore.prefix + " to see all his|her playlists!\r\n");
+					event.getChannel().sendMessage(embed);
 				}
 			}
 			catch (AssertionError | Exception e)
 			{
-				e.printStackTrace();
+				logger.error("Critical error!", e);
+				String embedMessage = "Error in line " + e.getLocalizedMessage() + "\r\n" + "Cause: " + e.getCause();
+				if (e.getMessage() != null)
+				{
+					embedMessage += "Message: " + e.getMessage();
+				}
+				EmbedBuilder embed = new EmbedBuilder()
+					.setTitle("An error occured!")
+					.setDescription(embedMessage)
+					.setColor(Color.RED);
+				event.getChannel().sendMessage(embed);
 			}
+		}
+		else
+		{
+			EmbedBuilder embed = new EmbedBuilder()
+				.setTitle("Something is missing!")
+				.setColor(Color.ORANGE)
+				.setDescription("Example:\r\n" + BotMainCore.prefix + "view @Miggi BlackAce");
+			event.getChannel().sendMessage(embed);
 		}
 	}
 
