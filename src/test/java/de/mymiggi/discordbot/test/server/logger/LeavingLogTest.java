@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbot.server.logs.leaving.LeavingLogCore;
-import de.mymiggi.discordbot.server.logs.leaving.LogChannelLoader;
+import de.mymiggi.discordbot.server.logs.leaving.LeavingLogChannelLoader;
 
 class LeavingLogTest
 {
@@ -17,7 +17,7 @@ class LeavingLogTest
 	@SuppressWarnings("unused")
 	private static final DiscordApi api = BotMainCore.getTestAPI();
 	private static Logger logger = LoggerFactory.getLogger(LeavingLogTest.class.getSimpleName());
-	private static LogChannelLoader loader = new LogChannelLoader();
+	private static LeavingLogChannelLoader loader = new LeavingLogChannelLoader();
 	private static LeavingLogCore leavingLogger = new LeavingLogCore();
 
 	@BeforeEach

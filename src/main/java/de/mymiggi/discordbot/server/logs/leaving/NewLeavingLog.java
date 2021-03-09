@@ -20,7 +20,7 @@ public class NewLeavingLog
 	public void add(MessageCreateEvent event)
 	{
 		LeavingLogCore leavingLogger = BotMainCore.getLeavingLogger();
-		LogChannelLoader loader = new LogChannelLoader();
+		LeavingLogChannelLoader loader = new LeavingLogChannelLoader();
 		MessageCoolDown.del(event.getMessageLink().toString(), event.getChannel(), 30);
 
 		if (!Permissions.isAdmin(event))

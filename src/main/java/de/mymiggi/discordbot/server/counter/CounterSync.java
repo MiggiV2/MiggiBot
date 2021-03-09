@@ -32,7 +32,9 @@ public class CounterSync
 			}
 			catch (Exception e)
 			{
-				logger.warn("ERROR " + e.getMessage());
+				logger.warn(e.getMessage());
+				logger.warn("Removed from data base!");
+				client.delete(setting);
 			}
 		}
 		return checkedList;

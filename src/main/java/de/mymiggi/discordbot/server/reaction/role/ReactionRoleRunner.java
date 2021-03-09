@@ -17,7 +17,7 @@ public class ReactionRoleRunner
 {
 	private Map<Message, List<ReactionRoleSetting>> messagesAndSettings = new HashMap<Message, List<ReactionRoleSetting>>();
 	private Logger logger = LoggerFactory.getLogger("ReactionRoleRunner");
-	private DataSync loader = new DataSync();
+	private ReactionRoleSync loader = new ReactionRoleSync();
 
 	public void run()
 	{

@@ -14,11 +14,11 @@ import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbot.tools.database.UniversalHibernateClient;
 import de.mymiggi.discordbot.tools.database.util.LeavingLogSetting;
 
-public class LogChannelLoader
+public class LeavingLogChannelLoader
 {
 	private NewLeavingLog newLeavingLoger = new NewLeavingLog();
 	private UniversalHibernateClient client = new UniversalHibernateClient();
-	private Logger logger = LoggerFactory.getLogger(LogChannelLoader.class.getSimpleName());
+	private Logger logger = LoggerFactory.getLogger(LeavingLogChannelLoader.class.getSimpleName());
 
 	public Map<Server, TextChannel> run()
 	{
@@ -34,6 +34,7 @@ public class LogChannelLoader
 			catch (Exception e)
 			{
 				logger.warn(e.getMessage());
+				logger.warn("Removed from data base!");
 				client.delete(setting);
 			}
 		}
@@ -99,7 +100,7 @@ public class LogChannelLoader
 		Server server = BotMainCore.api.getServerById(setting.getServerID()).get();
 		if (!BotMainCore.api.getChannelById(setting.getChannelID()).isPresent())
 		{
-			throw new Exception("Eror in row: " + server.getName() + ", channelID is outdated! ID: " + setting.getChannelID());
+			throw new Exception(String.format("[%s] channelID is outdated! ID: %s", server.getName(), server.getName()));
 		}
 		TextChannel channel = BotMainCore.api.getChannelById(setting.getChannelID()).get().asTextChannel().get();
 		map.put(server, channel);

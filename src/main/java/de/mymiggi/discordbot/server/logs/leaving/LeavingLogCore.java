@@ -12,7 +12,7 @@ import de.mymiggi.discordbot.main.BotMainCore;
 public class LeavingLogCore
 {
 	private Map<Server, TextChannel> serverTextChannelMap = new HashMap<Server, TextChannel>();
-	private LogChannelLoader loader = new LogChannelLoader();
+	private LeavingLogChannelLoader loader = new LeavingLogChannelLoader();
 
 	public void run()
 	{

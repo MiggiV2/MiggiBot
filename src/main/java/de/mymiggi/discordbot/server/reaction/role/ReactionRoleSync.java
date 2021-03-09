@@ -14,9 +14,9 @@ import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbot.tools.database.UniversalHibernateClient;
 import de.mymiggi.discordbot.tools.database.util.ReactionRoleSetting;
 
-public class DataSync
+public class ReactionRoleSync
 {
-	private Logger logger = LoggerFactory.getLogger(DataSync.class.getSimpleName());
+	private Logger logger = LoggerFactory.getLogger(ReactionRoleSync.class.getSimpleName());
 	private UniversalHibernateClient client = new UniversalHibernateClient();
 
 	public Map<Message, List<ReactionRoleSetting>> run()
@@ -49,6 +49,11 @@ public class DataSync
 					}
 				});
 			}
+			else
+			{
+				client.delete(setting);
+				logger.warn("Removed from data base!");
+			}
 		}
 		return map;
 	}
@@ -72,18 +77,18 @@ public class DataSync
 	{
 		if (!BotMainCore.api.getServerById(data.getServerID()).isPresent())
 		{
-			logger.info("Server not found! ID: " + data.getServerID());
+			logger.warn("Server not found! ID: " + data.getServerID());
 			return false;
 		}
 		String serverName = BotMainCore.api.getServerById(data.getServerID()).get().getName();
 		if (!BotMainCore.api.getMessageByLink(data.getMessageLink()).isPresent())
 		{
-			logger.info("Message not present! Link: " + data.getMessageLink() + " Server: " + serverName);
+			logger.warn("Message not present! Link: " + data.getMessageLink() + " Server: " + serverName);
 			return false;
 		}
 		if (!BotMainCore.api.getRoleById(data.getRoleID()).isPresent())
 		{
-			logger.info("Role not present! Server: " + serverName);
+			logger.warn("Role not present! Server: " + serverName);
 			return false;
 		}
 		return true;

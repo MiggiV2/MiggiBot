@@ -9,7 +9,7 @@ import org.javacord.api.entity.permission.Role;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import de.mymiggi.discordbot.main.BotMainCore;
-import de.mymiggi.discordbot.server.reaction.role.DataSync;
+import de.mymiggi.discordbot.server.reaction.role.ReactionRoleSync;
 import de.mymiggi.discordbot.server.reaction.role.embed.DoneEmbedAction;
 import de.mymiggi.discordbot.tools.util.MessageCoolDown;
 
@@ -28,7 +28,7 @@ public class ListenForRole
 				String messageLink = message.getLink().toString();
 
 				long serverID = message.getServer().get().getId();
-				new DataSync().saveObjInDB(emoji, roleID, messageLink, serverID);
+				new ReactionRoleSync().saveObjInDB(emoji, roleID, messageLink, serverID);
 				new DoneEmbedAction().run(newMessage, emoji);
 
 				MessageCoolDown.del(embedLink, messageEvent.getChannel(), 2);
