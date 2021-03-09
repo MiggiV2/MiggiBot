@@ -33,7 +33,8 @@ public class LogChannelLoader
 			}
 			catch (Exception e)
 			{
-				logger.info("Error", e);
+				logger.warn(e.getMessage());
+				client.delete(setting);
 			}
 		}
 		return map;
@@ -98,7 +99,7 @@ public class LogChannelLoader
 		Server server = BotMainCore.api.getServerById(setting.getServerID()).get();
 		if (!BotMainCore.api.getChannelById(setting.getChannelID()).isPresent())
 		{
-			throw new Exception("Eror in File: " + server.getName() + ", channelID is outdated! ID: " + setting.getChannelID());
+			throw new Exception("Eror in row: " + server.getName() + ", channelID is outdated! ID: " + setting.getChannelID());
 		}
 		TextChannel channel = BotMainCore.api.getChannelById(setting.getChannelID()).get().asTextChannel().get();
 		map.put(server, channel);
