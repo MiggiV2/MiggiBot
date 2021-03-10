@@ -14,7 +14,7 @@ public class BadInputEmbedAction
 	{
 		EmbedBuilder embed = new EmbedBuilder();
 
-		embed.setTitle("Wrong syntax!")
+		embed.setTitle("Missing something!")
 			.setDescription(String.format("%sreactionRole MessageID", BotMainCore.prefix))
 			.addField("Example:", BotMainCore.prefix + "reactionRole 807626412319834113");
 

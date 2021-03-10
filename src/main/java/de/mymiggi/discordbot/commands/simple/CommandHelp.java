@@ -9,9 +9,7 @@ public class CommandHelp
 {
 	public void send(MessageCreateEvent event, String[] context)
 	{
-
 		EmbedBuilder embed;
-
 		if (context.length == 2 && context[1].equals("admin"))
 		{
 			embed = adminEmbed();
@@ -20,25 +18,26 @@ public class CommandHelp
 		{
 			embed = normalUserEmbed();
 		}
-
 		event.getChannel().sendMessage(embed);
 	}
 
 	private EmbedBuilder normalUserEmbed()
 	{
-		EmbedBuilder embed = new EmbedBuilder();
-
-		embed.setTitle(BotMainCore.api.getYourself().getName() + " command help")
+		String prefix = BotMainCore.prefix;
+		EmbedBuilder embed = new EmbedBuilder()
+			.setTitle(BotMainCore.api.getYourself().getName() + " command help")
 			.setImage("https://cdn.pixabay.com/photo/2017/11/10/16/45/faq-2936798_1280.png")
-			.setDescription("Some useful commands :nerd:")
-			.addField(BotMainCore.prefix + "lookup", "Lookup IPs and Domains")
-			.addField(BotMainCore.prefix + "info", "Shows infos about this server")
-			.addField(BotMainCore.prefix + "music", "Shows music help")
-			.addField(BotMainCore.prefix + "corona", "Shows stats about Corona. Data from Johns Hopkins CSSE")
-			.addField(BotMainCore.prefix + "covid19", "Shows stats about Corona. Data from Robert Koch Institute [RECOMMEND]")
-			.addField(BotMainCore.prefix + "countryHelp", "Shows country help. Covid stats for your country")
-			.addField(BotMainCore.prefix + "help admin", "Shows the bot help for admins");
-
+			.setDescription("Some useful commands")
+			.addField(prefix + "lookup", "Lookup IPs and Domains")
+			.addField(prefix + "info", "Shows infos about this server")
+			.addField(prefix + "music", "Shows music help")
+			.addField(prefix + "corona", "Shows stats about Corona. Data from Johns Hopkins CSSE")
+			.addField(prefix + "covid19", "Shows stats about Corona. Data from Robert Koch Institute [RECOMMEND]")
+			.addField(prefix + "gif", "After gif enter a search term and get surprised!")
+			.addField(prefix + "countryHelp", "Shows country help. Covid stats for your country")
+			.addField(prefix + "help admin", "Shows the bot help for admins")
+			.addField(prefix + "untisHelp", "Shows help for untis commands")
+			.addField(prefix + "R6Help", "Shows help for all R6 commands");
 		return embed;
 	}
 

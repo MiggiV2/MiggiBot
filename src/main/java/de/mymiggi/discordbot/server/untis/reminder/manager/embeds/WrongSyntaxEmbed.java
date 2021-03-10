@@ -13,6 +13,6 @@ public class WrongSyntaxEmbed
 		return new EmbedBuilder()
 			.setTitle("Missing your role ID!")
 			.setColor(Color.RED)
-			.setDescription(BotMainCore.prefix + "addUntisReminder 746645343432867882");
+			.setDescription("Example: " + BotMainCore.prefix + "addUntisReminder 746645343432867882");
 	}
 }

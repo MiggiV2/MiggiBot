@@ -18,7 +18,26 @@ public class NewCovidChannelConfig
 	private List<CovidChannelConfig> channelConfigs = BotMainCore.getCovidAutoMessage().getConfigs();
 	private Logger logger = LoggerFactory.getLogger(NewCovidChannelConfig.class.getSimpleName());
 
-	public void create(MessageCreateEvent event)
+	public void run(MessageCreateEvent event, String[] context)
+	{
+		if (context.length == 1)
+		{
+			try
+			{
+				create(event);
+			}
+			catch (Exception e)
+			{
+				logger.warn("Failed", e);
+			}
+		}
+		if (context.length == 2 && context[1].equals("rm") || context[1].equals("delete"))
+		{
+			delete(event);
+		}
+	}
+
+	private void create(MessageCreateEvent event)
 	{
 		long channelID = event.getChannel().getId();
 		long serverID = event.getServer().get().getId();
@@ -46,40 +65,7 @@ public class NewCovidChannelConfig
 		event.getChannel().sendMessage(embed);
 	}
 
-	public void run(MessageCreateEvent event, String[] context)
-	{
-		if (context.length == 1)
-		{
-			try
-			{
-				create(event);
-			}
-			catch (Exception e)
-			{
-				logger.warn("Failed", e);
-			}
-		}
-		if (context.length == 2)
-		{
-			if (context[1].equals("rm") || context[1].equals("delete"))
-			{
-				delete(event);
-			}
-			if (context[1].equals("create"))
-			{
-				try
-				{
-					create(event);
-				}
-				catch (Exception e)
-				{
-					logger.warn("Failed", e);
-				}
-			}
-		}
-	}
-
-	public void delete(MessageCreateEvent event)
+	private void delete(MessageCreateEvent event)
 	{
 		EmbedBuilder embed = new EmbedBuilder();
 		if (configsContainsServerID(event.getServer().get().getId()))

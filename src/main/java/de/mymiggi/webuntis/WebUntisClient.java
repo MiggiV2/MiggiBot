@@ -2,7 +2,7 @@ package de.mymiggi.webuntis;
 
 import java.io.IOException;
 
-import de.mymiggi.webuntis.helper.actions.SendRequestAction;
+import de.mymiggi.webuntis.helper.actions.SendUntisRequestAction;
 import de.mymiggi.webuntis.util.WebUntisResponse;
 
 public class WebUntisClient
@@ -11,7 +11,7 @@ public class WebUntisClient
 	{
 		try
 		{
-			WebUntisResponse response = new SendRequestAction().run();
+			WebUntisResponse response = new SendUntisRequestAction().run();
 			response.getLessonInfos();
 			response.getTimetable();
 			return response;

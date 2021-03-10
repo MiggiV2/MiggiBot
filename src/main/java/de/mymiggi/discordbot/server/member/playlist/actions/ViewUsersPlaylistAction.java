@@ -73,11 +73,11 @@ public class ViewUsersPlaylistAction
 				}
 				else
 				{
-					logger.warn("Playlist not found!" + context[2]);
+					logger.warn("Playlist not found! " + context[2]);
 					EmbedBuilder embed = new EmbedBuilder()
 						.setTitle("Playlist not found!")
 						.setColor(Color.ORANGE)
-						.setDescription("Use " + BotMainCore.prefix + " to see all his|her playlists!\r\n");
+						.setDescription("Use " + BotMainCore.prefix + "check to see all his|her playlists!\r\n");
 					event.getChannel().sendMessage(embed);
 				}
 			}

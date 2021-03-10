@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 
 import de.mymiggi.discordbot.commands.constructor.SimpleCommandCore;
 import de.mymiggi.discordbot.corona.rki.province.automessage.CovidAutoMessage;
+import de.mymiggi.discordbot.drivingschool.lessons.reminder.ReminderThread;
 import de.mymiggi.discordbot.main.corehelper.LoadMyPrefixActioin;
 import de.mymiggi.discordbot.main.corehelper.LoadMyTokenAction;
-import de.mymiggi.discordbot.main.statusmessage.HelpStatusThread;
 import de.mymiggi.discordbot.server.counter.MemberCounterCore;
 import de.mymiggi.discordbot.server.logs.leaving.LeavingLogCore;
 import de.mymiggi.discordbot.server.logs.welcomer.WelcomerRunner;
@@ -36,6 +36,7 @@ public class BotMainCore
 	private static MemberPlayListCore memberPlayListCore = new MemberPlayListCore();
 	private static CovidAutoMessage covidAutoMessage = new CovidAutoMessage();
 	private static TimeTableReminderCore timeTableReminderCore = new TimeTableReminderCore();
+	private static ReminderThread drivingReminder = new ReminderThread();
 	private static boolean isRunning = false;
 
 	public static void run()
@@ -53,11 +54,12 @@ public class BotMainCore
 			memberPlayListCore.load();
 			covidAutoMessage.startThread();
 			timeTableReminderCore.run();
+			drivingReminder.run();
 
 			printLoadedListSize();
 
 			logger.info("Invite via Url: " + api.createBotInvite());
-			HelpStatusThread.run(api);
+			// HelpStatusThread.run(api);
 		}
 		isRunning = true;
 	}

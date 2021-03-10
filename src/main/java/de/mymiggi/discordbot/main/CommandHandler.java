@@ -16,11 +16,11 @@ import de.mymiggi.discordbot.commands.simple.PingTest;
 import de.mymiggi.discordbot.commands.simple.PowerOff;
 import de.mymiggi.discordbot.commands.simple.Purger;
 import de.mymiggi.discordbot.commands.simple.ServerInfo;
-import de.mymiggi.discordbot.commands.simple.rest.RestMessages;
 import de.mymiggi.discordbot.corona.covid19.CoronaAPI;
 import de.mymiggi.discordbot.corona.rki.country.RKICountry;
 import de.mymiggi.discordbot.corona.rki.province.RKIProvince;
 import de.mymiggi.discordbot.corona.rki.province.automessage.NewCovidChannelConfig;
+import de.mymiggi.discordbot.drivingschool.lessons.DrivingLessonsCore;
 import de.mymiggi.discordbot.music.youtube.MusicCore;
 import de.mymiggi.discordbot.music.youtube.MusicHelper;
 import de.mymiggi.discordbot.server.counter.NewCounterCreator;
@@ -28,12 +28,13 @@ import de.mymiggi.discordbot.server.logs.leaving.NewLeavingLog;
 import de.mymiggi.discordbot.server.logs.welcomer.NewWelcomerCreater;
 import de.mymiggi.discordbot.server.member.playlist.MemberPlayListCore;
 import de.mymiggi.discordbot.server.member.playlist.help.MemberPlayListHelper;
+import de.mymiggi.discordbot.server.r6.R6CommandHelper;
 import de.mymiggi.discordbot.server.r6.addplayer.StartMessageListener;
 import de.mymiggi.discordbot.server.r6.map.RandomR6MapCore;
-import de.mymiggi.discordbot.server.r6.map.create.NewR6MapCore;
 import de.mymiggi.discordbot.server.r6.matchmaker.DiscordMatchMakerCore;
 import de.mymiggi.discordbot.server.reaction.role.newconfig.StartListening;
 import de.mymiggi.discordbot.server.tenor.gif.PostRandomGitAction;
+import de.mymiggi.discordbot.server.untis.UntisCommandHelper;
 import de.mymiggi.discordbot.server.untis.reminder.manager.NewReminderChannel;
 import de.mymiggi.discordbot.server.untis.timetable.TimeTableCore;
 import de.mymiggi.discordbot.tools.UpdateDBToNewObject;
@@ -81,17 +82,17 @@ public class CommandHandler
 			case "PowerOff":
 				new PowerOff().run(event, api);
 				break;
-			case "Rest":
-				new RestMessages().sendVisiCard(event);
-				break;
-			case "read":
-				disabelEmbed(event);
-				// new RestMessages().read(event);
-				break;
-			case "send":
-				disabelEmbed(event);
-				// new RestMessages().send(event, context);
-				break;
+			// case "Rest":
+			// new RestMessages().sendVisiCard(event);
+			// break;
+			// case "read":
+			// disabelEmbed(event);
+			// new RestMessages().read(event);
+			// break;
+			// case "send":
+			// disabelEmbed(event);
+			// new RestMessages().send(event, context);
+			// break;
 			case "lookup":
 				new IPInfoCommand().send(event, context);
 				break;
@@ -236,14 +237,17 @@ public class CommandHandler
 			case "addUntisReminder":
 				new NewReminderChannel().add(event, context);
 				break;
-			case "match":
-				new DiscordMatchMakerCore().run(event);
-				break;
 			case "nächsteStunde":
 				BotMainCore.getTimeTableReminderCore().nextSubjectEmbed(event);
 				break;
 			case "TimeTable":
 				new TimeTableCore().run(event);
+				break;
+			case "untisHelp":
+				new UntisCommandHelper().run(event);
+				break;
+			case "match":
+				new DiscordMatchMakerCore().run(event);
 				break;
 			case "randomMap":
 				randomR6MapCore.get(event, context);
@@ -255,7 +259,10 @@ public class CommandHandler
 				randomR6MapCore.update(event, context);
 				break;
 			case "addNewMap":
-				new NewR6MapCore().run(event);
+				randomR6MapCore.add(event);
+				break;
+			case "R6Help":
+				new R6CommandHelper().run(event);
 				break;
 			case "gif":
 				new PostRandomGitAction().run(event, context);
@@ -265,6 +272,12 @@ public class CommandHandler
 				break;
 			case "convert":
 				new UpdateDBToNewObject().run(event);
+				break;
+			case "driving":
+				new DrivingLessonsCore().beginSavingAction(event);
+				break;
+			case "deleteDriving":
+				new DrivingLessonsCore().remove(event);
 				break;
 		}
 		for (Command temp : list)

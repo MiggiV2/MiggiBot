@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.javacord.api.event.message.MessageCreateEvent;
 
+import de.mymiggi.discordbot.server.r6.map.create.NewR6MapCore;
 import de.mymiggi.discordbot.server.r6.map.get.GetRandomMapAction;
 import de.mymiggi.discordbot.server.r6.map.list.ListR6MapsAction;
 import de.mymiggi.discordbot.server.r6.map.update.UpdateR6MapAction;
@@ -27,5 +28,10 @@ public class RandomR6MapCore
 	public void update(MessageCreateEvent event, String[] context)
 	{
 		new UpdateR6MapAction().run(event, context, mapList);
+	}
+
+	public void add(MessageCreateEvent event)
+	{
+		new NewR6MapCore().run(event);
 	}
 }

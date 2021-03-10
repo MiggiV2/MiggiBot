@@ -19,11 +19,11 @@ import com.google.gson.Gson;
 
 import de.mymiggi.webuntis.util.WebUntisResponse;
 
-public class SendRequestAction
+public class SendUntisRequestAction
 {
 	private static String cookieURLPattern = "https://erato.webuntis.com/WebUntis/?school=%s#/basic/timetable";
 	private static String dataURLPattern = "https://erato.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=195&date=%s&formatId=3";
-	private static Logger logger = LoggerFactory.getLogger(SendRequestAction.class.getSimpleName());
+	private static Logger logger = LoggerFactory.getLogger(SendUntisRequestAction.class.getSimpleName());
 
 	public WebUntisResponse run() throws IOException
 	{

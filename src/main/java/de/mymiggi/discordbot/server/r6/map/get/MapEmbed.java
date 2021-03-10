@@ -19,22 +19,34 @@ public class MapEmbed
 
 	public EmbedBuilder buildRandomRankedMap()
 	{
+		if (mapList.isEmpty())
+		{
+			return new EmbedBuilder()
+				.setTitle("Critical error!")
+				.setDescription("Can't find maps in my database!")
+				.setColor(Color.RED);
+		}
 		R6Map randomMap = getRandomRankedMap();
-		EmbedBuilder embed = new EmbedBuilder();
-		embed.setTitle(randomMap.getName())
+		return new EmbedBuilder()
+			.setTitle(randomMap.getName())
 			.setImage(randomMap.getImageURL())
 			.setColor(Color.GREEN);
-		return embed;
 	}
 
 	public EmbedBuilder buildRandomMap()
 	{
+		if (mapList.isEmpty())
+		{
+			return new EmbedBuilder()
+				.setTitle("Critical error!")
+				.setDescription("Can't find maps in my database!")
+				.setColor(Color.RED);
+		}
 		R6Map randomMap = getRandomMap();
-		EmbedBuilder embed = new EmbedBuilder();
-		embed.setTitle(randomMap.getName())
+		return new EmbedBuilder()
+			.setTitle(randomMap.getName())
 			.setImage(randomMap.getImageURL())
 			.setColor(Color.GREEN);
-		return embed;
 	}
 
 	private R6Map getRandomRankedMap()

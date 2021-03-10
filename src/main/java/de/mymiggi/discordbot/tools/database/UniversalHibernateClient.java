@@ -26,7 +26,7 @@ public class UniversalHibernateClient
 	{
 		checkObject(object.getClass());
 		session.beginTransaction();
-		session.save(object);
+		session.saveOrUpdate(object);
 		session.getTransaction().commit();
 	}
 

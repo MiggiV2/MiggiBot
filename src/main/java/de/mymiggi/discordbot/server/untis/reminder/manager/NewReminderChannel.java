@@ -1,7 +1,6 @@
 package de.mymiggi.discordbot.server.untis.reminder.manager;
 
 import java.awt.Color;
-import java.util.concurrent.ExecutionException;
 
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.message.MessageCreateEvent;
@@ -29,28 +28,20 @@ public class NewReminderChannel
 
 		if (!Permissions.isAdmin(event))
 		{
-			try
-			{
-				String lastBotMessageLink = event.getChannel().sendMessage(new NotAdminEmbed().build(event)).get().getLink().toString();
-				MessageCoolDown.del(lastBotMessageLink, event.getChannel(), 15);
-			}
-			catch (InterruptedException | ExecutionException e)
-			{
-				logger.error("IsNotAdminEmbed failed!", e);
-			}
-			logger.info(event.getMessageAuthor().getName() + " try to use command, but he is not an admin!");
+			logger.warn(event.getMessageAuthor().getName() + " try to use command, but he is not an admin!");
+			event.getChannel()
+				.sendMessage(new NotAdminEmbed().build(event))
+				.thenAccept(embedMessage -> {
+					MessageCoolDown.del(embedMessage.getLink().toString(), event.getChannel(), 15);
+				});
 		}
 		else if (context.length != 2)
 		{
-			try
-			{
-				String lastBotMessageLink = event.getChannel().sendMessage(new WrongSyntaxEmbed().build()).get().getLink().toString();
-				MessageCoolDown.del(lastBotMessageLink, event.getChannel(), 15);
-			}
-			catch (AssertionError | InterruptedException | ExecutionException e)
-			{
-				logger.error("WrongSyntaxEmbed failed!", e);
-			}
+			event.getChannel()
+				.sendMessage(new WrongSyntaxEmbed().build())
+				.thenAccept(embedMessage -> {
+					MessageCoolDown.del(embedMessage.getLink().toString(), event.getChannel(), 15);
+				});
 		}
 		else
 		{
@@ -70,21 +61,17 @@ public class NewReminderChannel
 				{
 					if (e.getMessage().equals("Cant find this Role!"))
 					{
-						try
-						{
-							String lastBotMessageLink = event.getChannel().sendMessage(new CantFindeRoleEmbed().build()).get().getLink().toString();
-							MessageCoolDown.del(lastBotMessageLink, event.getChannel(), 15);
-						}
-						catch (AssertionError | InterruptedException | ExecutionException ex)
-						{
-							logger.error("CantFindeRoleEmbed failed!", ex);
-						}
+						event.getChannel()
+							.sendMessage(new CantFindeRoleEmbed().build())
+							.thenAccept(embedMessage -> {
+								MessageCoolDown.del(embedMessage.getLink().toString(), event.getChannel(), 15);
+							});
 					}
 				}
 				else
 				{
-					EmbedBuilder embed = new EmbedBuilder();
-					embed.setTitle("Someting went wrong!")
+					EmbedBuilder embed = new EmbedBuilder()
+						.setTitle("Something went wrong!")
 						.setDescription(e.getClass().getSimpleName())
 						.setColor(Color.RED);
 					event.getChannel().sendMessage(embed);
