@@ -10,6 +10,7 @@ import de.mymiggi.discordbot.corona.rki.province.automessage.CovidAutoMessage;
 import de.mymiggi.discordbot.drivingschool.lessons.reminder.ReminderThread;
 import de.mymiggi.discordbot.main.corehelper.LoadMyPrefixActioin;
 import de.mymiggi.discordbot.main.corehelper.LoadMyTokenAction;
+import de.mymiggi.discordbot.main.statusmessage.HelpStatusThread;
 import de.mymiggi.discordbot.server.counter.MemberCounterCore;
 import de.mymiggi.discordbot.server.logs.leaving.LeavingLogCore;
 import de.mymiggi.discordbot.server.logs.welcomer.WelcomerRunner;
@@ -59,7 +60,7 @@ public class BotMainCore
 			printLoadedListSize();
 
 			logger.info("Invite via Url: " + api.createBotInvite());
-			// HelpStatusThread.run(api);
+			HelpStatusThread.run(api);
 		}
 		isRunning = true;
 	}
