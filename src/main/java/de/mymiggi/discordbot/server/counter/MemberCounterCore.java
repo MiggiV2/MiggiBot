@@ -16,13 +16,13 @@ public class MemberCounterCore
 	private List<CounterSetting> list = new ArrayList<CounterSetting>();
 	private CounterSync sync = new CounterSync();
 	private static Logger logger = LoggerFactory.getLogger(MemberCounterCore.class.getSimpleName());
-	
+
 	public void run()
 	{
 		syncList();
 		list.forEach(linked -> {
-			Counter counter1 = new Counter(linked.getServerID(), linked.getChannelID(), linked.getMessageID());
-			counter1.run();
+			Counter counter = new Counter(linked.getServerID(), linked.getChannelID(), linked.getMessageID());
+			counter.run();
 		});
 	}
 
@@ -34,14 +34,12 @@ public class MemberCounterCore
 	public void runNewAddedCounter()
 	{
 		int listSize = list.size();
-		if (listSize == 0)
+		if (listSize > 0)
 		{
-			return;
+			CounterSetting counterSetting = list.get(listSize - 1);
+			Counter newCounter = new Counter(counterSetting.getServerID(), counterSetting.getChannelID(), counterSetting.getMessageID());
+			newCounter.run();
 		}
-		CounterSetting linked = list.get(listSize - 1);
-		Counter newCounter = new Counter(linked.getServerID(), linked.getChannelID(), linked.getMessageID());
-
-		newCounter.run();
 	}
 
 	public void sendStarEmbed(MessageCreateEvent event)
@@ -62,7 +60,7 @@ public class MemberCounterCore
 			logger.debug("Error", e);
 		}
 	}
-	
+
 	public int getListSize()
 	{
 		return list.size();

@@ -22,7 +22,6 @@ public class ServerAndChannelsLoader
 	{
 		List<WelcomerSetting> list = client.getList(WelcomerSetting.class);
 		Map<Server, WelcomerSetting> serverAndChannel = new HashMap<Server, WelcomerSetting>();
-
 		for (WelcomerSetting setting : list)
 		{
 			try
@@ -32,9 +31,10 @@ public class ServerAndChannelsLoader
 			catch (Exception e)
 			{
 				logger.info("Error", e);
+				logger.warn("Removed from data base!");
+				client.delete(setting);
 			}
 		}
-
 		return serverAndChannel;
 	}
 
@@ -42,12 +42,10 @@ public class ServerAndChannelsLoader
 	{
 		WelcomerSetting temp = new WelcomerSetting();
 		NewWelcomerCreater newWelcomer = new NewWelcomerCreater();
-
 		temp.setChannelID(ChannelID);
 		temp.setServerID(ServerID);
 		temp.setRoleID(RoleID);
 		temp.setTimeStamp(System.currentTimeMillis());
-
 		if (!BotMainCore.api.getServerById(ServerID).isPresent())
 		{
 			if (event != null)
@@ -57,7 +55,6 @@ public class ServerAndChannelsLoader
 			logger.error("[ServerAndChannelsLoader] Server not found!");
 			throw new Exception("Server not found!");
 		}
-
 		if (!BotMainCore.api.getChannelById(ChannelID).isPresent())
 		{
 			if (event != null)
@@ -76,9 +73,7 @@ public class ServerAndChannelsLoader
 			logger.error("[ServerAndChannelsLoader] Role not found!");
 			throw new Exception("Role not found!");
 		}
-
 		client.save(temp);
-
 		if (event != null)
 		{
 			newWelcomer.done(event, event.getChannel().asServerTextChannel().get().getName());
@@ -97,13 +92,11 @@ public class ServerAndChannelsLoader
 	{
 		long channelID = settings.getChannelID();
 		long roleID = settings.getRoleID();
-
 		if (!BotMainCore.api.getServerById(settings.getServerID()).isPresent())
 		{
 			throw new Exception("ServerID is outdated! ID: " + settings.getServerID());
 		}
 		Server server = BotMainCore.api.getServerById(settings.getServerID()).get();
-
 		if (!BotMainCore.api.getChannelById(channelID).isPresent())
 		{
 			throw new Exception("Eror in File: " + server.getName() + ", channelID is outdated! ID: " + channelID);

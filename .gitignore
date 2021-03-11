@@ -36,3 +36,5 @@ src/main/resources/l.hibernate.cfg.xml
 src/main/resources/s.hibernate.cfg.xml
 src/main/resources/keystore.jks
 src/main/resources/pss.txt
+src/main/resources/application.properties
+application.properties

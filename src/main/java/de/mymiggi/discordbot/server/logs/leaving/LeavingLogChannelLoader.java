@@ -24,7 +24,6 @@ public class LeavingLogChannelLoader
 	{
 		List<LeavingLogSetting> list = client.getList(LeavingLogSetting.class);
 		Map<Server, TextChannel> map = new HashMap<Server, TextChannel>();
-
 		for (LeavingLogSetting setting : list)
 		{
 			try
@@ -104,7 +103,6 @@ public class LeavingLogChannelLoader
 		}
 		TextChannel channel = BotMainCore.api.getChannelById(setting.getChannelID()).get().asTextChannel().get();
 		map.put(server, channel);
-
 		return map;
 	}
 }

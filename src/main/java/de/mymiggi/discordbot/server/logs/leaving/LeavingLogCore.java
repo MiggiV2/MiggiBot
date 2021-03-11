@@ -13,32 +13,37 @@ public class LeavingLogCore
 {
 	private Map<Server, TextChannel> serverTextChannelMap = new HashMap<Server, TextChannel>();
 	private LeavingLogChannelLoader loader = new LeavingLogChannelLoader();
+	private long lastUpdateTimeStamp;
 
 	public void run()
 	{
 		syncHashMap();
 		BotMainCore.api.addServerMemberLeaveListener(event -> {
-
-			if (!serverTextChannelMap.containsKey(event.getServer()))
+			checkIfNeedSync();
+			if (serverTextChannelMap.containsKey(event.getServer()))
 			{
-				System.err.println(event.getServer() + " not in list for leavingLogs!");
-				return;
+				EmbedBuilder embed = new EmbedBuilder()
+					.setAuthor(event.getUser())
+					.setDescription("Sorry guys, but I had to go! :wave:");
+				serverTextChannelMap.get(event.getServer()).sendMessage(embed);
 			}
-			EmbedBuilder embed = new EmbedBuilder();
-
-			embed.setAuthor(event.getUser())
-				.setDescription("Sorry guys, but I had to go! :wave:");
-
-			TextChannel channel = serverTextChannelMap.get(event.getServer());
-			channel.sendMessage(embed);
 		});
+	}
+
+	private void checkIfNeedSync()
+	{
+		if (lastUpdateTimeStamp < (System.currentTimeMillis() - 10 * 60 * 1000))
+		{
+			syncHashMap();
+		}
 	}
 
 	public void syncHashMap()
 	{
 		serverTextChannelMap = loader.run();
+		lastUpdateTimeStamp = System.currentTimeMillis();
 	}
-	
+
 	public int getListSize()
 	{
 		return serverTextChannelMap.size();
