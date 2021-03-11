@@ -38,3 +38,5 @@ src/main/resources/keystore.jks
 src/main/resources/pss.txt
 src/main/resources/application.properties
 application.properties
+src/main/resources/fullchain.pem
+src/main/resources/privkey.pem
