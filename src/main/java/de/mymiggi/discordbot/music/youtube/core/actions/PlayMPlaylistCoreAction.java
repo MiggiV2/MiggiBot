@@ -53,8 +53,6 @@ public class PlayMPlaylistCoreAction
 				{
 					tryToJoin(event, serverPlayer, songs);
 				}
-				event.getChannel().type().get();
-				event.getMessage().addReaction("👍");
 				tryToSendQueueEmbed(event, serverPlayer);
 			}
 			catch (Exception e)
@@ -72,6 +70,9 @@ public class PlayMPlaylistCoreAction
 				ServerPlayer player = new ServerPlayer();
 				serverPlayer.put(server, player);
 				player.run(event, songs, false);
+			});
+			event.getChannel().type().thenAccept(successful -> {
+				event.getMessage().addReaction("👍");
 			});
 		}
 		else
@@ -98,6 +99,9 @@ public class PlayMPlaylistCoreAction
 					{
 						player.run(event, songs, false);
 					}
+					event.getChannel().type().thenAccept(successful -> {
+						event.getMessage().addReaction("👍");
+					});
 				}
 				else
 				{

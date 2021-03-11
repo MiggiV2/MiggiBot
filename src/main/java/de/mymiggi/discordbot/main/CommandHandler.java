@@ -46,6 +46,9 @@ public class CommandHandler
 	private MemberPlayListCore memberPlayListCore = BotMainCore.getMemberPlayListCore();
 	private NewCovidChannelConfig newCovidChannelConfiger = new NewCovidChannelConfig();
 	private RandomR6MapCore randomR6MapCore = new RandomR6MapCore();
+	private RKICountry rkiCountry = new RKICountry();
+	private RKIProvince rkiProvince = new RKIProvince();
+	private CoronaAPI coronaAPI = new CoronaAPI();
 
 	private final String prefix = BotMainCore.prefix;
 	private DiscordApi api;
@@ -160,16 +163,16 @@ public class CommandHandler
 				new NewCounterCreator().add(event, context);
 				break;
 			case "corona":
-				new CoronaAPI().get(event);
+				coronaAPI.get(event);
 				break;
 			case "covid19":
-				new RKIProvince().send(event);
+				rkiProvince.send(event);
 				break;
 			case "country":
-				new RKICountry().send(event, context);
+				rkiCountry.send(event, context);
 				break;
 			case "countryHelp":
-				new RKICountry().sendHelpEmbed(event);
+				rkiCountry.sendHelpEmbed(event);
 				break;
 			case "covidChannel":
 				newCovidChannelConfiger.run(event, context);

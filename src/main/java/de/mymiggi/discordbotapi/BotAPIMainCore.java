@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -21,7 +20,7 @@ public class BotAPIMainCore
 {
 	@GET
 	@Path("/start")
-	public Response list()
+	public Response start()
 	{
 		BotMainCore.run();
 		return Response.ok().status(201).build();
@@ -29,7 +28,7 @@ public class BotAPIMainCore
 
 	@GET
 	@Path("/vc")
-	public List<DiscordServerResponse> add()
+	public List<DiscordServerResponse> getVC()
 	{
 		List<DiscordServerResponse> connectedVC = new ArrayList<DiscordServerResponse>();
 		BotMainCore.api.getYourself()
@@ -40,8 +39,16 @@ public class BotAPIMainCore
 		return connectedVC;
 	}
 
-	@DELETE
-	public void delete()
+	@GET
+	@Path("/server")
+	public List<DiscordServerResponse> getDiscordServer()
 	{
+		List<DiscordServerResponse> connectedVC = new ArrayList<DiscordServerResponse>();
+		BotMainCore.api
+			.getServers()
+			.forEach(server -> {
+				connectedVC.add(new DiscordServerResponse(server));
+			});
+		return connectedVC;
 	}
 }

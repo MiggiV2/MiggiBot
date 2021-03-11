@@ -44,7 +44,7 @@ public class NewLeavingLog
 	{
 		EmbedBuilder embed = new EmbedBuilder();
 
-		embed.setTitle("Successfuly added channel " + channelName)
+		embed.setTitle("Successfully added channel " + channelName)
 			.setFooter("Btw, thx for using my bot! <3 Miggi");
 		try
 		{

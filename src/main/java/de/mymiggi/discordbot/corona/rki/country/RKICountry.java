@@ -25,7 +25,6 @@ public class RKICountry
 	{
 		syncData();
 		String country = buildQuerry(context);
-
 		if (context.length < 2)
 		{
 			event.getChannel().sendMessage(noArgumentEmbed());
@@ -35,11 +34,9 @@ public class RKICountry
 		try
 		{
 			handleServerMessages(event);
-
 			Response querryResponse = getCountryByName(country);
 			EmbedBuilder embed = buildCountryEmbed(querryResponse);
 			event.getMessageAuthor().asUser().get().sendMessage(embed);
-
 			MessageCoolDown.del(event.getMessageLink().toString(), event.getChannel(), 5);
 			return;
 		}
@@ -54,7 +51,6 @@ public class RKICountry
 		try
 		{
 			List<Response> results = rki.moreResults(country);
-
 			if (results.size() == 1)
 			{
 				Response querryResponse = getCountryByName(results.get(0).getGEN());
@@ -217,8 +213,15 @@ public class RKICountry
 	public String getRandomCountry()
 	{
 		int randomInt = (int)(Math.random() * getCountrysList().size());
-
-		return getCountrysList().get(randomInt);
+		char[] randomCharArray = getCountrysList().get(randomInt).toCharArray();
+		char[] firstChar = { randomCharArray[0] };
+		String firstStringChar = new String(firstChar).toUpperCase();
+		char[] arrayWithoutFirstChar = new char[randomCharArray.length - 1];
+		for (int i = 1; i < randomCharArray.length; i++)
+		{
+			arrayWithoutFirstChar[i - 1] = randomCharArray[i];
+		}
+		return firstStringChar + new String(arrayWithoutFirstChar);
 	}
 
 	private String formaterInt(int responseInt)
@@ -247,10 +250,4 @@ public class RKICountry
 			}
 		}
 	}
-
-	/*
-	 * Not finished yet private static void closeDM(MessageCreateEvent event) {
-	 * long userID = event.getMessageAuthor().getId();
-	 * BotMainCore.api.getPrivateChannelById(userID).ifPresent(c -> c.remove); }
-	 */
 }

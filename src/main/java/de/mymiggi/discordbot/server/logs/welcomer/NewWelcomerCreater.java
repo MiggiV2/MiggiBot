@@ -49,7 +49,7 @@ public class NewWelcomerCreater
 	{
 		EmbedBuilder embed = new EmbedBuilder();
 
-		embed.setTitle("Wrong syntax!")
+		embed.setTitle("Miss something!")
 			.setDescription(String.format("%swelcome RoleID", BotMainCore.prefix))
 			.addField("Example:", BotMainCore.prefix + "welcome 746645343432867882");
 
@@ -68,7 +68,7 @@ public class NewWelcomerCreater
 	public void done(MessageCreateEvent event, String channelName)
 	{
 		EmbedBuilder embed = new EmbedBuilder();
-		embed.setTitle("Successfuly added channel " + channelName)
+		embed.setTitle("Successfully added channel " + channelName)
 			.setFooter("Btw, thx for using my bot! <3 Miggi");
 
 		try

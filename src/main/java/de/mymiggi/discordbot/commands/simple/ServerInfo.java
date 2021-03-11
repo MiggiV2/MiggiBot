@@ -34,7 +34,7 @@ public class ServerInfo
 		int voicChanels = server.getTextChannels().size();
 
 		EmbedBuilder e = new EmbedBuilder()
-			.setTitle("Server info of " + server.getName())
+			.setTitle("Server info for " + server.getName())
 			.setDescription("Short infos")
 			.addField("Owner", owner.getName())
 			.addField("Created: ", myDate.toString())
