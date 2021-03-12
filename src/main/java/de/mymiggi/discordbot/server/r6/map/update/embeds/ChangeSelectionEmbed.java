@@ -15,7 +15,8 @@ public class ChangeSelectionEmbed
 			.setDescription(String.format("" +
 				":one: Name = %s\r\n" +
 				":two: ImageURL\r\n" +
-				":three: isRanked = %s",
+				":three: isRanked = %s\r\n" +
+				":wave: DELETE MAP",
 				map.getName(), map.isRankedPool()))
 			.setImage(map.getImageURL())
 			.setColor(Color.GREEN);

@@ -6,6 +6,7 @@ import org.javacord.api.event.message.reaction.ReactionAddEvent;
 
 import de.mymiggi.discordbot.server.r6.map.update.actions.AbstractUpdateAction;
 import de.mymiggi.discordbot.server.r6.map.update.actions.CloseEmbedAction;
+import de.mymiggi.discordbot.server.r6.map.update.actions.DeleteAction;
 import de.mymiggi.discordbot.server.r6.map.update.actions.SaveAction;
 import de.mymiggi.discordbot.server.r6.map.update.embeds.ChangeSelectionEmbed;
 import de.mymiggi.discordbot.tools.database.util.R6Map;
@@ -35,6 +36,11 @@ public class ChangeSelectionHandler
 			else if (reactionAddEvent.getEmoji().equalsEmoji("❌"))
 			{
 				new CloseEmbedAction().run(reactionAddEvent.getMessage().get());
+			}
+			else if (reactionAddEvent.getEmoji().equalsEmoji("👋"))
+			{
+				new CloseEmbedAction().run(reactionAddEvent.getMessage().get());
+				new DeleteAction().run(reactionAddEvent.getChannel(), map);
 			}
 			else
 			{

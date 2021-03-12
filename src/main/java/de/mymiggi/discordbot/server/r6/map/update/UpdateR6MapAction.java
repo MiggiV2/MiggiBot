@@ -37,6 +37,7 @@ public class UpdateR6MapAction
 							embed.addReaction(NumberEmoji.THREE.getEmoji());
 							embed.addReaction("✅");
 							embed.addReaction("❌");
+							embed.addReaction("👋");
 							embed.addReactionAddListener(reactionevent -> {
 								changeSelectionHandler.run(reactionevent, map);
 							});
