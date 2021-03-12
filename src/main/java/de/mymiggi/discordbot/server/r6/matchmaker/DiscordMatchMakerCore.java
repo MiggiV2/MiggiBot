@@ -27,12 +27,13 @@ public class DiscordMatchMakerCore
 		eventMessage.addReaction("⚔️");
 		eventMessage.addReaction("❌");
 		eventMessage.addReactionAddListener(reactionAddEvent -> {
-			new MatchMessageReactionHandler().run(reactionAddEvent, vcUserIngoreMap, matchMakerBeginner);
+			new MatchMessageReactionHandler().run(reactionAddEvent,
+				vcUserIngoreMap, matchMakerBeginner);
 		});
 		/*
 		 * Test USER
 		 */
-		// BotMainCore.api.getServerById(743800306827001958L).get().getMembers()
+		// BotMainCore.api.getServerById(689382577571627013L).get().getMembers()
 		// .stream()
 		// .filter(user -> !user.isYourself())
 		// .forEach(user -> vcUserIngoreMap.put(user, false));

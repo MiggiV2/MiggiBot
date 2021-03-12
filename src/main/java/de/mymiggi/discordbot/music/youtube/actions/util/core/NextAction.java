@@ -20,6 +20,7 @@ public class NextAction
 		{
 			if (queue.isLooping())
 			{
+				queue.setCurrentTrackPosition(queue.getLoopingPostion());
 				playTrack(queue, audioResource);
 				if (sendEmbed)
 				{
