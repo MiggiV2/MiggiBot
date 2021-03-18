@@ -17,19 +17,21 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
+import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.webuntis.util.WebUntisResponse;
 
 public class SendUntisRequestAction
 {
-	private static String cookieURLPattern = "https://erato.webuntis.com/WebUntis/?school=%s#/basic/timetable";
-	private static String dataURLPattern = "https://erato.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=195&date=%s&formatId=3";
+	private String cookieURLPattern = "https://erato.webuntis.com/WebUntis/?school=%s#/basic/timetable";
+	private String dataURLPattern = "https://erato.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=195&date=%s&formatId=3";
 	private static Logger logger = LoggerFactory.getLogger(SendUntisRequestAction.class.getSimpleName());
 
 	public WebUntisResponse run() throws IOException
 	{
 		LocalDate currentTime = LocalDate.now();
+		String untisSchoolName = BotMainCore.config.getUntisSchoolName();
 		String dataURL = String.format(dataURLPattern, currentTime.toString());
-		String cookieURL = String.format(cookieURLPattern, new LoadConfig().loadSchoolName());
+		String cookieURL = String.format(cookieURLPattern, untisSchoolName);
 		HttpClientContext context = HttpClientContext.create();
 		try (CloseableHttpClient httpClient = HttpClients.createDefault())
 		{

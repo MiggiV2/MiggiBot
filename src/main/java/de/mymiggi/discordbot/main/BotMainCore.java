@@ -8,9 +8,7 @@ import org.slf4j.LoggerFactory;
 import de.mymiggi.discordbot.commands.constructor.SimpleCommandCore;
 import de.mymiggi.discordbot.corona.rki.province.automessage.CovidAutoMessage;
 import de.mymiggi.discordbot.drivingschool.lessons.reminder.ReminderThread;
-import de.mymiggi.discordbot.main.corehelper.LoadMyPrefixActioin;
-import de.mymiggi.discordbot.main.corehelper.LoadMyTokenAction;
-import de.mymiggi.discordbot.main.statusmessage.HelpStatusThread;
+import de.mymiggi.discordbot.main.corehelper.ConfigBuilder;
 import de.mymiggi.discordbot.server.counter.MemberCounterCore;
 import de.mymiggi.discordbot.server.logs.leaving.LeavingLogCore;
 import de.mymiggi.discordbot.server.logs.welcomer.WelcomerRunner;
@@ -20,10 +18,10 @@ import de.mymiggi.discordbot.server.untis.reminder.TimeTableReminderCore;
 
 public class BotMainCore
 {
-	public static String prefix = LoadMyPrefixActioin.run();
-
+	public static final BotConfig config = new ConfigBuilder().run();
+	public static String prefix = config.getPrefix();
 	public static final DiscordApi api = new DiscordApiBuilder()
-		.setToken(LoadMyTokenAction.run(true))
+		.setToken(config.getBotToken())
 		.setAllIntents()
 		.login()
 		.join();
@@ -60,7 +58,7 @@ public class BotMainCore
 			printLoadedListSize();
 
 			logger.info("Invite via Url: " + api.createBotInvite());
-			HelpStatusThread.run(api);
+			// HelpStatusThread.run(api);
 		}
 		isRunning = true;
 	}
@@ -76,11 +74,7 @@ public class BotMainCore
 
 	public static DiscordApi getTestAPI()
 	{
-		return new DiscordApiBuilder()
-			.setToken(LoadMyTokenAction.run(false))
-			.setAllIntents()
-			.login()
-			.join();
+		return api;
 	}
 
 	public static WelcomerRunner getWelcomer()

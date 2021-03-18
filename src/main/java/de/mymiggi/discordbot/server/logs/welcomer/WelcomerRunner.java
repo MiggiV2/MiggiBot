@@ -8,6 +8,8 @@ import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.permission.Role;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbot.tools.database.util.WelcomerSetting;
@@ -17,6 +19,7 @@ public class WelcomerRunner
 	private Map<Server, WelcomerSetting> serverAndChannel = new HashMap<Server, WelcomerSetting>();
 	private ServerAndChannelsLoader loader = new ServerAndChannelsLoader();
 	private long lastUpdateTimeStamp;
+	private static Logger logger = LoggerFactory.getLogger(BotMainCore.class.getSimpleName());
 
 	public void run()
 	{
@@ -45,7 +48,7 @@ public class WelcomerRunner
 					}
 					catch (InterruptedException | ExecutionException e)
 					{
-						e.printStackTrace();
+						logger.error("Role cant add!", e);
 					}
 				}
 			}

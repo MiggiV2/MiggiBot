@@ -64,7 +64,6 @@ public class FileManager
 			logger.error("An error occurred!");
 			e.printStackTrace();
 		}
-
 		return json;
 	}
 

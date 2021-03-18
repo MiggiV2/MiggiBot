@@ -14,9 +14,11 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.PlaylistItemListResponse;
 
+import de.mymiggi.discordbot.main.BotMainCore;
+
 public class YTPlaylistSearcher
 {
-	private final String DEVELOPER_KEY = new LoadMyYTTokenAction().run();
+	private final String DEVELOPER_KEY = BotMainCore.config.getYtAPIKey();
 	private final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 	private final String APPLICATION_NAME = "Miggi's DiscordBot";
 

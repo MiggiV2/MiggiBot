@@ -20,12 +20,17 @@ public class RoberKochInstitut
 	private List<Response> shorterCountryResponseList = new ArrayList<Response>();
 	private List<String> countrys = new ArrayList<String>();
 	private Logger logger = LoggerFactory.getLogger("RKICountryAPI");
+	private long lastUpdateStamp;
 
 	public void update()
 	{
-		String respons = getResponse();
-		features rikResponse = buildObj(respons);
-		countryMap = getCountry(rikResponse);
+		if (countryMap == null | System.currentTimeMillis() - lastUpdateStamp > 12 * 60 * 60 * 1000)
+		{
+			String respons = getResponse();
+			features rikResponse = buildObj(respons);
+			countryMap = getCountry(rikResponse);
+			lastUpdateStamp = System.currentTimeMillis();
+		}
 	}
 
 	private String getResponse()
@@ -106,19 +111,13 @@ public class RoberKochInstitut
 
 	public Map<String, Response> getStatsMap()
 	{
-		if (countryMap.isEmpty())
-		{
-			update();
-		}
+		update();
 		return countryMap;
 	}
 
 	public List<String> getCountrys()
 	{
-		if (countrys.isEmpty())
-		{
-			update();
-		}
+		update();
 		return countrys;
 	}
 }

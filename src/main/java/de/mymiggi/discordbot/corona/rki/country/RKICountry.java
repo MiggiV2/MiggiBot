@@ -2,9 +2,7 @@ package de.mymiggi.discordbot.corona.rki.country;
 
 import java.awt.Color;
 import java.text.DecimalFormat;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import org.javacord.api.entity.message.embed.EmbedBuilder;
@@ -18,12 +16,11 @@ import de.mymiggi.discordbot.tools.util.MessageCoolDown;
 public class RKICountry
 {
 	private RoberKochInstitut rki = new RoberKochInstitut();
-	private Map<String, Response> statsMap = new HashMap<String, Response>();
-	private Logger logger = LoggerFactory.getLogger("RKICountry");
+	private Logger logger = LoggerFactory.getLogger(RKICountry.class.getSimpleName());
 
 	public void send(MessageCreateEvent event, String[] context)
 	{
-		syncData();
+		rki.update();
 		String country = buildQuerry(context);
 		if (context.length < 2)
 		{
@@ -54,7 +51,9 @@ public class RKICountry
 			if (results.size() == 1)
 			{
 				Response querryResponse = getCountryByName(results.get(0).getGEN());
-				event.getMessageAuthor().asUser().get().sendMessage(buildCountryEmbed(querryResponse));
+				event.getMessageAuthor().asUser()
+					.get()
+					.sendMessage(buildCountryEmbed(querryResponse));
 			}
 			else
 			{
@@ -82,14 +81,6 @@ public class RKICountry
 	public void sendHelpEmbed(MessageCreateEvent event)
 	{
 		event.getChannel().sendMessage(helpEmbed());
-	}
-
-	public void syncData()
-	{
-		if (statsMap.isEmpty())
-		{
-			statsMap = rki.getStatsMap();
-		}
 	}
 
 	public List<String> getCountrysList()

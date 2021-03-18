@@ -25,9 +25,17 @@ public class UniversalHibernateClient
 	public <T> void save(T object)
 	{
 		checkObject(object.getClass());
-		session.beginTransaction();
-		session.saveOrUpdate(object);
-		session.getTransaction().commit();
+		try
+		{
+			session.beginTransaction();
+			session.saveOrUpdate(object);
+			session.getTransaction().commit();
+		}
+		catch (Exception e)
+		{
+			LOGGER.error("Cant save object!", e);
+			session.getTransaction().rollback();
+		}
 	}
 
 	public <T> void saveList(List<T> objectList)

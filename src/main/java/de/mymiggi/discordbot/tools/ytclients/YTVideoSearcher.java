@@ -13,11 +13,13 @@ import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 
+import de.mymiggi.discordbot.main.BotMainCore;
+
 public class YTVideoSearcher
 {
 
 	private static final long NUMBER_OF_VIDEOS_RETURNED = 1;
-	private static String ytAPI_Key = new LoadMyYTTokenAction().run();
+	private static String ytAPI_Key = BotMainCore.config.getYtAPIKey();
 	private static Logger logger = LoggerFactory.getLogger(YTVideoSearcher.class.getSimpleName());
 	private static YouTube youtube;
 
