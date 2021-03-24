@@ -9,6 +9,7 @@ import org.javacord.api.event.message.MessageCreateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.mymiggi.discordbot.bitcoin.BitCoinCommand;
 import de.mymiggi.discordbot.commands.constructor.Command;
 import de.mymiggi.discordbot.commands.simple.CommandHelp;
 import de.mymiggi.discordbot.commands.simple.IPInfoCommand;
@@ -281,6 +282,9 @@ public class CommandHandler
 				break;
 			case "deleteDriving":
 				new DrivingLessonsCore().remove(event);
+				break;
+			case "BitCoin":
+				new BitCoinCommand().run(event);
 				break;
 		}
 		for (Command temp : list)

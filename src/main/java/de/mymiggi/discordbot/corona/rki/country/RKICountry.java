@@ -111,6 +111,11 @@ public class RKICountry
 		return embed;
 	}
 
+	public void updateData()
+	{
+		rki.update();
+	}
+
 	private String buildQuerry(String[] context)
 	{
 		String searchQuery = "";

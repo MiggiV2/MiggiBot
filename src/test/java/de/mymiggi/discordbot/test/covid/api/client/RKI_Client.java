@@ -46,7 +46,7 @@ class RKI_Client
 
 		rkiProvince.syncData();
 		data = rkiProvince.getData();
-		rkiCountry.syncData();
+		rkiCountry.updateData();
 
 		assertFalse(data == null);
 		System.out.println("Got! \r\n");
