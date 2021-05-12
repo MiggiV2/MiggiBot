@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -12,6 +13,7 @@ import javax.ws.rs.core.Response;
 
 import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbotapi.util.DiscordServerResponse;
+import de.mymiggi.discordbotapi.webhook.WebHookTask;
 
 @Path("/bot")
 @Produces(MediaType.APPLICATION_JSON)
@@ -19,7 +21,7 @@ import de.mymiggi.discordbotapi.util.DiscordServerResponse;
 public class BotAPIMainCore
 {
 	@GET
-	@Path("/start")
+	@Path("start")
 	public Response start()
 	{
 		BotMainCore.run();
@@ -27,7 +29,7 @@ public class BotAPIMainCore
 	}
 
 	@GET
-	@Path("/vc")
+	@Path("vc")
 	public List<DiscordServerResponse> getVC()
 	{
 		List<DiscordServerResponse> connectedVC = new ArrayList<DiscordServerResponse>();
@@ -40,7 +42,7 @@ public class BotAPIMainCore
 	}
 
 	@GET
-	@Path("/server")
+	@Path("server")
 	public List<DiscordServerResponse> getDiscordServer()
 	{
 		List<DiscordServerResponse> connectedVC = new ArrayList<DiscordServerResponse>();
@@ -50,5 +52,12 @@ public class BotAPIMainCore
 				connectedVC.add(new DiscordServerResponse(server));
 			});
 		return connectedVC;
+	}
+
+	@POST
+	@Path("webhook")
+	public Response webhook(String json)
+	{
+		return new WebHookTask().run(json);
 	}
 }
