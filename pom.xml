@@ -42,9 +42,9 @@
 			<url>http://google-api-client-libraries.appspot.com/mavenrepo</url>
 		</repository>
 		<repository>
-			<id>bintray-sedmelluq-com.sedmelluq</id>
-			<name>bintray</name>
-			<url>https://dl.bintray.com/sedmelluq/com.sedmelluq</url>
+			<id>dv8tion</id>
+			<name>m2-dv8tion</name>
+			<url>https://m2.dv8tion.net/releases</url>
 		</repository>
 	</repositories>
 
@@ -103,7 +103,7 @@
 		<dependency>
 			<groupId>com.sedmelluq</groupId>
 			<artifactId>lavaplayer</artifactId>
-			<version>[1.3.75,)</version>
+			<version>1.3.75</version>
 		</dependency>
 
 		<!-- BD -->
