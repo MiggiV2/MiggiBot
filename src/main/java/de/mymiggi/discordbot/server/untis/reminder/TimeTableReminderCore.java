@@ -9,6 +9,7 @@ import org.javacord.api.event.message.MessageCreateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbot.server.untis.reminder.manager.ReminderChannelLoader;
 import de.mymiggi.discordbot.tools.database.util.UntisReminderChannelNew;
 import de.mymiggi.discordbot.tools.util.MessageCoolDown;
@@ -20,35 +21,63 @@ import de.mymiggi.webuntis.util.WebUntisResponse;
 public class TimeTableReminderCore
 {
 	private List<UntisReminderChannelNew> channels = new ArrayList<UntisReminderChannelNew>();
-	private WebUntisResponse response = new WebUntisClient().getResponse();
+	private WebUntisResponse response;
 	private static Logger logger = LoggerFactory.getLogger(TimeTableReminderCore.class.getSimpleName());
+
+	public TimeTableReminderCore()
+	{
+		if (BotMainCore.config.getUntisSchoolName() != null)
+		{
+			response = new WebUntisClient().getResponse();
+		}
+	}
 
 	public void run()
 	{
-		syncChannels();
-		logger.info("Loaded channels " + channels.size());
-		new UpaterThread().run(response);
-		new ReminderThread().run(response, channels);
+		if (BotMainCore.config.getUntisSchoolName() != null)
+		{
+			syncChannels();
+			logger.info("Loaded channels " + channels.size());
+			new UpaterThread().run(response);
+			new ReminderThread().run(response, channels);
+		}
+		else
+		{
+			logger.warn("UntisSchoolName is not in config!");
+		}
 	}
 
 	public void nextSubjectEmbed(MessageCreateEvent event)
 	{
-		EmbedBuilder embed = new EmbedBuilder();
-		Elements nextLesson = new NextLessonForToday().getNextSubjectByTime(response);
-		if (nextLesson == null)
+		if (BotMainCore.config.getUntisSchoolName() != null)
 		{
-			embed.setTitle("Heute keine Schule mehr!");
-			event.getMessage().addReaction("👌");
+			EmbedBuilder embed = new EmbedBuilder();
+			Elements nextLesson = new NextLessonForToday().getNextSubjectByTime(response);
+			if (nextLesson == null)
+			{
+				embed.setTitle("Heute keine Schule mehr!");
+				event.getMessage().addReaction("👌");
+			}
+			else
+			{
+				embed.setTitle("Nächste Stunde ist " + nextLesson.getLongName());
+				event.getMessage().addReaction("👍");
+			}
+			embed.setColor(Color.ORANGE);
+			event.getChannel().sendMessage(embed).thenAccept(message -> {
+				MessageCoolDown.del(message.getLink().toString(), event.getChannel(), 30);
+			});
 		}
 		else
 		{
-			embed.setTitle("Nächste Stunde ist " + nextLesson.getLongName());
-			event.getMessage().addReaction("👍");
+			BotMainCore.api.getOwner().thenAccept(owner -> {
+				EmbedBuilder embed = new EmbedBuilder()
+					.setTitle("Sorry, but UntisSchoolName is not in my config!")
+					.setDescription(String.format("Ask %s to set this in my config!", owner.getName()))
+					.setColor(Color.RED);
+				event.getChannel().sendMessage(embed);
+			});
 		}
-		embed.setColor(Color.ORANGE);
-		event.getChannel().sendMessage(embed).thenAccept(message -> {
-			MessageCoolDown.del(message.getLink().toString(), event.getChannel(), 30);
-		});
 	}
 
 	public void startNewThread(UntisReminderChannelNew newChannel)

@@ -9,53 +9,82 @@ import de.mymiggi.discordbot.main.BotMainCore;
 
 public class PostRandomGitAction
 {
-	private String searchQuery = "";
 
 	public void run(MessageCreateEvent event, String[] context)
 	{
-		if (context.length >= 2)
+		if (BotMainCore.config.getTenorAPIKey() == null)
 		{
-			event.getMessage()
-				.addReaction("🎞");
-			for (int i = 1; i < context.length; i++)
-			{
-				if (i == context.length - 1)
-				{
-					searchQuery += context[i];
-				}
-				else
-				{
-					searchQuery += context[i] + "_";
-				}
-			}
+			sendNotInConfig(event);
+		}
+		else if (context.length >= 2)
+		{
+			String searchQuery = buildSearchQuerry(context);
+			event.getMessage().addReaction("🎞");
 			try
 			{
-				String gifURL = new RandomGifAction().get(searchQuery);
-				event.getChannel()
-					.sendMessage(gifURL)
-					.thenAccept(message -> {
-						message.addReaction("🔄");
-						message.addReaction("❌");
-						message.addReactionAddListener(reactionAddEvent -> {
-							new TenorReactionHandler().run(reactionAddEvent, searchQuery, event.getMessage());
-						});
-					});
+				sendGIF(event, searchQuery);
 			}
 			catch (Exception e)
 			{
-				String altGif = "https://tenor.com/view/tonton-tonton-sticker-no-nope-gif-13636081";
-				event.getChannel()
-					.sendMessage(altGif);
+				event.getChannel().sendMessage("https://tenor.com/view/tonton-tonton-sticker-no-nope-gif-13636081");
 			}
 		}
 		else
 		{
+			sendMissingArgument(event);
+		}
+	}
+
+	private String buildSearchQuerry(String[] context)
+	{
+		String searchQuery = "";
+		for (int i = 1; i < context.length; i++)
+		{
+			if (i == context.length - 1)
+			{
+				searchQuery += context[i];
+			}
+			else
+			{
+				searchQuery += context[i] + "_";
+			}
+		}
+		return searchQuery;
+	}
+
+	private void sendNotInConfig(MessageCreateEvent event)
+	{
+		BotMainCore.api.getOwner().thenAccept(owner -> {
 			EmbedBuilder embed = new EmbedBuilder()
-				.setTitle("Sorry, but you forgot soemthing!")
-				.setDescription(BotMainCore.prefix + "gif cat")
+				.setTitle("Sorry, but there is not Tenor api-key in my config!")
+				.setDescription(String.format("Ask %s to set one!", owner.getName()))
 				.setColor(Color.RED);
 			event.getChannel()
 				.sendMessage(embed);
-		}
+		});
+	}
+
+	private void sendMissingArgument(MessageCreateEvent event)
+	{
+		EmbedBuilder embed = new EmbedBuilder()
+			.setTitle("Sorry, but you forgot soemthing!")
+			.setDescription(BotMainCore.prefix + "gif cat")
+			.setColor(Color.RED);
+		event.getChannel()
+			.sendMessage(embed);
+	}
+
+	private void sendGIF(MessageCreateEvent event, String searchQuery) throws Exception
+	{
+		String gifURL = new RandomGifAction().get(searchQuery);
+		event.getChannel()
+			.sendMessage(gifURL)
+			.thenAccept(message -> {
+				message.addReaction("🔄");
+				message.addReaction("❌");
+				message.addReactionAddListener(reactionAddEvent -> {
+					new TenorReactionHandler().run(reactionAddEvent, searchQuery, event.getMessage());
+				});
+			});
 	}
 }

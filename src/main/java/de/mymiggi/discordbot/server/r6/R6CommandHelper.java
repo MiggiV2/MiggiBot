@@ -15,6 +15,8 @@ public class R6CommandHelper
 			.addField(prefix + "randomMap", "Get a random R6 map")
 			.addField(prefix + "listMaps", "See all maps in by database")
 			.addField(prefix + "match", "Create tow teams with players in your voice channel")
+			.addField(prefix + "stats YOUR-NAME", "See your R6 stats!")
+			.addField(prefix + "r6Highlight YOUR-NAME", "See your R6 last highlight!")
 			.addField(prefix + "newPlayer [ADMIN ONLY]", "Register new R6 player from your server for matchmaking")
 			.addField(prefix + "updateMaps [BOTOWNER ONLY]", "My onwer can update maps")
 			.addField(prefix + "addNewMap [BOTOWNER ONLY]", "My owner can add new maps")

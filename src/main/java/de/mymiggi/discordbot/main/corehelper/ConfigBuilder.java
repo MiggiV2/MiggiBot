@@ -21,9 +21,27 @@ public class ConfigBuilder
 		Map<String, String> configMap = read("bot.config");
 		config.setBotToken(configMap.get("botToken"));
 		config.setPrefix(configMap.get("botPrefix"));
-		config.setTenorAPIKey(configMap.get("tenorAPIKey"));
-		config.setUntisSchoolName(configMap.get("untisSchoolName"));
-		config.setYtAPIKey(configMap.get("youtubeAPIKey"));
+		config.setTenorAPIKey(configMap.get("youtubeAPIKey"));
+		if (configMap.containsKey("tenorAPIKey"))
+		{
+			config.setTenorAPIKey(configMap.get("tenorAPIKey"));
+		}
+		if (configMap.containsKey("untisSchoolName"))
+		{
+			config.setUntisSchoolName(configMap.get("untisSchoolName"));
+		}
+		if (configMap.containsKey("ubisoft-email"))
+		{
+			config.seteMail(configMap.get("ubisoft-email"));
+		}
+		if (configMap.containsKey("ubisoft-password"))
+		{
+			config.setPassword(configMap.get("ubisoft-password"));
+		}
+		if (configMap.containsKey("ubisoft-credential"))
+		{
+			config.setCredential(configMap.get("ubisoft-credential"));
+		}
 		return config;
 	}
 
@@ -38,13 +56,19 @@ public class ConfigBuilder
 			{
 				String line = myReader.nextLine();
 				String[] keyAndValue = line.split("=");
-				if (keyAndValue.length != 2 && line.length() > 2)
+				if (keyAndValue.length <= 1 && line.length() > 2)
 				{
-					System.err.println("Config should not be empty!");
-					System.err.println("Error in line: " + line);
 					logger.error("Config should not be empty!");
 					logger.error("Error in line: " + line);
 					break;
+				}
+				if (keyAndValue.length > 2)
+				{
+					combineValue(keyAndValue);
+				}
+				if (keyAndValue[0].equals("ubisoft-credential"))
+				{
+					keyAndValue[1] += "==";
 				}
 				configMap.put(keyAndValue[0], keyAndValue[1]);
 			}
@@ -52,8 +76,23 @@ public class ConfigBuilder
 		}
 		catch (FileNotFoundException e)
 		{
-			e.printStackTrace();
+			throw new RuntimeException("Please fill out target/bot.config!");
 		}
 		return configMap;
+	}
+
+	private String[] combineValue(String[] keyAndValue)
+	{
+		String newValue = "";
+		String newKey = keyAndValue[0];
+		for (int i = 1; i < keyAndValue.length - 1; i++)
+		{
+			newValue += keyAndValue[i] + "=";
+		}
+		newValue += keyAndValue[keyAndValue.length - 1];
+		keyAndValue = new String[2];
+		keyAndValue[0] = newKey;
+		keyAndValue[1] = newValue;
+		return keyAndValue;
 	}
 }

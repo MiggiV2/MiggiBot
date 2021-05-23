@@ -33,12 +33,12 @@ import de.mymiggi.discordbot.server.r6.R6CommandHelper;
 import de.mymiggi.discordbot.server.r6.addplayer.StartMessageListener;
 import de.mymiggi.discordbot.server.r6.map.RandomR6MapCore;
 import de.mymiggi.discordbot.server.r6.matchmaker.DiscordMatchMakerCore;
+import de.mymiggi.discordbot.server.r6.stats.R6StatsCommandCore;
 import de.mymiggi.discordbot.server.reaction.role.newconfig.StartListening;
 import de.mymiggi.discordbot.server.tenor.gif.PostRandomGitAction;
 import de.mymiggi.discordbot.server.untis.UntisCommandHelper;
 import de.mymiggi.discordbot.server.untis.reminder.manager.NewReminderChannel;
 import de.mymiggi.discordbot.server.untis.timetable.TimeTableCore;
-import de.mymiggi.discordbot.tools.UpdateDBToNewObject;
 import de.mymiggi.discordbot.tools.util.MessageCoolDown;
 
 public class CommandHandler
@@ -50,7 +50,7 @@ public class CommandHandler
 	private RKICountry rkiCountry = new RKICountry();
 	private RKIProvince rkiProvince = new RKIProvince();
 	private CoronaAPI coronaAPI = new CoronaAPI();
-
+	private R6StatsCommandCore r6StatsCommandCore = new R6StatsCommandCore();
 	private final String prefix = BotMainCore.prefix;
 	private DiscordApi api;
 	private ArrayList<Command> list = new ArrayList<Command>();
@@ -274,9 +274,6 @@ public class CommandHandler
 			case "ping":
 				new PingTest().run(event);
 				break;
-			case "convert":
-				new UpdateDBToNewObject().run(event);
-				break;
 			case "driving":
 				new DrivingLessonsCore().beginSavingAction(event);
 				break;
@@ -285,6 +282,12 @@ public class CommandHandler
 				break;
 			case "BitCoin":
 				new BitCoinCommand().run(event);
+				break;
+			case "r6Stats":
+				r6StatsCommandCore.runStats(event, context);
+				break;
+			case "r6Highlight":
+				r6StatsCommandCore.runWeekly(event, context);
 				break;
 		}
 		for (Command temp : list)
