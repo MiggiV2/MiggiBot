@@ -2,27 +2,27 @@ package de.mymiggi.r6.stats.wrapper.entitys.stats;
 
 public class GameModeStats
 {
-	private int matchesPlayed;
-	private int roundsPlayed;
-	private int minutesPlayed;
-	private int matchesWon;
-	private int matchesLost;
-	private int roundsWon;
-	private int roundsLost;
-	private int kills;
-	private int assists;
-	private int death;
-	private int headshots;
-	private int meleeKills;
-	private int teamKills;
-	private int openingKills;
-	private int openingDeaths;
-	private int trades;
-	private int openingKillTrades;
-	private int openingDeathTrades;
-	private int distanceTravelled;
-	private int revives;
-	private double winLossRatio;
+	private int matchesPlayed = 0;
+	private int roundsPlayed = 0;
+	private int minutesPlayed = 0;
+	private int matchesWon = 0;
+	private int matchesLost = 0;
+	private int roundsWon = 0;
+	private int roundsLost = 0;
+	private int kills = 0;
+	private int assists = 0;
+	private int death = 0;
+	private int headshots = 0;
+	private int meleeKills = 0;
+	private int teamKills = 0;
+	private int openingKills = 0;
+	private int openingDeaths = 0;
+	private int trades = 0;
+	private int openingKillTrades = 0;
+	private int openingDeathTrades = 0;
+	private int distanceTravelled = 0;
+	private int revives = 0;
+	private double winLossRatio = 0;
 	private SpecialValue killDeathRatio;
 	private SpecialValue headshotAccuracy;
 	private SpecialValue killsPerRound;
@@ -34,9 +34,9 @@ public class GameModeStats
 	private SpecialValue roundsSurvived;
 	private SpecialValue roundsWithAnAce;
 	private SpecialValue roundsWithClutch;
-	private double timeAlivePerMatch;
-	private double timeDeadPerMatch;
-	private double distancePerRound;
+	private double timeAlivePerMatch = 0;
+	private double timeDeadPerMatch = 0;
+	private double distancePerRound = 0;
 
 	public int getMatchesPlayed()
 	{
@@ -391,7 +391,7 @@ public class GameModeStats
 
 class SpecialValue
 {
-	private double value;
+	private double value = 0;
 
 	public double getValue()
 	{

@@ -23,8 +23,13 @@ public class R6StatsEmbed
 
 	private EmbedBuilder addField(EmbedBuilder embed, GameModeStats gameModeStats, String mode, boolean inline)
 	{
-		return embed
-			.addField(mode, String.format(""
+		if (gameModeStats == null)
+		{
+			return embed;
+		}
+		else
+		{
+			return embed.addField(mode, String.format(""
 				+ "K/D: %s \r\n"
 				+ "Headshot: %s %% \r\n"
 				+ "Win/Loss: %s \r\n"
@@ -43,5 +48,6 @@ public class R6StatsEmbed
 				gameModeStats.getOpeningDeaths(),
 				gameModeStats.getRoundsWithAnAce(),
 				gameModeStats.getRoundsWithClutch()), inline);
+		}
 	}
 }
