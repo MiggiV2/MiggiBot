@@ -1,5 +1,7 @@
 <h2>MiggiBot</h2>
-<p>You can configur this bot in target/bot.config!</p>
+<p>The MiggiBot is not just a simple bot!</p>
+<p>Our DiscordServer -> https://discord.gg/aSJJwn9</p>
+<p>My Bot invite -> https://discord.com/oauth2/authorize?client_id=732152444787753002&scope=bot&permissions=0</p>
 <p>The MiggiBot is not just a simple bot!</p>
 <h3>Core commands</h3>
 <ul>
@@ -54,6 +56,7 @@
     <li>POSTGRES Database -> Config in src/main/resources/hibernate.cfg.xml</li>
     <li>Maven installed</li>
 </ul>
+<p>You can configur this bot in target/bot.config!</p>
 <p>POSTGRES Database help!</p>
 <p>Config in src/main/resources/hibernate.cfg.xml</p>
 <p>RECOMMEND -> https://wkrzywiec.medium.com/database-in-a-docker-container-how-to-start-and-whats-it-about-5e3ceea77e50</p>
