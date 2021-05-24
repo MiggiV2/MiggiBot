@@ -2,6 +2,7 @@ hs_err_pid3169.log
 bot.token
 Commands/custom.json
 *.bot
+*.properties
 pom2.xml
 pom2.xml
 prefix.bot
