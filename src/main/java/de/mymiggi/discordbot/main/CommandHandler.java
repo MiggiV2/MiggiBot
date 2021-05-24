@@ -289,6 +289,9 @@ public class CommandHandler
 			case "r6Highlight":
 				r6StatsCommandCore.runWeekly(event, context);
 				break;
+			case "r6Rank":
+				r6StatsCommandCore.runRankedStats(event, context);
+				break;
 		}
 		for (Command temp : list)
 		{

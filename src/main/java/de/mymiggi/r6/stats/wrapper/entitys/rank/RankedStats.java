@@ -1,5 +1,7 @@
 package de.mymiggi.r6.stats.wrapper.entitys.rank;
 
+import java.text.DecimalFormat;
+
 import de.mymiggi.r6.stats.wrapper.actions.helper.GetRankedNameByID;
 
 public class RankedStats
@@ -27,7 +29,35 @@ public class RankedStats
 	private String profile_id;
 	private String update_time;
 
-	public double getWins()
+	public String getRankName()
+	{
+		try
+		{
+			return new GetRankedNameByID().get(rank).name();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return "NOT FOUND!";
+		}
+	}
+
+	public String getKDStr()
+	{
+		return new DecimalFormat("#0.000").format((double)kills / deaths);
+	}
+
+	public double getKD()
+	{
+		return (double)kills / deaths;
+	}
+
+	public String getWinsAndLossesRation()
+	{
+		return new DecimalFormat("#0.000").format((double)wins / losses);
+	}
+
+	public int getWins()
 	{
 		return wins;
 	}
@@ -115,19 +145,6 @@ public class RankedStats
 	public void setRank(int rank)
 	{
 		this.rank = rank;
-	}
-
-	public String getRankName()
-	{
-		try
-		{
-			return new GetRankedNameByID().get(rank).name();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return "NOT FOUND!";
-		}
 	}
 
 	public int getMax_rank()

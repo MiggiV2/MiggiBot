@@ -10,8 +10,9 @@ import org.slf4j.LoggerFactory;
 
 import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbot.server.r6.stats.actions.UpdateR6HighlightMessage;
+import de.mymiggi.discordbot.server.r6.stats.actions.UpdateR6RankedMessage;
 import de.mymiggi.discordbot.server.r6.stats.actions.UpdateR6StatsMessage;
-import de.mymiggi.discordbot.server.r6.stats.actions.helpers.AskForPlatfromAction;
+import de.mymiggi.discordbot.server.r6.stats.actions.helpers.AskForPlatformAction;
 import de.mymiggi.discordbot.tools.util.MessageCoolDown;
 import de.mymiggi.r6.stats.wrapper.WrapperManager;
 
@@ -47,7 +48,26 @@ public class R6StatsCommandCore
 			String username = context[1];
 			TextChannel channel = event.getChannel();
 			event.addReactionsToMessage("👍");
-			new AskForPlatfromAction().run(channel, username, wrapperManager, new UpdateR6HighlightMessage());
+			new AskForPlatformAction().run(channel, username, wrapperManager, new UpdateR6HighlightMessage());
+		}
+	}
+
+	public void runRankedStats(MessageCreateEvent event, String[] context)
+	{
+		if (context.length != 2)
+		{
+			sendMissingUserName(event);
+		}
+		else if (wrapperManager == null)
+		{
+			sendNotInConfig(event);
+		}
+		else
+		{
+			String username = context[1];
+			TextChannel channel = event.getChannel();
+			event.addReactionsToMessage("👍");
+			new AskForPlatformAction().run(channel, username, wrapperManager, new UpdateR6RankedMessage());
 		}
 	}
 
@@ -66,7 +86,7 @@ public class R6StatsCommandCore
 			String username = context[1];
 			TextChannel channel = event.getChannel();
 			event.addReactionsToMessage("👍");
-			new AskForPlatfromAction().run(channel, username, wrapperManager, new UpdateR6StatsMessage());
+			new AskForPlatformAction().run(channel, username, wrapperManager, new UpdateR6StatsMessage());
 		}
 	}
 

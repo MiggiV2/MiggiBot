@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import de.mymiggi.discordbot.tools.util.MessageCoolDown;
 import de.mymiggi.r6.stats.wrapper.PlatfromType;
+import de.mymiggi.r6.stats.wrapper.RankedRegions;
 import de.mymiggi.r6.stats.wrapper.WrapperManager;
 import de.mymiggi.r6.stats.wrapper.entitys.PlayerIDResponse;
 
@@ -21,10 +22,22 @@ public abstract class AbstractUpdateR6MessageAction
 	protected String playerName;
 	protected WrapperManager wrapperManager;
 	protected PlatfromType playerPlatfrom;
+	protected RankedRegions rankedRegion;
 	protected Message message;
+	protected boolean needRankedRegion;
 	protected Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
-	public abstract void execute(PlayerIDResponse userProfile) throws IOException;
+	protected abstract void execute(PlayerIDResponse userProfile) throws IOException;
+
+	public void run(String username, WrapperManager wrapperManager, RankedRegions rankedRegion, PlatfromType playerPlatfrom, Message message)
+	{
+		this.playerName = username;
+		this.wrapperManager = wrapperManager;
+		this.rankedRegion = rankedRegion;
+		this.playerPlatfrom = playerPlatfrom;
+		this.message = message;
+		runRequest(username);
+	}
 
 	public void run(String username, WrapperManager wrapperManager, PlatfromType playerPlatfrom, Message message)
 	{
@@ -32,6 +45,11 @@ public abstract class AbstractUpdateR6MessageAction
 		this.wrapperManager = wrapperManager;
 		this.playerPlatfrom = playerPlatfrom;
 		this.message = message;
+		runRequest(username);
+	}
+
+	private void runRequest(String username)
+	{
 		try
 		{
 			sendLoadingEmbed(message);
@@ -84,5 +102,10 @@ public abstract class AbstractUpdateR6MessageAction
 			.setColor(Color.RED);
 		message.edit(embed);
 		MessageCoolDown.del(message.getLink().toString(), message.getChannel(), 15);
+	}
+
+	public boolean isNeedRankedRegion()
+	{
+		return needRankedRegion;
 	}
 }
