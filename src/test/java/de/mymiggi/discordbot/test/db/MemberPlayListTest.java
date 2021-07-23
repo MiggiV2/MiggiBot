@@ -12,11 +12,9 @@ import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbot.server.member.playlist.manager.actions.MPlaylistCreateNew;
 import de.mymiggi.discordbot.server.member.playlist.manager.actions.get.MPlaylistAddSongAction;
 import de.mymiggi.discordbot.tools.database.UniversalHibernateClient;
-import de.mymiggi.discordbot.tools.database.util.MemberPlayListInfo;
 import de.mymiggi.discordbot.tools.database.util.MemberPlayListInfoNew;
 import de.mymiggi.discordbot.tools.database.util.NewMemberPlaylistSong;
 
-@SuppressWarnings("deprecation")
 class MemberPlayListTest
 {
 	private UniversalHibernateClient client = new UniversalHibernateClient();
@@ -28,7 +26,6 @@ class MemberPlayListTest
 	@Test
 	void test() throws Exception
 	{
-		convert();
 		oldPlaylists = client.getList(MemberPlayListInfoNew.class);
 		for (int i = 0; i < 8; i++)
 		{
@@ -40,22 +37,6 @@ class MemberPlayListTest
 		buildSavedPlayLists();
 		deleteEntirePlayList();
 		deleteSavedPlayLists();
-	}
-
-	private void convert()
-	{
-		List<MemberPlayListInfo> oldPlaylists = client.getList(MemberPlayListInfo.class);
-		List<MemberPlayListInfoNew> convertedPlaylists = new ArrayList<MemberPlayListInfoNew>();
-		for (MemberPlayListInfo temp : oldPlaylists)
-		{
-			MemberPlayListInfoNew newPlaylist = new MemberPlayListInfoNew()
-				.setJoined(temp.isJoined())
-				.setPlayListTitel(temp.getPlayListTitle())
-				.setPublicToAllUseres(temp.isPublicToAllUseres())
-				.setUserID(temp.getUserID());
-			convertedPlaylists.add(newPlaylist);
-		}
-		client.saveList(convertedPlaylists);
 	}
 
 	private void deleteSavedPlayLists()

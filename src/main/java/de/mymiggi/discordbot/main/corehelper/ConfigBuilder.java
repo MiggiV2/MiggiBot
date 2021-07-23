@@ -21,7 +21,7 @@ public class ConfigBuilder
 		Map<String, String> configMap = read("bot.config");
 		config.setBotToken(configMap.get("botToken"));
 		config.setPrefix(configMap.get("botPrefix"));
-		config.setTenorAPIKey(configMap.get("youtubeAPIKey"));
+		config.setYtAPIKey(configMap.get("youtubeAPIKey"));
 		if (configMap.containsKey("tenorAPIKey"))
 		{
 			config.setTenorAPIKey(configMap.get("tenorAPIKey"));

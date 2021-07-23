@@ -1,5 +1,8 @@
 package de.mymiggi.discordbot.test.db;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -13,12 +16,15 @@ class WelcomerClientTest
 {
 
 	private static Logger logger = LoggerFactory.getLogger(WelcomerClientTest.class.getSimpleName());
-
+	private List<WelcomerSetting> settings = new ArrayList<WelcomerSetting>();
+	private int settingsBeforeTest;
+	
 	@Test
 	void test()
 	{
 		UniversalHibernateClient client = new UniversalHibernateClient();
-
+		settingsBeforeTest = client.getList(WelcomerSetting.class).size();
+		
 		logger.info("Creating CounterSetting!");
 		createCounterSetting(client);
 		createCounterSetting(client);
@@ -26,14 +32,13 @@ class WelcomerClientTest
 		System.out.println("");
 		logger.info("List CounterSettings!");
 		printCounterSettings(client);
-		// logger.info("Delete CounterSettings!");
-		// deleteTest(client);
+		logger.info("Delete CounterSettings!");
+		deleteTest(client);
 	}
-
+	
 	private void printCounterSettings(UniversalHibernateClient client)
 	{
 		List<WelcomerSetting> list = client.getList(WelcomerSetting.class);
-
 		System.out.println("");
 		System.out.println("ChannelID----------RoleID-------------ServerID-----------TimeStamp---");
 		list.forEach(setting -> {
@@ -47,30 +52,20 @@ class WelcomerClientTest
 
 	private void createCounterSetting(UniversalHibernateClient client)
 	{
-
 		WelcomerSetting setting = new WelcomerSetting();
 		setting.setChannelID(genRandomID());
 		setting.setRoleID(genRandomID());
 		setting.setServerID(genRandomID());
 		setting.setTimeStamp(System.currentTimeMillis());
-
 		client.save(setting);
+		settings.add(setting);
 	}
 
 	public void deleteTest(UniversalHibernateClient client)
 	{
-		WelcomerSetting setting = new WelcomerSetting();
-		setting.setChannelID(genRandomID());
-		setting.setRoleID(genRandomID());
-		setting.setServerID(genRandomID());
-		setting.setTimeStamp(System.currentTimeMillis());
-
-		client.save(setting);
-		client.delete(setting);
-		printCounterSettings(client);
-
-		client.deleteAll(WelcomerSetting.class);
-		printCounterSettings(client);
+		client.deleteList(settings);
+		List<WelcomerSetting> list = client.getList(WelcomerSetting.class);
+		assertTrue(list.size() == settingsBeforeTest);
 	}
 
 	private long genRandomID()

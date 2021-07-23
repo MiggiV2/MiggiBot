@@ -1,5 +1,8 @@
 package de.mymiggi.discordbot.test.db;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -13,12 +16,15 @@ class LeavingLogClientTest
 {
 
 	private static Logger logger = LoggerFactory.getLogger(LeavingLogClientTest.class.getSimpleName());
-
+	private List<LeavingLogSetting> settings = new ArrayList<LeavingLogSetting>();
+	private int settingsBeforeTest;
+	
 	@Test
 	void test()
 	{
 		UniversalHibernateClient client = new UniversalHibernateClient();
-
+		settingsBeforeTest = client.getList(LeavingLogSetting.class).size();
+		
 		logger.info("Creating CounterSetting!");
 		createCounterSetting(client);
 		createCounterSetting(client);
@@ -26,8 +32,8 @@ class LeavingLogClientTest
 		System.out.println("");
 		logger.info("List CounterSettings!");
 		printCounterSettings(client);
-		// logger.info("Delete CounterSettings!");
-		// deleteTest(client);
+		logger.info("Delete CounterSettings!");
+		deleteTest(client);
 	}
 
 	private void printCounterSettings(UniversalHibernateClient client)
@@ -51,23 +57,15 @@ class LeavingLogClientTest
 		setting.setChannelID(genRandomID());
 		setting.setServerID(genRandomID());
 		setting.setTimeStamp(System.currentTimeMillis());
-
+		settings.add(setting);
 		client.save(setting);
 	}
 
 	public void deleteTest(UniversalHibernateClient client)
 	{
-		LeavingLogSetting setting = new LeavingLogSetting();
-		setting.setChannelID(genRandomID());
-		setting.setServerID(genRandomID());
-		setting.setTimeStamp(System.currentTimeMillis());
-
-		client.save(setting);
-		client.delete(setting);
-		printCounterSettings(client);
-
-		client.deleteAll(LeavingLogSetting.class);
-		printCounterSettings(client);
+		client.deleteList(settings);
+		List<LeavingLogSetting> list = client.getList(LeavingLogSetting.class);
+		assertTrue(list.size() == settingsBeforeTest);
 	}
 
 	private long genRandomID()
