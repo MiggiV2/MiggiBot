@@ -8,6 +8,7 @@ import org.javacord.api.event.message.MessageCreateEvent;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
+import de.mymiggi.discordbot.music.fresh.entitys.FreshSong;
 import de.mymiggi.discordbot.music.youtube.actions.AbstractYTAction;
 import de.mymiggi.discordbot.music.youtube.actions.util.RegisterAllActions;
 import de.mymiggi.discordbot.music.youtube.actions.util.core.LoadCostumPlaylistAction;
@@ -52,6 +53,12 @@ public class ServerPlayer
 		new StartPlayingAction().run(queue, audioResource, instantHandler, event, playlist, queryIsPlayist);
 	}
 
+	public void runFreshPlaylist(MessageCreateEvent event, List<FreshSong> playlist, boolean queryIsPlayist)
+	{
+		initializeLocalVariable(event);
+		new StartPlayingAction().runFreshPlaylist(queue, audioResource, instantHandler, event, playlist, queryIsPlayist);
+	}
+
 	public void next(int skipTo, boolean sendEmbed)
 	{
 		new NextAction().run(skipTo, sendEmbed, queue, audioResource);
@@ -67,9 +74,14 @@ public class ServerPlayer
 		new ResumeAction().run(queue, audioResource);
 	}
 
-	public void loadCustomPlaylist(List<NewMemberPlaylistSong> playlist)
+	public void loadMemberPlaylist(List<NewMemberPlaylistSong> playlist)
 	{
 		new LoadCostumPlaylistAction().run(queue, playlist);
+	}
+
+	public void loadFreshPlaylist(List<FreshSong> playlist)
+	{
+		new LoadCostumPlaylistAction().runFreshPlaylist(queue, playlist);
 	}
 
 	public AudioTrack getLastAddedTrack() throws Exception
@@ -132,7 +144,7 @@ public class ServerPlayer
 		return queue.isLooping();
 	}
 
-	public boolean isAllowd(User user)
+	public boolean isAllowed(User user)
 	{
 		return new IsAllowedCheck().run(queue, user);
 	}

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.message.MessageCreateEvent;
 
+import de.mymiggi.discordbot.music.fresh.PlayFreshPlayListAction;
 import de.mymiggi.discordbot.music.youtube.core.actions.ClearCoreAction;
 import de.mymiggi.discordbot.music.youtube.core.actions.LoopCoreAction;
 import de.mymiggi.discordbot.music.youtube.core.actions.MoveVoiceChannelCoreAction;
@@ -71,6 +72,11 @@ public class MusicCore
 	public void playMemberPlayList(MessageCreateEvent event)
 	{
 		new PlayMPlaylistCoreAction().fromEventUser(event, serverPlayer);
+	}
+
+	public void playFreshPlayList(MessageCreateEvent event)
+	{
+		new PlayFreshPlayListAction().run(event, serverPlayer);
 	}
 
 	public void playSharedPlayList(MessageCreateEvent event, String[] context)

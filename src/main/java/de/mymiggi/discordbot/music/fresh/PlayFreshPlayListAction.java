@@ -1,75 +1,52 @@
-package de.mymiggi.discordbot.music.youtube.core.actions;
+package de.mymiggi.discordbot.music.fresh;
 
-import java.awt.Color;
 import java.util.List;
 import java.util.Map;
 
-import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.mymiggi.discordbot.main.BotMainCore;
+import de.mymiggi.discordbot.music.fresh.entitys.FreshSong;
 import de.mymiggi.discordbot.music.youtube.ServerPlayer;
 import de.mymiggi.discordbot.music.youtube.core.embeds.SendErrorEmbedAction;
-import de.mymiggi.discordbot.tools.database.util.NewMemberPlaylistSong;
 
-public class PlayMPlaylistCoreAction
+public class PlayFreshPlayListAction
 {
-	private Logger logger = LoggerFactory.getLogger(PlayMPlaylistCoreAction.class.getSimpleName());
+	private Logger logger = LoggerFactory.getLogger(PlayFreshPlayListAction.class.getSimpleName());
 
-	public void fromEventUser(MessageCreateEvent event, Map<Server, ServerPlayer> serverPlayer)
+	public void run(MessageCreateEvent event, Map<Server, ServerPlayer> serverPlayer)
 	{
 		try
 		{
-			List<NewMemberPlaylistSong> currentPlayListSongs = BotMainCore.getMemberPlayListCore().getCurrentPlayList(event.getMessageAuthor().asUser().get());
-			run(event, serverPlayer, currentPlayListSongs);
+			List<FreshSong> songs = new FreshPlayer().loadSongs();
+			if (!serverPlayer.containsKey(event.getServer().get()))
+			{
+				tryToJoinFirstTime(event, serverPlayer, songs);
+			}
+			else
+			{
+				tryToJoin(event, serverPlayer, songs);
+			}
+			tryToSendQueueEmbed(event, serverPlayer);
 		}
 		catch (Exception e)
 		{
-			logger.warn("Getting Memeberplaylist failed!", e);
+			logger.warn("Error", e);
+			new SendErrorEmbedAction().run(event, "Error! -> " + e.getClass().getName());
 		}
 	}
 
-	public void run(MessageCreateEvent event, Map<Server, ServerPlayer> serverPlayer, List<NewMemberPlaylistSong> songs)
-	{
-		if (songs.isEmpty())
-		{
-			EmbedBuilder embed = new EmbedBuilder()
-				.setTitle("Please add songs first!")
-				.setColor(Color.RED);
-			event.getChannel().sendMessage(embed);
-		}
-		else
-		{
-			try
-			{
-				if (!serverPlayer.containsKey(event.getServer().get()))
-				{
-					tryToJoinFirstTime(event, serverPlayer, songs);
-				}
-				else
-				{
-					tryToJoin(event, serverPlayer, songs);
-				}
-				tryToSendQueueEmbed(event, serverPlayer);
-			}
-			catch (Exception e)
-			{
-				logger.warn("Error", e);
-			}
-		}
-	}
-
-	private void tryToJoinFirstTime(MessageCreateEvent event, Map<Server, ServerPlayer> serverPlayer, List<NewMemberPlaylistSong> songs)
+	private void tryToJoinFirstTime(MessageCreateEvent event, Map<Server, ServerPlayer> serverPlayer, List<FreshSong> songs)
 	{
 		if (event.getMessageAuthor().getConnectedVoiceChannel().isPresent())
 		{
 			event.getServer().ifPresent(server -> {
 				ServerPlayer player = new ServerPlayer();
 				serverPlayer.put(server, player);
-				player.run(event, songs, false);
+				player.runFreshPlaylist(event, songs, false);
 			});
 			event.getChannel().type().thenAccept(successful -> {
 				event.getMessage().addReaction("👍");
@@ -83,7 +60,7 @@ public class PlayMPlaylistCoreAction
 		}
 	}
 
-	private void tryToJoin(MessageCreateEvent event, Map<Server, ServerPlayer> serverPlayer, List<NewMemberPlaylistSong> songs)
+	private void tryToJoin(MessageCreateEvent event, Map<Server, ServerPlayer> serverPlayer, List<FreshSong> songs)
 	{
 		event.getServer().ifPresent(server -> {
 			if (event.getMessageAuthor().getConnectedVoiceChannel().isPresent())
@@ -93,11 +70,11 @@ public class PlayMPlaylistCoreAction
 				{
 					if (player.getConnectedChannel() != null && player.getConnectedChannel().isConnected(BotMainCore.api.getYourself()))
 					{
-						player.loadMemberPlaylist(songs);
+						player.loadFreshPlaylist(songs);
 					}
 					else
 					{
-						player.run(event, songs, false);
+						player.runFreshPlaylist(event, songs, false);
 					}
 					event.getChannel().type().thenAccept(successful -> {
 						event.getMessage().addReaction("👍");

@@ -41,7 +41,7 @@ public class PlayCoreAction
 				else
 				{
 					ServerPlayer player = serverPlayer.get(server);
-					if (player.isAllowd(event.getMessageAuthor().asUser().get()))
+					if (player.isAllowed(event.getMessageAuthor().asUser().get()))
 					{
 						new StartPlayingAction().run(event, serverPlayer, queryResponse, true, queryIsPlayist, toPushInQueue, suppressEmbeds);
 					}

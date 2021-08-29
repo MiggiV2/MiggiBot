@@ -154,6 +154,9 @@ public class CommandHandler
 			case "move":
 				musicCore.moveToVoiceChannel(event);
 				break;
+			case "fresh":
+				musicCore.playFreshPlayList(event);
+				break;
 			case "music":
 				new MusicHelper().send(event);
 				break;

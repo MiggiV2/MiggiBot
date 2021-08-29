@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.mymiggi.discordbot.main.BotMainCore;
+import de.mymiggi.discordbot.music.fresh.entitys.FreshSong;
 import de.mymiggi.discordbot.music.youtube.actions.util.helpers.CreateServerPlayerDataObjektsAction;
 import de.mymiggi.discordbot.music.youtube.actions.util.helpers.NextTrackListener;
 import de.mymiggi.discordbot.music.youtube.handler.InstantHandler;
@@ -32,6 +33,33 @@ public class StartPlayingAction
 			audioConnection.setAudioSource(audioResource.getSource());
 			audioResource.setAudioConnection(audioConnection);
 			instantHandler.set(searchQuery, queryIsPlayist);
+			audioResource.getPlayerManager().loadItem(searchQuery, instantHandler);
+			startDeafenListener(event, queue.getVoicChannel());
+		}).exceptionally(e -> {
+			logger.error("Could not get connection to server {}", event.getServer().get(), e);
+			throw new RuntimeException(e);
+		});
+	}
+
+	public void runFreshPlaylist(Queue queue, AudioResource audioResource, InstantHandler instantHandler, MessageCreateEvent event, List<FreshSong> playlist, boolean queryIsPlayist)
+	{
+		new CreateServerPlayerDataObjektsAction().run(queue, audioResource, event);
+		new NextTrackListener().run(queue, audioResource);
+
+		queue.getVoicChannel().connect().thenAccept(audioConnection -> {
+			audioConnection.setAudioSource(audioResource.getSource());
+			String searchQuery = playlist.get(0).getSearchQuery();
+			audioResource.setAudioConnection(audioConnection);
+			instantHandler.setReplaceWithAudioSource(true);
+			instantHandler.set(searchQuery, queryIsPlayist);
+			for (int i = 0; i < playlist.size(); i++)
+			{
+				Song song = new Song();
+				FreshSong freshSong = playlist.get(i);
+				song.setSearchQurry(freshSong.getSearchQuery());
+				song.setTitel(freshSong.getTitle() + " | " + freshSong.getArtist());
+				queue.getSongs().add(song);
+			}
 			audioResource.getPlayerManager().loadItem(searchQuery, instantHandler);
 			startDeafenListener(event, queue.getVoicChannel());
 		}).exceptionally(e -> {

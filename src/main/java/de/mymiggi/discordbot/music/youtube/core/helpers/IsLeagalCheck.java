@@ -29,7 +29,7 @@ public class IsLeagalCheck
 			return false;
 		}
 		ServerPlayer player = serverPlayer.get(server);
-		if (!player.isAllowd(event.getMessageAuthor().asUser().get()))
+		if (!player.isAllowed(event.getMessageAuthor().asUser().get()))
 		{
 			logger.info("Please join the VoicChannel first! @" + event.getMessageAuthor().getName());
 			new SendErrorEmbedAction().run(event, "Please join the VoicChannel first!");

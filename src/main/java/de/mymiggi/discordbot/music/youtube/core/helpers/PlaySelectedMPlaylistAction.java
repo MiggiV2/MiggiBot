@@ -64,7 +64,7 @@ public class PlaySelectedMPlaylistAction
 			for (int i = 1; i < currentPlayListSongs.size(); i++)
 			{
 				queryResponse = new CheckURLAction().run(currentPlayListSongs.get(i).getSongURL());
-				if (player.isAllowd(event.getMessageAuthor().asUser().get()))
+				if (player.isAllowed(event.getMessageAuthor().asUser().get()))
 				{
 					new StartPlayingAction().run(event, serverPlayer, queryResponse, true, false, false, true);
 					Thread.sleep(20);
