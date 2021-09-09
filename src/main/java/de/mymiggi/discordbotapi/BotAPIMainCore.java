@@ -10,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbotapi.util.DiscordServerResponse;
@@ -26,6 +27,13 @@ public class BotAPIMainCore
 	{
 		BotMainCore.run();
 		return Response.ok().status(201).build();
+	}
+
+	@GET
+	@Path("update-commands")
+	public Response update()
+	{
+		return BotMainCore.updateShlashCommands() ? Response.ok().build() : Response.status(Status.CREATED).build();
 	}
 
 	@GET

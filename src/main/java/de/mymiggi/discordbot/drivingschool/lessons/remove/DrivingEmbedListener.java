@@ -10,7 +10,7 @@ import org.javacord.api.util.event.ListenerManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.mymiggi.discordbot.main.CommandHandler;
+import de.mymiggi.discordbot.main.commands.CommandHandler;
 import de.mymiggi.discordbot.server.r6.matchmaker.handler.GetNumberByReaction;
 import de.mymiggi.discordbot.tools.database.UniversalHibernateClient;
 import de.mymiggi.discordbot.tools.database.util.DrivingLesson;

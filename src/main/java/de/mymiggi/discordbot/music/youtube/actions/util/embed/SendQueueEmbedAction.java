@@ -15,19 +15,13 @@ public class SendQueueEmbedAction
 {
 	public void run(Queue queue, List<AbstractYTAction> actions)
 	{
-		EmbedBuilder embed = new EmbedBuilder();
-
-		String server = queue.getTextChannel().asServerTextChannel().get().getServer().getName();
-		String queueStr = new QueueStrAction().get(queue);
-
-		embed.setTitle(server + " music queue").addField("Current track " + (queue.getCurrentTrackPosition() + 1), queueStr);
-
 		if (queue.getLastQueueEmbedLink() != null)
 		{
 			MessageCoolDown.del(queue.getLastQueueEmbedLink(), queue.getTextChannel(), 2);
 		}
 		try
 		{
+			EmbedBuilder embed = getEmbed(queue);
 			queue.setLastQueueEmbedLink(queue.getTextChannel().sendMessage(embed).get().getLink().toString());
 			new StartReactionListener().run(queue, actions);
 			new AfterOneHouerEmbedAgain().run(queue.getLastQueueEmbedLink(), queue, actions);
@@ -36,5 +30,14 @@ public class SendQueueEmbedAction
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public EmbedBuilder getEmbed(Queue queue)
+	{
+		String server = queue.getTextChannel().asServerTextChannel().get().getServer().getName();
+		String queueStr = new QueueStrAction().get(queue);
+		return new EmbedBuilder()
+			.setTitle(server + " music queue")
+			.addField("Current track " + (queue.getCurrentTrackPosition() + 1), queueStr);
 	}
 }

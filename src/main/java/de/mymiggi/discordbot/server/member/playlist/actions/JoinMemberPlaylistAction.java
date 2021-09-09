@@ -5,7 +5,9 @@ import java.util.concurrent.ExecutionException;
 
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,6 +81,29 @@ public class JoinMemberPlaylistAction
 			{
 				logger.warn("Error", e);
 			}
+		}
+	}
+
+	public void run(SlashCommandCreateEvent event, MemberPlaylistManager memberPlaylistManager, LastEmbedMaps lastEmbedMaps)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		interaction.respondLater();
+		User user = interaction.getUser();
+		String searchQuery = interaction.getFirstOptionStringValue().orElse("NO_TITLE");
+		try
+		{
+			memberPlaylistManager.joinPlayList(user, searchQuery);
+			interaction.createFollowupMessageBuilder()
+				.setContent("Joined playlist " + memberPlaylistManager.getCurrentPlayListName(user))
+				.send();
+			new UpdateLastAllPlaylistEmbedAction().run(user, lastEmbedMaps, memberPlaylistManager);
+			new UpdateLastSongsEmbedAction().run(user, lastEmbedMaps, memberPlaylistManager);
+		}
+		catch (Exception e)
+		{
+			interaction.createFollowupMessageBuilder()
+				.setContent("Failed to join your playlist! Error:" + e.getClass())
+				.send();
 		}
 	}
 }

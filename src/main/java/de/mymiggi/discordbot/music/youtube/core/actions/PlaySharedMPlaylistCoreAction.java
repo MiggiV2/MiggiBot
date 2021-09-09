@@ -8,7 +8,9 @@ import java.util.concurrent.ExecutionException;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +46,30 @@ public class PlaySharedMPlaylistCoreAction
 			{
 				handelErros(event, e);
 			}
+		}
+	}
+
+	public void run(SlashCommandCreateEvent event, Map<Server, ServerPlayer> serverPlayer)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		User targetedUser = interaction.getFirstOptionUserValue().orElse(null);
+		String searchQuery = interaction.getSecondOptionStringValue().orElse("NO_PARAMENTER");
+		if (targetedUser != null)
+		{
+			try
+			{
+				List<NewMemberPlaylistSong> currentPlayListSongs = BotMainCore.getMemberPlayListCore().getSharedParty(targetedUser, searchQuery);
+				new PlayMPlaylistCoreAction().run(event, serverPlayer, currentPlayListSongs);
+				interaction.createImmediateResponder().setContent("Have fun ;D").respond();
+			}
+			catch (Exception e)
+			{
+				interaction.createImmediateResponder().setContent("Failed! error:" + e.getClass()).respond();
+			}
+		}
+		else
+		{
+			interaction.createImmediateResponder().setContent("User can't be null! (wtf)").respond();
 		}
 	}
 

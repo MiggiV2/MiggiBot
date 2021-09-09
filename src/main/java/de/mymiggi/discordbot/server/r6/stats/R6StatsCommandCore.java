@@ -1,19 +1,16 @@
 package de.mymiggi.discordbot.server.r6.stats;
 
-import java.awt.Color;
-
-import org.javacord.api.entity.channel.TextChannel;
-import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.mymiggi.discordbot.main.BotMainCore;
+import de.mymiggi.discordbot.server.r6.stats.actions.AbstractUpdateR6MessageAction;
 import de.mymiggi.discordbot.server.r6.stats.actions.UpdateR6HighlightMessage;
 import de.mymiggi.discordbot.server.r6.stats.actions.UpdateR6RankedMessage;
 import de.mymiggi.discordbot.server.r6.stats.actions.UpdateR6StatsMessage;
 import de.mymiggi.discordbot.server.r6.stats.actions.helpers.AskForPlatformAction;
-import de.mymiggi.discordbot.tools.util.MessageCoolDown;
 import de.mymiggi.r6.stats.wrapper.WrapperManager;
 
 public class R6StatsCommandCore
@@ -33,84 +30,43 @@ public class R6StatsCommandCore
 		}
 	}
 
-	public void runWeekly(MessageCreateEvent event, String[] context)
+	public void runWeekly(SlashCommandCreateEvent event)
 	{
-		if (context.length != 2)
-		{
-			sendMissingUserName(event);
-		}
-		else if (wrapperManager == null)
+		runAbstract(event, new UpdateR6HighlightMessage());
+	}
+
+	public void runRankedStats(SlashCommandCreateEvent event)
+	{
+		runAbstract(event, new UpdateR6RankedMessage());
+	}
+
+	public void runStats(SlashCommandCreateEvent event)
+	{
+		runAbstract(event, new UpdateR6StatsMessage());
+	}
+
+	private void runAbstract(SlashCommandCreateEvent event, AbstractUpdateR6MessageAction action)
+	{
+		if (wrapperManager == null)
 		{
 			sendNotInConfig(event);
 		}
 		else
 		{
-			String username = context[1];
-			TextChannel channel = event.getChannel();
-			event.addReactionsToMessage("👍");
-			new AskForPlatformAction().run(channel, username, wrapperManager, new UpdateR6HighlightMessage());
-		}
-	}
-
-	public void runRankedStats(MessageCreateEvent event, String[] context)
-	{
-		if (context.length != 2)
-		{
-			sendMissingUserName(event);
-		}
-		else if (wrapperManager == null)
-		{
-			sendNotInConfig(event);
-		}
-		else
-		{
-			String username = context[1];
-			TextChannel channel = event.getChannel();
-			event.addReactionsToMessage("👍");
-			new AskForPlatformAction().run(channel, username, wrapperManager, new UpdateR6RankedMessage());
-		}
-	}
-
-	public void runStats(MessageCreateEvent event, String[] context)
-	{
-		if (context.length != 2)
-		{
-			sendMissingUserName(event);
-		}
-		else if (wrapperManager == null)
-		{
-			sendNotInConfig(event);
-		}
-		else
-		{
-			String username = context[1];
-			TextChannel channel = event.getChannel();
-			event.addReactionsToMessage("👍");
-			new AskForPlatformAction().run(channel, username, wrapperManager, new UpdateR6StatsMessage());
-		}
-	}
-
-	private void sendNotInConfig(MessageCreateEvent event)
-	{
-		BotMainCore.api.getOwner().thenAccept(owner -> {
-			EmbedBuilder embed = new EmbedBuilder()
-				.setTitle("Sorry, but there is no Ubisoft account in my config!")
-				.setDescription(String.format("Ask %s to set one!", owner.getName()))
-				.setColor(Color.RED);
-			event.getChannel()
-				.sendMessage(embed);
-		});
-	}
-
-	private void sendMissingUserName(MessageCreateEvent event)
-	{
-		EmbedBuilder embed = new EmbedBuilder()
-			.setTitle("You have to enter your username!")
-			.setColor(Color.ORANGE);
-		event.getChannel()
-			.sendMessage(embed)
-			.thenAccept(message -> {
-				MessageCoolDown.del(message.getLink().toString(), message.getChannel(), 12);
+			SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+			String username = interaction.getFirstOptionStringValue().orElse("NO_NAME");
+			interaction.createImmediateResponder().setContent("Have fun ;D").respond();
+			interaction.getChannel().ifPresent(channel -> {
+				new AskForPlatformAction().run(channel, username, wrapperManager, action);
 			});
+		}
+	}
+
+	private void sendNotInConfig(SlashCommandCreateEvent event)
+	{
+		event.getSlashCommandInteraction()
+			.createImmediateResponder()
+			.setContent("Sorry, but there is no Ubisoft account in my config!")
+			.respond();
 	}
 }

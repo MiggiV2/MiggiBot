@@ -3,7 +3,9 @@ package de.mymiggi.discordbot.music.youtube.core.actions;
 import java.util.Map;
 
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 
 import de.mymiggi.discordbot.music.youtube.ServerPlayer;
 import de.mymiggi.discordbot.music.youtube.core.helpers.IsLeagalCheck;
@@ -18,6 +20,23 @@ public class ClearCoreAction
 				ServerPlayer player = serverPlayer.get(server);
 				player.stop();
 			});
+		}
+	}
+
+	public void run(SlashCommandCreateEvent event, Map<Server, ServerPlayer> serverPlayer)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		if (new IsLeagalCheck().run(event, serverPlayer))
+		{
+			interaction.getServer().ifPresent(server -> {
+				ServerPlayer player = serverPlayer.get(server);
+				player.stop();
+				interaction.createImmediateResponder().setContent("Cleared!").respond();
+			});
+		}
+		else
+		{
+			interaction.createImmediateResponder().setContent("You are not allowed to do this! Join the vc ;D").respond();
 		}
 	}
 }

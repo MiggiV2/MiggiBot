@@ -102,9 +102,9 @@ class WelcomerTest
 		 */
 		logger.info("testing to create json file ...");
 
-		long channelID = 368429093555011586L;
-		long serverID = 368429093555011584L;
-		long roleID = 692699643565441044L;
+		long channelID = 743800308353990706L;
+		long serverID = 743800306827001958L;
+		long roleID = 746645343432867882L;
 
 		loader.buildJsonFile(serverID, channelID, roleID, null);
 		welcomer.syncHashMap();

@@ -5,7 +5,9 @@ import java.util.concurrent.ExecutionException;
 
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.util.logging.ExceptionLogger;
 
 import de.mymiggi.discordbot.music.youtube.ServerPlayer;
@@ -42,6 +44,32 @@ public class LoopCoreAction
 				{
 					e.printStackTrace();
 				}
+			}
+		});
+	}
+
+	public void run(SlashCommandCreateEvent event, Map<Server, ServerPlayer> serverPlayer)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		interaction.getServer().ifPresent(server -> {
+			ServerPlayer player = serverPlayer.get(server);
+			String content = "";
+			if (new IsLeagalCheck().run(event, serverPlayer))
+			{
+				if (player.isLooping())
+				{
+					content = "Stopped looping the queue!";
+				}
+				else
+				{
+					content = "Looping the queue!";
+				}
+				player.loop();
+				interaction.createImmediateResponder().setContent(content).respond();
+			}
+			else
+			{
+				interaction.createImmediateResponder().setContent("You are not allowed to do this! Join the vc ;D").respond();
 			}
 		});
 	}

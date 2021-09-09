@@ -21,11 +21,18 @@ class UntisFrameWorkTest
 		System.out.println(String.format("Got %s lessons!", lessons.length));
 		assertTrue(response.getLessonInfos().length != 0);
 		assertFalse(response.getTimetable().isEmpty());
-		assertNotNull(getRandomSubject(response));
-		assertNotEquals(getRandomSubject(response), "");
-		for (int i = 0; i < 5; i++)
+		if (lessons.length == 0)
 		{
-			System.out.println("Random subject: " + getRandomSubject(response));
+			System.out.println("No subjects found!");
+		}
+		else
+		{
+			assertNotNull(getRandomSubject(response));
+			assertNotEquals(getRandomSubject(response), "");
+			for (int i = 0; i < 5; i++)
+			{
+				System.out.println("Random subject: " + getRandomSubject(response));
+			}
 		}
 		System.out.println("Test passed!");
 	}

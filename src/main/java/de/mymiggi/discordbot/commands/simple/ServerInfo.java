@@ -9,7 +9,9 @@ import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
 import org.javacord.api.entity.user.User;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,5 +47,37 @@ public class ServerInfo
 			.setColor(Color.BLUE);
 
 		channel.sendMessage(e);
+	}
+
+	public void get(SlashCommandCreateEvent event)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		interaction.getServer().ifPresent(server -> {
+			Instant timeStamp = server.getCreationTimestamp();
+			Date myDate = Date.from(timeStamp);
+
+			User owner = server.getOwner().get();
+			Icon icon = server.getIcon().get();
+
+			int userNr = server.getMemberCount();
+			int textChannels = server.getVoiceChannels().size();
+			int voicChanels = server.getTextChannels().size();
+
+			EmbedBuilder e = new EmbedBuilder()
+				.setTitle("Server info for " + server.getName())
+				.setDescription("Short infos")
+				.addField("Owner", owner.getName())
+				.addField("Created: ", myDate.toString())
+				.addField("Mebers: ", String.valueOf(userNr))
+				.addInlineField("TextChannles: ", String.valueOf(textChannels))
+				.addInlineField("VoicChannles: ", String.valueOf(voicChanels))
+				.setThumbnail(icon)
+				.setColor(Color.BLUE);
+
+			interaction.createImmediateResponder()
+				.setContent("Info:")
+				.addEmbed(e)
+				.respond();
+		});
 	}
 }

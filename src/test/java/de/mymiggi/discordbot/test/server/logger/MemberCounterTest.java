@@ -40,9 +40,9 @@ class MemberCounterTest
 		 */
 		logger.info("testing with correct IDs...");
 
-		long channelID = 803162374482952202L;
+		long channelID = 862395331363078174L;
 		long serverID = 743800306827001958L;
-		long messageID = 803176360348221460L;
+		long messageID = 885104884507086868L;
 
 		try
 		{
@@ -50,7 +50,7 @@ class MemberCounterTest
 		}
 		catch (Exception e)
 		{
-			logger.debug(e.getMessage(),e);
+			logger.debug(e.getMessage(), e);
 			logger.info("Please update the IDs, to start the test!");
 			throw new Exception("Please update the IDs, to start the test");
 		}

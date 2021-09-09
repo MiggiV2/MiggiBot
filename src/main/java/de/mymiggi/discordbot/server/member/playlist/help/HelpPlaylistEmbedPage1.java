@@ -13,11 +13,11 @@ public class HelpPlaylistEmbedPage1
 		EmbedBuilder embed = new EmbedBuilder();
 		embed.setTitle("Help for playlist")
 			.setThumbnail(BotMainCore.api.getYourself().getAvatar())
-			.addField(String.format("%screate [PlayListName]", BotMainCore.prefix), "Create a new playlist", false)
-			.addField(String.format("%sadd [SongeTitle]", BotMainCore.prefix), "Add a song to your current playlist", false)
-			.addField(String.format("%sjoin [PlaylistName]", BotMainCore.prefix), "Select one of your playlists, to join", false)
-			.addField(String.format("%ssee", BotMainCore.prefix), "See all your songs, in your current playlist", false)
-			.addField(String.format("%srm", BotMainCore.prefix, BotMainCore.prefix, BotMainCore.prefix), "Delete a song by title or track number \r\n Aliases: del, delete", false)
+			.addField("/create [PlayListName]", "Create a new playlist", false)
+			.addField("/add [SongeTitle]", "Add a song to your current playlist", false)
+			.addField("/join [PlaylistName]", "Select one of your playlists, to join", false)
+			.addField("/see", "See all your songs, in your current playlist", false)
+			.addField("/rm", "Delete a song by title or track number \r\n Aliases: del, delete", false)
 			.setColor(Color.GRAY)
 			.setFooter("<3 Miggi");
 		return embed;

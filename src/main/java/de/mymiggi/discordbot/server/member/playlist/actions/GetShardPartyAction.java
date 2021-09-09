@@ -3,7 +3,9 @@ package de.mymiggi.discordbot.server.member.playlist.actions;
 import java.util.List;
 
 import org.javacord.api.entity.user.User;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +36,25 @@ public class GetShardPartyAction
 			{
 				logger.warn("Failed", e);
 			}
+		}
+	}
+
+	public void run(SlashCommandCreateEvent event, MemberPlaylistManager memberPlaylistManager)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		User targetedUser = interaction.getFirstOptionUserValue().orElse(null);
+		String searchQuery = interaction.getSecondOptionStringValue().orElse("NO_TITLE");
+		interaction.respondLater();
+		try
+		{
+			List<NewMemberPlaylistSong> songs = memberPlaylistManager.getSongsByPlayListName(targetedUser, searchQuery);
+			logger.info("Done! Found " + songs.size() + " Songs!");
+			interaction.createFollowupMessageBuilder().setContent("Have fun ;D").send();
+		}
+		catch (Exception e)
+		{
+			logger.warn("Failed", e);
+			interaction.createFollowupMessageBuilder().setContent("Failed: Error:" + e.getClass()).send();
 		}
 	}
 }

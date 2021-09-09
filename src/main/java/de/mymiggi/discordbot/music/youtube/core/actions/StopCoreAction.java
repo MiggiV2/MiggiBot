@@ -6,7 +6,9 @@ import java.util.concurrent.ExecutionException;
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.util.logging.ExceptionLogger;
 
 import de.mymiggi.discordbot.music.youtube.ServerPlayer;
@@ -41,6 +43,31 @@ public class StopCoreAction
 				{
 					e.printStackTrace();
 				}
+			}
+		});
+	}
+
+	public void run(SlashCommandCreateEvent event, Map<Server, ServerPlayer> serverPlayer)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		interaction.getServer().ifPresent(server -> {
+			ServerPlayer player = null;
+			if (serverPlayer.containsKey(server))
+			{
+				player = serverPlayer.get(server);
+				if (new IsLeagalCheck().run(event, serverPlayer))
+				{
+					player.stop();
+					interaction.createImmediateResponder().setContent("See u later :wave:").respond();
+				}
+				else
+				{
+					interaction.createImmediateResponder().setContent("You are not allowed to do this! Join the vc ;D").respond();
+				}
+			}
+			else
+			{
+				interaction.createImmediateResponder().setContent("Soemthing went wrong! Try later again!").respond();
 			}
 		});
 	}

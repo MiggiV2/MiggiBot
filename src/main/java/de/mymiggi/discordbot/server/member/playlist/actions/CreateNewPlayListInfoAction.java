@@ -6,7 +6,9 @@ import java.util.concurrent.ExecutionException;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,6 +79,37 @@ public class CreateNewPlayListInfoAction
 		}
 		catch (InterruptedException | ExecutionException e)
 		{
+		}
+	}
+
+	public void run(SlashCommandCreateEvent event, MemberPlaylistManager memberPlaylistManager, LastEmbedMaps lastEmbedMaps)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		interaction.respondLater();
+		User user = interaction.getUser();
+		String searchQuery = interaction.getFirstOptionStringValue().orElse("NO_PLAYLIST");
+		try
+		{
+			memberPlaylistManager.createNewPlayList(searchQuery, user);
+			if (memberPlaylistManager.getCurrentPlayListName(user) != null)
+			{
+				interaction.createFollowupMessageBuilder()
+					.setContent("Current playlist " + memberPlaylistManager.getCurrentPlayListName(user))
+					.send();
+			}
+			new UpdateLastAllPlaylistEmbedAction().run(user, lastEmbedMaps, memberPlaylistManager);
+		}
+		catch (Exception e)
+		{
+			if (e.getMessage() != null && e.getMessage().equals("Playlist limit reached!"))
+			{
+				interaction.createFollowupMessageBuilder().setContent("Sorry but, you have reached the playlist limit!").send();
+			}
+			else
+			{
+				interaction.createFollowupMessageBuilder().setContent("An error has occurred! Error:" + e.getClass()).send();
+			}
+			logger.error("Failed to create!", e);
 		}
 	}
 }

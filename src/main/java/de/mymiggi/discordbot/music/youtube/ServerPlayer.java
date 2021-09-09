@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.javacord.api.entity.channel.ServerVoiceChannel;
 import org.javacord.api.entity.user.User;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
@@ -43,19 +45,49 @@ public class ServerPlayer
 
 	public void run(MessageCreateEvent event, String searchQuery, boolean queryIsPlayist)
 	{
-		initializeLocalVariable(event);
+		User user = event.getMessageAuthor().asUser().get();
+		ServerVoiceChannel vc = event.getMessageAuthor().getConnectedVoiceChannel().get();
+		initializeLocalVariable(user, vc);
+		new StartPlayingAction().run(queue, audioResource, instantHandler, event, searchQuery, queryIsPlayist);
+	}
+
+	public void run(SlashCommandCreateEvent event, String searchQuery, boolean queryIsPlayist)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		ServerVoiceChannel vc = interaction.getUser().getConnectedVoiceChannel(interaction.getServer().get()).get();
+		initializeLocalVariable(interaction.getUser(), vc);
 		new StartPlayingAction().run(queue, audioResource, instantHandler, event, searchQuery, queryIsPlayist);
 	}
 
 	public void run(MessageCreateEvent event, List<NewMemberPlaylistSong> playlist, boolean queryIsPlayist)
 	{
-		initializeLocalVariable(event);
+		User user = event.getMessageAuthor().asUser().get();
+		ServerVoiceChannel vc = event.getMessageAuthor().getConnectedVoiceChannel().get();
+		initializeLocalVariable(user, vc);
+		new StartPlayingAction().run(queue, audioResource, instantHandler, event, playlist, queryIsPlayist);
+	}
+
+	public void run(SlashCommandCreateEvent event, List<NewMemberPlaylistSong> playlist, boolean queryIsPlayist)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		ServerVoiceChannel vc = interaction.getUser().getConnectedVoiceChannel(interaction.getServer().get()).get();
+		initializeLocalVariable(interaction.getUser(), vc);
 		new StartPlayingAction().run(queue, audioResource, instantHandler, event, playlist, queryIsPlayist);
 	}
 
 	public void runFreshPlaylist(MessageCreateEvent event, List<FreshSong> playlist, boolean queryIsPlayist)
 	{
-		initializeLocalVariable(event);
+		User user = event.getMessageAuthor().asUser().get();
+		ServerVoiceChannel vc = event.getMessageAuthor().getConnectedVoiceChannel().get();
+		initializeLocalVariable(user, vc);
+		new StartPlayingAction().runFreshPlaylist(queue, audioResource, instantHandler, event, playlist, queryIsPlayist);
+	}
+
+	public void runFreshPlaylist(SlashCommandCreateEvent event, List<FreshSong> playlist, boolean queryIsPlayist)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		ServerVoiceChannel vc = interaction.getUser().getConnectedVoiceChannel(interaction.getServer().get()).get();
+		initializeLocalVariable(interaction.getUser(), vc);
 		new StartPlayingAction().runFreshPlaylist(queue, audioResource, instantHandler, event, playlist, queryIsPlayist);
 	}
 
@@ -164,13 +196,18 @@ public class ServerPlayer
 		return queue.getUserWhoStartedQueue();
 	}
 
-	private void initializeLocalVariable(MessageCreateEvent event)
+	public Queue getQueue()
+	{
+		return this.queue;
+	}
+
+	private void initializeLocalVariable(User user, ServerVoiceChannel voiceChannel)
 	{
 		queue = new Queue();
 		audioResource = new AudioResource();
 		instantHandler = new InstantHandler(queue, audioResource);
-		queue.setVoicChannel(event.getMessageAuthor().getConnectedVoiceChannel().get());
-		queue.setUserWhoStartedQueue(event.getMessageAuthor().asUser().get());
+		queue.setVoicChannel(voiceChannel);
+		queue.setUserWhoStartedQueue(user);
 		actions = new RegisterAllActions().run(queue, audioResource);
 	}
 }

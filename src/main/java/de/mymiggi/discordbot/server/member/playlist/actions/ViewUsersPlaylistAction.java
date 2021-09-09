@@ -6,7 +6,9 @@ import java.util.List;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,6 +105,59 @@ public class ViewUsersPlaylistAction
 				.setColor(Color.ORANGE)
 				.setDescription("Example:\r\n" + BotMainCore.prefix + "view @Miggi BlackAce");
 			event.getChannel().sendMessage(embed);
+		}
+	}
+
+	public void run(MemberPlaylistManager memberPlaylistManager, SlashCommandCreateEvent event, LastEmbedMaps lastEmbedMaps)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		User user = interaction.getFirstOptionUserValue().orElse(null);
+		interaction.respondLater();
+		try
+		{
+			String playListName = interaction.getSecondOptionStringValue().orElse("NO_TITLE");
+			if (isPublish(memberPlaylistManager, playListName, user))
+			{
+				List<NewMemberPlaylistSong> playListSongs = memberPlaylistManager.getSongsByPlayListName(user, playListName);
+				EmbedBuilder embed = new PlaylistSongsEmbed().run(user, playListSongs, playListName, 1);
+				ReactionEventHandler listener = new ReactionEventHandler(playListSongs, playListName);
+				Message lastEmbed = interaction.createFollowupMessageBuilder()
+					.setContent(user.getName() + "'s playlists:")
+					.addEmbed(embed)
+					.send()
+					.get();
+				String lastEmbedURL = lastEmbed.getLink().toString();
+				boolean needFastSkip = playListSongs.size() > 30;
+				boolean needSkip = playListSongs.size() > 10;
+				if (needFastSkip)
+				{
+					lastEmbed.addReaction("⏫");
+				}
+				if (needSkip)
+				{
+					lastEmbed.addReaction("🔼");
+				}
+				lastEmbed.addReaction("❌");
+				if (needSkip)
+				{
+					lastEmbed.addReaction("🔽");
+				}
+				if (needFastSkip)
+				{
+					lastEmbed.addReaction("⏬");
+				}
+				lastEmbed.addReactionAddListener(reactionEvent -> listener.run(reactionEvent));
+				lastEmbedMaps.getLastSongsEmbedMap().put(user, lastEmbedURL);
+			}
+			else
+			{
+				interaction.createFollowupMessageBuilder().setContent("Playlist not found! -> " + playListName).send();
+			}
+		}
+		catch (AssertionError | Exception e)
+		{
+			logger.error("Critical error!", e);
+			interaction.createFollowupMessageBuilder().setContent("Failed -> Error:" + e.getClass()).send();
 		}
 	}
 

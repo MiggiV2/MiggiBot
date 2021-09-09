@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.mymiggi.discordbot.main.BotMainCore;
-import de.mymiggi.discordbot.server.logs.leaving.LeavingLogCore;
 import de.mymiggi.discordbot.server.logs.leaving.LeavingLogChannelLoader;
+import de.mymiggi.discordbot.server.logs.leaving.LeavingLogCore;
 
 class LeavingLogTest
 {
@@ -97,8 +97,8 @@ class LeavingLogTest
 		 */
 		logger.info("testing to create json file ...");
 
-		String channelID = "368429093555011586";
-		String serverID = "368429093555011584";
+		String channelID = "743800308353990706";
+		String serverID = "743800306827001958";
 
 		loader.buildJsonFile(serverID, channelID);
 		leavingLogger.syncHashMap();

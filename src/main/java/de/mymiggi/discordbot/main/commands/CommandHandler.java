@@ -1,4 +1,4 @@
-package de.mymiggi.discordbot.main;
+package de.mymiggi.discordbot.main.commands;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -22,18 +22,16 @@ import de.mymiggi.discordbot.corona.rki.country.RKICountry;
 import de.mymiggi.discordbot.corona.rki.province.RKIProvince;
 import de.mymiggi.discordbot.corona.rki.province.automessage.NewCovidChannelConfig;
 import de.mymiggi.discordbot.drivingschool.lessons.DrivingLessonsCore;
+import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbot.music.youtube.MusicCore;
 import de.mymiggi.discordbot.music.youtube.MusicHelper;
 import de.mymiggi.discordbot.server.counter.NewCounterCreator;
 import de.mymiggi.discordbot.server.logs.leaving.NewLeavingLog;
 import de.mymiggi.discordbot.server.logs.welcomer.NewWelcomerCreater;
 import de.mymiggi.discordbot.server.member.playlist.MemberPlayListCore;
-import de.mymiggi.discordbot.server.member.playlist.help.MemberPlayListHelper;
-import de.mymiggi.discordbot.server.r6.R6CommandHelper;
 import de.mymiggi.discordbot.server.r6.addplayer.StartMessageListener;
 import de.mymiggi.discordbot.server.r6.map.RandomR6MapCore;
 import de.mymiggi.discordbot.server.r6.matchmaker.DiscordMatchMakerCore;
-import de.mymiggi.discordbot.server.r6.stats.R6StatsCommandCore;
 import de.mymiggi.discordbot.server.reaction.role.newconfig.StartListening;
 import de.mymiggi.discordbot.server.tenor.gif.PostRandomGitAction;
 import de.mymiggi.discordbot.server.untis.UntisCommandHelper;
@@ -43,14 +41,13 @@ import de.mymiggi.discordbot.tools.util.MessageCoolDown;
 
 public class CommandHandler
 {
-	private MusicCore musicCore = new MusicCore();
+	public static final MusicCore MUSIC_CORE = new MusicCore();
 	private MemberPlayListCore memberPlayListCore = BotMainCore.getMemberPlayListCore();
 	private NewCovidChannelConfig newCovidChannelConfiger = new NewCovidChannelConfig();
 	private RandomR6MapCore randomR6MapCore = new RandomR6MapCore();
 	private RKICountry rkiCountry = new RKICountry();
 	private RKIProvince rkiProvince = new RKIProvince();
 	private CoronaAPI coronaAPI = new CoronaAPI();
-	private R6StatsCommandCore r6StatsCommandCore = new R6StatsCommandCore();
 	private final String prefix = BotMainCore.prefix;
 	private DiscordApi api;
 	private ArrayList<Command> list = new ArrayList<Command>();
@@ -86,17 +83,6 @@ public class CommandHandler
 			case "PowerOff":
 				new PowerOff().run(event, api);
 				break;
-			// case "Rest":
-			// new RestMessages().sendVisiCard(event);
-			// break;
-			// case "read":
-			// disabelEmbed(event);
-			// new RestMessages().read(event);
-			// break;
-			// case "send":
-			// disabelEmbed(event);
-			// new RestMessages().send(event, context);
-			// break;
 			case "lookup":
 				new IPInfoCommand().send(event, context);
 				break;
@@ -107,56 +93,56 @@ public class CommandHandler
 				new ServerInfo().get(event);
 				break;
 			case "play":
-				musicCore.play(event, context, false, false, false);
+				MUSIC_CORE.play(event, context, false, false, false);
 				break;
 			case "stop":
-				musicCore.stop(event);
+				MUSIC_CORE.stop(event);
 				break;
 			case "skip":
-				musicCore.skip(event, context);
+				MUSIC_CORE.skip(event, context);
 				break;
 			case "s":
-				musicCore.skip(event, context);
+				MUSIC_CORE.skip(event, context);
 				break;
 			case "pause":
-				musicCore.pause(event);
+				MUSIC_CORE.pause(event);
 				break;
 			case "p":
-				musicCore.pause(event);
+				MUSIC_CORE.pause(event);
 				break;
 			case "resume":
-				musicCore.resume(event);
+				MUSIC_CORE.resume(event);
 				break;
 			case "queue":
-				musicCore.queue(event, false);
+				MUSIC_CORE.queue(event, false);
 				break;
 			case "shuffle":
-				musicCore.shuffle(event);
+				MUSIC_CORE.shuffle(event);
 				break;
 			case "playList":
-				musicCore.play(event, context, true, false, false);
+				MUSIC_CORE.play(event, context, true, false, false);
 				break;
 			case "push":
-				musicCore.play(event, context, false, true, false);
+				MUSIC_CORE.play(event, context, false, true, false);
 				break;
 			case "clear":
-				musicCore.clear(event);
+				MUSIC_CORE.clear(event);
 				break;
 			case "loop":
-				musicCore.loop(event);
+				MUSIC_CORE.loop(event);
 				break;
 			case "party":
-				musicCore.playMemberPlayList(event);
+				MUSIC_CORE.playMemberPlayList(event);
 				break;
 			case "sharedParty":
-				musicCore.playSharedPlayList(event, context);
+				MUSIC_CORE.playSharedPlayList(event, context);
 				break;
 			case "move":
-				musicCore.moveToVoiceChannel(event);
+				MUSIC_CORE.moveToVoiceChannel(event);
 				break;
-			case "fresh":
-				musicCore.playFreshPlayList(event);
-				break;
+			// case "fresh":
+			// musicCore.playFreshPlayList(event);
+			// break;
 			case "music":
 				new MusicHelper().send(event);
 				break;
@@ -236,7 +222,7 @@ public class CommandHandler
 				memberPlayListCore.viewForeignPlaylist(event, context);
 				break;
 			case "helpPlaylist":
-				new MemberPlayListHelper().run(event);
+				deprecatedEmbed(event);
 				break;
 			case "newPlayer":
 				new StartMessageListener().run(event);
@@ -269,7 +255,7 @@ public class CommandHandler
 				randomR6MapCore.add(event);
 				break;
 			case "R6Help":
-				new R6CommandHelper().run(event);
+				deprecatedEmbed(event);
 				break;
 			case "gif":
 				new PostRandomGitAction().run(event, context);
@@ -287,13 +273,13 @@ public class CommandHandler
 				new BitCoinCommand().run(event);
 				break;
 			case "r6Stats":
-				r6StatsCommandCore.runStats(event, context);
+				deprecatedEmbed(event);
 				break;
 			case "r6Highlight":
-				r6StatsCommandCore.runWeekly(event, context);
+				deprecatedEmbed(event);
 				break;
 			case "r6Rank":
-				r6StatsCommandCore.runRankedStats(event, context);
+				deprecatedEmbed(event);
 				break;
 		}
 		for (Command temp : list)
@@ -318,16 +304,14 @@ public class CommandHandler
 		System.out.println("Prefix " + prefix + " can be found in Class CommandHandler");
 	}
 
-	public void disabelEmbed(MessageCreateEvent event)
+	public void deprecatedEmbed(MessageCreateEvent event)
 	{
-		EmbedBuilder embed = new EmbedBuilder();
-		embed.setTitle("Sorry, but this command is disabled!")
+		EmbedBuilder embed = new EmbedBuilder()
+			.setTitle("Sorry, but this command deprecated! Use the SlashCommand instead!")
 			.setColor(Color.RED);
 		event.getChannel().sendMessage(embed).thenAccept(embedMessage -> {
-			MessageCoolDown.del(embedMessage.getLink().toString(),
-				event.getChannel(), 12);
-			MessageCoolDown.del(event.getMessage().getLink().toString(),
-				event.getChannel(), 12);
+			MessageCoolDown.del(embedMessage.getLink().toString(), event.getChannel(), 12);
+			MessageCoolDown.del(event.getMessage().getLink().toString(), event.getChannel(), 12);
 		});
 	}
 }

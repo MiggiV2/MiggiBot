@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,67 @@ public class IPInfoCommand
 {
 	private long lastID;
 	private Logger logger = LoggerFactory.getLogger(IPInfoCommand.class.getSimpleName());
+
+	// SlashCommandCreateEvent
+
+	public void run(SlashCommandCreateEvent event)
+	{
+		logger.info(event.getSlashCommandInteraction().getUser().getName() + " used command!");
+		String param = event.getSlashCommandInteraction().getFirstOptionStringValue().orElse("8.8.8.8");
+		String host = param;
+		if (param.split(".").length != 4)
+		{
+			try
+			{
+				if (param.startsWith("https") | param.startsWith("http"))
+				{
+					host = new URL(param).getHost();
+				}
+				InetAddress domain = InetAddress.getByName(host);
+				host = domain.getHostAddress();
+			}
+			catch (MalformedURLException | UnknownHostException e)
+			{
+				logger.warn("Failed", e);
+			}
+		}
+		IPInfo ipInfo = IPInfo.builder().setToken("708ce44b2ea38c").build();
+		try
+		{
+			IPResponse response = ipInfo.lookupIP(host);
+			System.out.println("host:" + host);
+			event.getSlashCommandInteraction()
+				.createImmediateResponder()
+				.setContent("done!")
+				.addEmbed(getInfoEmbed(response))
+				.respond();
+		}
+		catch (Exception e)
+		{
+			logger.warn("API ERROR", e);
+			event.getSlashCommandInteraction()
+				.createImmediateResponder()
+				.setContent("failed!")
+				.addEmbed(getErrordEmbed(e))
+				.respond();
+		}
+	}
+
+	private EmbedBuilder getErrordEmbed(Exception e)
+	{
+		return new EmbedBuilder()
+			.setTitle("LookUp Error")
+			.setDescription(String.format("Error: %s; Message: %s", e.getClass(), e.getMessage()))
+			.setColor(Color.ORANGE);
+	}
+
+	private EmbedBuilder getInfoEmbed(IPResponse ipResponse)
+	{
+		return new EmbedBuilder()
+			.setTitle("LookUP " + ipResponse.getIp())
+			.setDescription(String.format("Country: %s \n Region: %s \n City: %s %s \n Organization : %s", ipResponse.getCountryCode(), ipResponse.getRegion(), ipResponse.getPostal(), ipResponse.getCity(), ipResponse.getOrg()))
+			.setColor(Color.ORANGE);
+	}
 
 	public boolean send(MessageCreateEvent event, String[] context)
 	{
@@ -46,11 +108,10 @@ public class IPInfoCommand
 			}
 		}
 		sendStartEmbed(event, context);
-		boolean failed = true;
 		if (context.length != 2)
 		{
 			sendFailedEmbed(event);
-			return failed;
+			return false;
 		}
 		IPInfo ipInfo = IPInfo.builder().setToken("708ce44b2ea38c").build();
 		try
@@ -63,8 +124,7 @@ public class IPInfoCommand
 			logger.warn("API ERROR", ex);
 			sendFailedEmbed(event);
 		}
-		failed = false;
-		return failed;
+		return true;
 	}
 
 	private void sendStartEmbed(MessageCreateEvent event, String[] context)
@@ -88,7 +148,7 @@ public class IPInfoCommand
 	{
 		EmbedBuilder m = new EmbedBuilder()
 			.setTitle("LookUp Help")
-			.setDescription("Example: ++lookup 216.58.215.227")
+			.setDescription(String.format("Example: %slookup 8.8.8.8", BotMainCore.prefix))
 			.setColor(Color.ORANGE);
 		try
 		{

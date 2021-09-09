@@ -4,28 +4,29 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.javacord.api.entity.message.Message;
-import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 
 public class MemberPlayListHelper
 {
 	private int currentPage = 1;
 	private PlaylistHelpReactionHandler handler = new PlaylistHelpReactionHandler(currentPage);
 
-	public void run(MessageCreateEvent event)
+	public void run(SlashCommandCreateEvent event)
 	{
-		try
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		interaction.getChannel().ifPresent(channel -> {
+			channel.sendMessage(new HelpPlaylistEmbedPage1().run())
+				.thenAccept(message -> {
+					message.addReactions("⬅️", "❌", "➡️");
+					message.addReactionAddListener(reactionEvent -> handler.run(reactionEvent)).removeAfter(60, TimeUnit.MINUTES);
+					deleteEmbedAfterOneHour(message);
+					interaction.createImmediateResponder().setContent("Hope this can help ;D").respond();
+				});
+		});
+		if (!interaction.getChannel().isPresent())
 		{
-			Message message = event.getChannel().sendMessage(new HelpPlaylistEmbedPage1().run()).get();
-			message.addReaction("⬅️");
-			message.addReaction("❌");
-			message.addReaction("➡️");
-			message.addReactionAddListener(reactionEvent -> handler.run(reactionEvent)).removeAfter(60, TimeUnit.MINUTES);
-
-			deleteEmbedAfterOneHour(message);
-		}
-		catch (InterruptedException | ExecutionException e)
-		{
-			e.printStackTrace();
+			interaction.createImmediateResponder().setContent("Something went wrong! I can't find the channel to post my message?!").respond();
 		}
 	}
 

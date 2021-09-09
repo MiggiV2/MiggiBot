@@ -1,24 +1,32 @@
 package de.mymiggi.discordbot.commands.simple;
 
+import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import de.mymiggi.discordbot.main.BotMainCore;
 
 public class CommandHelp
 {
+	public void send(TextChannel channel, boolean showAdmin)
+	{
+		EmbedBuilder embed = showAdmin ? adminEmbed() : normalUserEmbed();
+		channel.sendMessage(embed);
+	}
+
+	public void send(SlashCommandCreateEvent event, boolean showAdmin)
+	{
+		EmbedBuilder embed = showAdmin ? adminEmbed() : normalUserEmbed();
+		event.getInteraction().createImmediateResponder()
+			.setContent("Your help :)")
+			.addEmbed(embed)
+			.respond();
+	}
+
 	public void send(MessageCreateEvent event, String[] context)
 	{
-		EmbedBuilder embed;
-		if (context.length == 2 && context[1].equals("admin"))
-		{
-			embed = adminEmbed();
-		}
-		else
-		{
-			embed = normalUserEmbed();
-		}
-		event.getChannel().sendMessage(embed);
+		send(event.getChannel(), context.length == 2 && context[1].equalsIgnoreCase("admin"));
 	}
 
 	private EmbedBuilder normalUserEmbed()
@@ -44,7 +52,6 @@ public class CommandHelp
 	private EmbedBuilder adminEmbed()
 	{
 		EmbedBuilder embed = new EmbedBuilder();
-
 		embed.setTitle(BotMainCore.api.getYourself().getName() + " command help")
 			.setImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-1YS-wzk_ePlUQNjxS3D6TT0qNh01UT6Y-w&usqp=CAU")
 			.setDescription("Some useful commands for admins")
@@ -52,7 +59,6 @@ public class CommandHelp
 			.addField(BotMainCore.prefix + "welcome AUTO-ROLE-ID", "Set the current channel  as welcome channel for new users")
 			.addField(BotMainCore.prefix + "counter", "Set the current channel as counter, to see how many useres your server has")
 			.addField(BotMainCore.prefix + "leavingLog", "Set the current channel as leaving Log, to see how left the server");
-
 		return embed;
 	}
 }

@@ -4,7 +4,9 @@ import java.util.Map;
 
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.util.logging.ExceptionLogger;
 
 import de.mymiggi.discordbot.music.youtube.ServerPlayer;
@@ -58,5 +60,55 @@ public class StartPlayingAction
 			}
 		}
 		event.addReactionsToMessage(Emojis.ARROW_FORWARD.getEmoji()).exceptionally(ExceptionLogger.get());
+	}
+
+	public void run(SlashCommandCreateEvent event, Map<Server, ServerPlayer> serverPlayer, QueryResponse queryResponse, boolean toAdd, boolean queryIsPlayist, boolean toPushInQueue, boolean suppressEmbeds)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		interaction.getChannel().ifPresent(channel -> {
+			interaction.getServer().ifPresent(server -> {
+				boolean isPlayist = queryIsPlayist;
+				String EmbedLink = "";
+				if (!suppressEmbeds)
+				{
+					EmbedLink = new SendSearchingEmbed().run(channel);
+				}
+				ServerPlayer player = serverPlayer.get(server);
+				String messageBeginning;
+				if (toAdd)
+				{
+					messageBeginning = "Added ";
+					player.addToQueue(queryResponse.getUrl(), isPlayist, toPushInQueue);
+				}
+				else
+				{
+					messageBeginning = "Playing ";
+					player.run(event, queryResponse.getUrl(), isPlayist);
+				}
+				if (queryResponse.getUrl().contains("youtube.com/playlist?list="))
+				{
+					isPlayist = true;
+				}
+				if (isPlayist)
+				{
+					new SendQueueEmbedCoreAction().run(event, true, serverPlayer);
+				}
+				if (!suppressEmbeds)
+				{
+					if (queryResponse.isWasURL())
+					{
+						new SendPlayingEmbed().run(player, channel, messageBeginning, toAdd, EmbedLink, isPlayist);
+					}
+					else
+					{
+						new SendPlayingMessage().run(player, channel, messageBeginning, toAdd, EmbedLink, isPlayist);
+					}
+				}
+				interaction.createImmediateResponder()
+					.setContent("Have fun ;D")
+					.respond();
+			});
+		});
+		new DMCheckAction().run(interaction);
 	}
 }

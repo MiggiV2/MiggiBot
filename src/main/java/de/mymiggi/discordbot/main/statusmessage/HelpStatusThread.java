@@ -3,8 +3,6 @@ package de.mymiggi.discordbot.main.statusmessage;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.activity.ActivityType;
 
-import de.mymiggi.discordbot.main.BotMainCore;
-
 public class HelpStatusThread
 {
 	public static void run(DiscordApi api)
@@ -19,9 +17,9 @@ public class HelpStatusThread
 				{
 					try
 					{
-						api.updateActivity(ActivityType.LISTENING, BotMainCore.prefix + "help");
+						api.updateActivity(ActivityType.LISTENING, "/help");
 						Thread.sleep(8000);
-						api.updateActivity(ActivityType.PLAYING, BotMainCore.prefix + "music | music help");
+						api.updateActivity(ActivityType.PLAYING, "/music | music help");
 						Thread.sleep(8000);
 						api.updateActivity(ActivityType.LISTENING, api.getServers().size() + " server");
 						Thread.sleep(8000);

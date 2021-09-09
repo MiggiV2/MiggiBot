@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import de.mymiggi.discordbot.commands.constructor.SimpleCommandCore;
 import de.mymiggi.discordbot.corona.rki.province.automessage.CovidAutoMessage;
 import de.mymiggi.discordbot.drivingschool.lessons.reminder.ReminderThread;
+import de.mymiggi.discordbot.main.commands.CommandHandler;
+import de.mymiggi.discordbot.main.commands.SlashCommandHandler;
+import de.mymiggi.discordbot.main.commands.SlashCommandRegisterAction;
 import de.mymiggi.discordbot.main.corehelper.ConfigBuilder;
 import de.mymiggi.discordbot.main.statusmessage.HelpStatusThread;
 import de.mymiggi.discordbot.server.counter.MemberCounterCore;
@@ -38,6 +41,7 @@ public class BotMainCore
 	private static TimeTableReminderCore timeTableReminderCore = new TimeTableReminderCore();
 	private static ReminderThread drivingReminder = new ReminderThread();
 	private static boolean isRunning = false;
+	private static boolean updatedCommands = false;
 
 	public static void run()
 	{
@@ -45,7 +49,9 @@ public class BotMainCore
 		{
 			SimpleCommandCore simpleCommandCore = new SimpleCommandCore();
 			simpleCommandCore.run();
+
 			new CommandHandler(api).setCommandList(simpleCommandCore.getCommandList());
+			new SlashCommandHandler().run(api);
 
 			welcomer.run();
 			counter.run();
@@ -64,13 +70,15 @@ public class BotMainCore
 		isRunning = true;
 	}
 
-	private static void printLoadedListSize()
+	public static boolean updateShlashCommands()
 	{
-		logger.info("Counter loaded " + counter.getListSize() + " items!");
-		logger.info("Welcomer loaded " + welcomer.getListSize() + " items!");
-		logger.info("LeavingLogger loaded " + leavingLogger.getListSize() + " items!");
-		logger.info("ReactionRole loaded " + reactionRole.getListSize() + " items!");
-		logger.info("MemberPlaylist loaded " + memberPlayListCore.loadedPlaylists() + " playlists!");
+		if (!updatedCommands)
+		{
+			new SlashCommandRegisterAction().run(api);
+			updatedCommands = true;
+			return true;
+		}
+		return false;
 	}
 
 	public static DiscordApi getTestAPI()
@@ -111,5 +119,14 @@ public class BotMainCore
 	public static TimeTableReminderCore getTimeTableReminderCore()
 	{
 		return timeTableReminderCore;
+	}
+
+	private static void printLoadedListSize()
+	{
+		logger.info("Counter loaded " + counter.getListSize() + " items!");
+		logger.info("Welcomer loaded " + welcomer.getListSize() + " items!");
+		logger.info("LeavingLogger loaded " + leavingLogger.getListSize() + " items!");
+		logger.info("ReactionRole loaded " + reactionRole.getListSize() + " items!");
+		logger.info("MemberPlaylist loaded " + memberPlayListCore.loadedPlaylists() + " playlists!");
 	}
 }

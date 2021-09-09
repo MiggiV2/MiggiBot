@@ -4,7 +4,9 @@ import java.util.concurrent.ExecutionException;
 
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +61,43 @@ public class DeleteSongFromPlayListAction
 			{
 				logger.warn("Error", e);
 			}
+		}
+		new UpdateLastSongsEmbedAction().run(user, lastEmbedMaps, memberPlaylistManager);
+	}
+
+	public void run(SlashCommandCreateEvent event, MemberPlaylistManager memberPlaylistManager, LastEmbedMaps lastEmbedMaps)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		interaction.respondLater();
+		User user = interaction.getUser();
+		String searchQuery = interaction.getFirstOptionStringValue().orElse("NO_TITLE");
+		try
+		{
+			int index = Integer.parseInt(searchQuery);
+			memberPlaylistManager.delSongFormCurrentPlayListByIndex(index - 1, user);
+		}
+		catch (Exception e)
+		{
+			try
+			{
+				memberPlaylistManager.delSongFormCurrentPlayListByName(searchQuery, user);
+			}
+			catch (Exception e1)
+			{
+				logger.error("Error", e1);
+			}
+		}
+		if (memberPlaylistManager.getCurrentPlayListName(user) != null)
+		{
+			interaction.createFollowupMessageBuilder()
+				.setContent("Current playlist " + memberPlaylistManager.getCurrentPlayListName(user))
+				.send();
+		}
+		else
+		{
+			interaction.createFollowupMessageBuilder()
+				.setContent("Successfully deleted!")
+				.send();
 		}
 		new UpdateLastSongsEmbedAction().run(user, lastEmbedMaps, memberPlaylistManager);
 	}

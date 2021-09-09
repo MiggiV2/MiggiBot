@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.javacord.api.entity.server.Server;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
 
 import de.mymiggi.discordbot.music.fresh.PlayFreshPlayListAction;
@@ -29,12 +30,27 @@ public class MusicCore
 		new PlayCoreAction().run(event, context, serverPlayer, queryIsPlayist, toPushInQueue, suppressEmbeds);
 	}
 
+	public void play(SlashCommandCreateEvent event, boolean queryIsPlayist, boolean toPushInQueue, boolean suppressEmbeds)
+	{
+		new PlayCoreAction().run(event, serverPlayer, queryIsPlayist, toPushInQueue, suppressEmbeds);
+	}
+
 	public void skip(MessageCreateEvent event, String[] context)
 	{
 		new SkipCoreAction().run(event, context, serverPlayer);
 	}
 
+	public void skip(SlashCommandCreateEvent event)
+	{
+		new SkipCoreAction().run(event, serverPlayer);
+	}
+
 	public void resume(MessageCreateEvent event)
+	{
+		new ResumeCoreAction().run(event, serverPlayer);
+	}
+
+	public void resume(SlashCommandCreateEvent event)
 	{
 		new ResumeCoreAction().run(event, serverPlayer);
 	}
@@ -44,7 +60,17 @@ public class MusicCore
 		new PauseCoreAction().run(event, serverPlayer);
 	}
 
+	public void pause(SlashCommandCreateEvent event)
+	{
+		new PauseCoreAction().run(event, serverPlayer);
+	}
+
 	public void stop(MessageCreateEvent event)
+	{
+		new StopCoreAction().run(event, serverPlayer);
+	}
+
+	public void stop(SlashCommandCreateEvent event)
 	{
 		new StopCoreAction().run(event, serverPlayer);
 	}
@@ -54,7 +80,17 @@ public class MusicCore
 		new SendQueueEmbedCoreAction().run(event, noCheckNeeded, serverPlayer);
 	}
 
+	public void queue(SlashCommandCreateEvent event, boolean noCheckNeeded)
+	{
+		new SendQueueEmbedCoreAction().run(event, noCheckNeeded, serverPlayer);
+	}
+
 	public void shuffle(MessageCreateEvent event)
+	{
+		new ShuffleCoreAction().run(event, serverPlayer);
+	}
+
+	public void shuffle(SlashCommandCreateEvent event)
 	{
 		new ShuffleCoreAction().run(event, serverPlayer);
 	}
@@ -64,7 +100,17 @@ public class MusicCore
 		new ClearCoreAction().run(event, serverPlayer);
 	}
 
+	public void clear(SlashCommandCreateEvent event)
+	{
+		new ClearCoreAction().run(event, serverPlayer);
+	}
+
 	public void loop(MessageCreateEvent event)
+	{
+		new LoopCoreAction().run(event, serverPlayer);
+	}
+
+	public void loop(SlashCommandCreateEvent event)
 	{
 		new LoopCoreAction().run(event, serverPlayer);
 	}
@@ -74,7 +120,12 @@ public class MusicCore
 		new PlayMPlaylistCoreAction().fromEventUser(event, serverPlayer);
 	}
 
-	public void playFreshPlayList(MessageCreateEvent event)
+	public void playMemberPlayList(SlashCommandCreateEvent event)
+	{
+		new PlayMPlaylistCoreAction().fromEventUser(event, serverPlayer);
+	}
+
+	public void playFreshPlayList(SlashCommandCreateEvent event)
 	{
 		new PlayFreshPlayListAction().run(event, serverPlayer);
 	}
@@ -84,7 +135,17 @@ public class MusicCore
 		new PlaySharedMPlaylistCoreAction().run(event, serverPlayer, context);
 	}
 
+	public void playSharedPlayList(SlashCommandCreateEvent event)
+	{
+		new PlaySharedMPlaylistCoreAction().run(event, serverPlayer);
+	}
+
 	public void moveToVoiceChannel(MessageCreateEvent event)
+	{
+		new MoveVoiceChannelCoreAction().run(event, serverPlayer);
+	}
+
+	public void moveToVoiceChannel(SlashCommandCreateEvent event)
 	{
 		new MoveVoiceChannelCoreAction().run(event, serverPlayer);
 	}

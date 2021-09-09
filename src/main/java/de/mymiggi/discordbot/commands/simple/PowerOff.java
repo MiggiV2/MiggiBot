@@ -7,13 +7,38 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PowerOff
 {
-	private Logger logger = LoggerFactory.getLogger("PowerOff");
+	private Logger logger = LoggerFactory.getLogger(PowerOff.class.getSimpleName());
+
+	public void run(SlashCommandCreateEvent event, DiscordApi api)
+	{
+		if (event.getInteraction().getUser().getId() == api.getOwnerId())
+		{
+			event.getInteraction()
+				.createImmediateResponder()
+				.setContent("See you!")
+				.respond();
+			shutDown();
+		}
+		else
+		{
+			EmbedBuilder embed403 = new EmbedBuilder()
+				.setTitle("What?")
+				.setDescription("You are not my owner!" + System.lineSeparator() + "What are you doing there? :octagonal_sign:")
+				.setThumbnail("https://pngimg.com/uploads/denied/denied_PNG2.png");
+			event.getInteraction()
+				.createImmediateResponder()
+				.setContent("Wait a minute???")
+				.addEmbed(embed403)
+				.respond();
+		}
+	}
 
 	public void run(MessageCreateEvent event, DiscordApi api)
 	{
@@ -55,5 +80,28 @@ public class PowerOff
 			logger.info(event.getMessageAuthor().getDisplayName() + " tryed to shutdown our Bot!");
 			event.getChannel().sendMessage(embed403);
 		}
+	}
+
+	private void shutDown()
+	{
+		Thread thread = new Thread()
+		{
+			@Override
+			public void run()
+			{
+				try
+				{
+					Thread.sleep(2000);
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+				logger.info("System power off! Via Discord");
+				System.exit(0);
+			}
+
+		};
+		thread.run();
 	}
 }

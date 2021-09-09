@@ -2,7 +2,9 @@ package de.mymiggi.discordbot.server.member.playlist.actions;
 
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +40,37 @@ public class DeleteEntirePlaylistAction
 		catch (Exception e)
 		{
 			logger.error("Error", e);
+		}
+	}
+
+	public void run(SlashCommandCreateEvent event, MemberPlaylistManager memberPlaylistManager, LastEmbedMaps lastEmbedMaps)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		interaction.respondLater();
+		User user = interaction.getUser();
+		try
+		{
+			memberPlaylistManager.deleteEntirePlayList(user);
+			if (memberPlaylistManager.getCurrentPlayListName(user) != null)
+			{
+				interaction.createFollowupMessageBuilder()
+					.setContent("Current playlist " + memberPlaylistManager.getCurrentPlayListName(user))
+					.send();
+			}
+			else
+			{
+				interaction.createFollowupMessageBuilder()
+					.setContent("Successfully deleted!")
+					.send();
+			}
+			new UpdateLastAllPlaylistEmbedAction().run(user, lastEmbedMaps, memberPlaylistManager);
+		}
+		catch (Exception e)
+		{
+			logger.error("Error", e);
+			interaction.createFollowupMessageBuilder()
+				.setContent("Failed! Error:" + e.getClass())
+				.send();
 		}
 	}
 }
