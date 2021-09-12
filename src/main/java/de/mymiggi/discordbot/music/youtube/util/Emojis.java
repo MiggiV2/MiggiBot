@@ -74,12 +74,28 @@ public enum Emojis
 			return "⏸";
 		}
 	},
+	THUMPS_UP
+	{
+		@Override
+		public String getEmoji()
+		{
+			return "👍";
+		}
+	},
 	LOOP_BUTTON
 	{
 		@Override
 		public String getEmoji()
 		{
 			return "🔄";
+		}
+	},
+	GREEN_CHECK
+	{
+		@Override
+		public String getEmoji()
+		{
+			return "✅";
 		}
 	};
 	public abstract String getEmoji();

@@ -9,7 +9,9 @@ import java.util.List;
 
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +40,23 @@ public class RKIProvince
 
 		MessageCoolDown.del(event.getMessageLink().toString(), event.getChannel(), 5);
 		logger.info(event.getMessageAuthor().getName() + " used command!");
+
+	}
+
+	public void send(SlashCommandCreateEvent event)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		interaction.respondLater();
+		if (data == null || System.currentTimeMillis() - lastUpdateStamp > 12 * 60 * 60 * 1000)
+		{
+			lastUpdateStamp = System.currentTimeMillis();
+			syncData();
+		}
+		interaction.createFollowupMessageBuilder()
+			.addEmbed(buildEmbed())
+			.addEmbed(highestEmbed())
+			.send();
+		logger.info(interaction.getUser() + " used command!");
 
 	}
 

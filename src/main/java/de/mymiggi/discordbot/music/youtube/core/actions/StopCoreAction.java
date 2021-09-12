@@ -15,6 +15,7 @@ import de.mymiggi.discordbot.music.youtube.ServerPlayer;
 import de.mymiggi.discordbot.music.youtube.core.helpers.IsLeagalCheck;
 import de.mymiggi.discordbot.music.youtube.util.Emojis;
 import de.mymiggi.discordbot.tools.util.MessageCoolDown;
+import de.mymiggi.discordbot.tools.util.RemoveResponseAction;
 
 public class StopCoreAction
 {
@@ -58,16 +59,25 @@ public class StopCoreAction
 				if (new IsLeagalCheck().run(event, serverPlayer))
 				{
 					player.stop();
-					interaction.createImmediateResponder().setContent("See u later :wave:").respond();
+					interaction.createImmediateResponder()
+						.setContent("See u later :wave:")
+						.respond()
+						.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 				}
 				else
 				{
-					interaction.createImmediateResponder().setContent("You are not allowed to do this! Join the vc ;D").respond();
+					interaction.createImmediateResponder()
+						.setContent("You are not allowed to do this! Join the vc ;D")
+						.respond()
+						.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 				}
 			}
 			else
 			{
-				interaction.createImmediateResponder().setContent("Soemthing went wrong! Try later again!").respond();
+				interaction.createImmediateResponder()
+					.setContent("Something went wrong! Try later again!")
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 			}
 		});
 	}

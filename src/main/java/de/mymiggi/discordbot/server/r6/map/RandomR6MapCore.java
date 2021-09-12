@@ -2,7 +2,7 @@ package de.mymiggi.discordbot.server.r6.map;
 
 import java.util.List;
 
-import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 
 import de.mymiggi.discordbot.server.r6.map.create.NewR6MapCore;
 import de.mymiggi.discordbot.server.r6.map.get.GetRandomMapAction;
@@ -15,22 +15,22 @@ public class RandomR6MapCore
 {
 	private List<R6Map> mapList = new UniversalHibernateClient().getList(R6Map.class);
 
-	public void get(MessageCreateEvent event, String[] context)
+	public void get(SlashCommandCreateEvent event)
 	{
-		new GetRandomMapAction().run(event.getMessage(), event.getChannel(), context, mapList);
+		new GetRandomMapAction().run(event, mapList);
 	}
 
-	public void list(MessageCreateEvent event)
+	public void list(SlashCommandCreateEvent event)
 	{
 		new ListR6MapsAction().run(mapList, event);
 	}
 
-	public void update(MessageCreateEvent event, String[] context)
+	public void update(SlashCommandCreateEvent event)
 	{
-		new UpdateR6MapAction().run(event, context, mapList);
+		new UpdateR6MapAction().run(event, mapList);
 	}
 
-	public void add(MessageCreateEvent event)
+	public void add(SlashCommandCreateEvent event)
 	{
 		new NewR6MapCore().run(event);
 	}

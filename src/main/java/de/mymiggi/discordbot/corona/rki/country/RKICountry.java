@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +44,7 @@ public class RKICountry
 			if (!e.getMessage().equals("Country not found in map"))
 			{
 				e.printStackTrace();
-				event.getChannel().sendMessage(errorEmbed());
+				event.getChannel().sendMessage(errorEmbed(e));
 			}
 		}
 		try
@@ -71,11 +73,36 @@ public class RKICountry
 			}
 			else
 			{
-				event.getChannel().sendMessage(errorEmbed());
+				event.getChannel().sendMessage(errorEmbed(e));
 				e.printStackTrace();
 			}
 		}
 		logger.info(event.getMessageAuthor().getName() + " used command!");
+	}
+
+	public void send(SlashCommandCreateEvent event)
+	{
+		rki.update();
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		interaction.respondLater();
+		String country = interaction.getFirstOptionStringValue().orElse("NO_LANDKREIS");
+		try
+		{
+			Response querryResponse = getCountryByName(country);
+			interaction.createFollowupMessageBuilder().addEmbed(buildCountryEmbed(querryResponse)).send();
+		}
+		catch (Exception e)
+		{
+			if (!e.getMessage().equals("Country not found in map"))
+			{
+				logger.error("Failed to send Embed!", e);
+				interaction.createFollowupMessageBuilder().addEmbed(errorEmbed(e)).send();
+			}
+			else
+			{
+				handleMoreResults(interaction, country, e);
+			}
+		}
 	}
 
 	public void sendHelpEmbed(MessageCreateEvent event)
@@ -114,6 +141,35 @@ public class RKICountry
 	public void updateData()
 	{
 		rki.update();
+	}
+
+	private void handleMoreResults(SlashCommandInteraction interaction, String country, Exception e)
+	{
+		try
+		{
+			List<Response> results = rki.moreResults(country);
+			if (results.size() == 1)
+			{
+				Response querryResponse = getCountryByName(results.get(0).getGEN());
+				interaction.createFollowupMessageBuilder().addEmbed(buildCountryEmbed(querryResponse)).send();
+			}
+			else
+			{
+				interaction.createFollowupMessageBuilder().addEmbed(moreResultsEmbed(results)).send();
+			}
+		}
+		catch (Exception e2)
+		{
+			if (e2.getMessage().equals("Country not found in map"))
+			{
+				interaction.createFollowupMessageBuilder().addEmbed(notFoundEmbed(country)).send();
+			}
+			else
+			{
+				logger.error("Failed to send Embed!", e);
+				interaction.createFollowupMessageBuilder().addEmbed(errorEmbed(e)).send();
+			}
+		}
 	}
 
 	private String buildQuerry(String[] context)
@@ -181,15 +237,12 @@ public class RKICountry
 		return embed;
 	}
 
-	private EmbedBuilder errorEmbed()
+	private EmbedBuilder errorEmbed(Exception e)
 	{
-		EmbedBuilder embed = new EmbedBuilder();
-
-		embed.setTitle("Internal Error!")
+		return new EmbedBuilder()
+			.setTitle("Error:" + e.getClass())
 			.setDescription("Something went wrong! I'm sorry")
 			.setColor(Color.RED);
-
-		return embed;
 	}
 
 	private EmbedBuilder moreResultsEmbed(List<Response> responseList)

@@ -18,6 +18,7 @@ import de.mymiggi.discordbot.music.youtube.core.helpers.DMCheckAction;
 import de.mymiggi.discordbot.music.youtube.core.helpers.IsLeagalCheck;
 import de.mymiggi.discordbot.music.youtube.util.Emojis;
 import de.mymiggi.discordbot.tools.util.MessageCoolDown;
+import de.mymiggi.discordbot.tools.util.RemoveResponseAction;
 
 public class ResumeCoreAction
 {
@@ -80,16 +81,25 @@ public class ResumeCoreAction
 						content = "I'm sorry. We can't find our song";
 						logger.error(content, e1);
 					}
-					interaction.createImmediateResponder().setContent(content).respond();
+					interaction.createImmediateResponder()
+						.setContent(content)
+						.respond()
+						.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 				}
 				else
 				{
-					interaction.createImmediateResponder().setContent("You are not allowed to do this! Join the vc ;D").respond();
+					interaction.createImmediateResponder()
+						.setContent("You are not allowed to do this! Join the vc ;D")
+						.respond()
+						.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 				}
 			}
 			else
 			{
-				interaction.createImmediateResponder().setContent("Soemthing went wrong! Try later again!").respond();
+				interaction.createImmediateResponder()
+					.setContent("Something went wrong! Try later again!")
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 			}
 		});
 		new DMCheckAction().run(interaction);

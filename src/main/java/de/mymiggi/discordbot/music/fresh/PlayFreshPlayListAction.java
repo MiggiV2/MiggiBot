@@ -13,6 +13,8 @@ import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbot.music.fresh.entitys.FreshSong;
 import de.mymiggi.discordbot.music.youtube.ServerPlayer;
 import de.mymiggi.discordbot.music.youtube.core.helpers.DMCheckAction;
+import de.mymiggi.discordbot.music.youtube.util.Emojis;
+import de.mymiggi.discordbot.tools.util.RemoveResponseAction;
 
 public class PlayFreshPlayListAction
 {
@@ -57,15 +59,17 @@ public class PlayFreshPlayListAction
 				player.runFreshPlaylist(event, songs, false);
 				interaction.getChannel().ifPresent(channel -> channel.type());
 				interaction.createImmediateResponder()
-					.setContent("Have fun ;D")
-					.respond();
+					.setContent("Fresh " + Emojis.THUMPS_UP.getEmoji())
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 			}
 			else
 			{
 				logger.info("User is not in VoicChannel @" + interaction.getUser());
 				interaction.createImmediateResponder()
 					.setContent("Please join a VoicChannel first!")
-					.respond();
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 			}
 		});
 	}
@@ -89,15 +93,17 @@ public class PlayFreshPlayListAction
 					}
 					interaction.getChannel().ifPresent(channel -> channel.type());
 					interaction.createImmediateResponder()
-						.setContent("Have fun ;D")
-						.respond();
+						.setContent("Fresh " + Emojis.THUMPS_UP.getEmoji())
+						.respond()
+						.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 				}
 				else
 				{
 					logger.info("In a different voice channel! @" + interaction.getUser().getName());
 					interaction.createImmediateResponder()
 						.setContent("I'm sorry, but im used in a different voice channel!")
-						.respond();
+						.respond()
+						.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 				}
 			}
 			else
@@ -105,7 +111,8 @@ public class PlayFreshPlayListAction
 				logger.info("User is not in VoicChannel @" + interaction.getUser().getName());
 				interaction.createImmediateResponder()
 					.setContent("Please join a VoicChannel first!")
-					.respond();
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 			}
 		});
 	}

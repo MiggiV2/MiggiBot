@@ -40,6 +40,14 @@ public class SlashCommandRegisterAction
 					.setRequired(true)
 					.build()),
 			new SlashCommandBuilder()
+				.setName("covid")
+				.setDescription("Get covid19 for germany!")
+				.addOption(new SlashCommandOptionBuilder()
+					.setName("LANDKREIS")
+					.setDescription("Do you need infos for your country (landkreis)?")
+					.setType(SlashCommandOptionType.STRING)
+					.build()),
+			new SlashCommandBuilder()
 				.setName("purge")
 				.setDescription("Cleans your channel")
 				.addOption(new SlashCommandOptionBuilder()
@@ -170,7 +178,7 @@ public class SlashCommandRegisterAction
 				.setDescription("List all your playlists"),
 			new SlashCommandBuilder()
 				.setName("publish")
-				.setDescription("Publish your current playlist. Every user see & play 		 published playlists"),
+				.setDescription("Publish your current playlist. Every user see & play published playlists"),
 			new SlashCommandBuilder()
 				.setName("hide")
 				.setDescription("Hide your playlist, from other users [Default]"),
@@ -187,13 +195,15 @@ public class SlashCommandRegisterAction
 				.setName("view")
 				.setDescription("See your own playlist"),
 			new SlashCommandBuilder()
+				.setName("ping")
+				.setDescription("Get ping stats for the bot. Discord, Database, HTTP-Requests"),
+			new SlashCommandBuilder()
 				.setName("r6-stats")
 				.setDescription("Show your Rainbow Six account infos! -> GENERAL, CASUAL, UNRANKED & RANKED")
 				.addOption(new SlashCommandOptionBuilder()
 					.setName("PLAYER")
 					.setDescription("Enter the name of rainbow six player!")
 					.setType(SlashCommandOptionType.STRING)
-					.setRequired(true)
 					.build()),
 			new SlashCommandBuilder()
 				.setName("r6-highlight")
@@ -202,7 +212,6 @@ public class SlashCommandRegisterAction
 					.setName("PLAYER")
 					.setDescription("Enter the name of rainbow six player!")
 					.setType(SlashCommandOptionType.STRING)
-					.setRequired(true)
 					.build()),
 			new SlashCommandBuilder()
 				.setName("r6-rank")
@@ -211,6 +220,32 @@ public class SlashCommandRegisterAction
 					.setName("PLAYER")
 					.setDescription("Enter the name of rainbow six player!")
 					.setType(SlashCommandOptionType.STRING)
+					.build()),
+			new SlashCommandBuilder()
+				.setName("r6-link")
+				.setDescription("Link your discord account with your rainbow six name!")
+				.addOption(new SlashCommandOptionBuilder()
+					.setName("NAME")
+					.setDescription("Your your ingame name!")
+					.setType(SlashCommandOptionType.STRING)
+					.setRequired(true)
+					.build())
+				.addOption(new SlashCommandOptionBuilder()
+					.setName("Platform")
+					.setDescription("Pls enter your platfrom!")
+					.setType(SlashCommandOptionType.INTEGER)
+					.addChoice("PC", 0)
+					.addChoice("XBOX", 1)
+					.addChoice("PLAYSTATION", 2)
+					.setRequired(true)
+					.build())
+				.addOption(new SlashCommandOptionBuilder()
+					.setName("Ranked-Region")
+					.setDescription("Your your ranked region!")
+					.setType(SlashCommandOptionType.INTEGER)
+					.addChoice("Europa (EMEA)", 0)
+					.addChoice("America (NCSA)", 1)
+					.addChoice("Asia (APAC)", 2)
 					.setRequired(true)
 					.build()),
 			new SlashCommandBuilder()
@@ -218,7 +253,48 @@ public class SlashCommandRegisterAction
 				.setDescription("Show help for my Rainbow Six commands!"),
 			new SlashCommandBuilder()
 				.setName("help-playlist")
-				.setDescription("Show help for my playlist commands!")))
+				.setDescription("Show help for my playlist commands!"),
+			new SlashCommandBuilder()
+				.setName("r6-map")
+				.setDescription("Get a random Rainbow Six map!")
+				.addOption(new SlashCommandOptionBuilder()
+					.setName("MAP-POOL")
+					.setDescription("Do you want RANKED/UNRANKED maps or also CASUAL maps?")
+					.setType(SlashCommandOptionType.INTEGER)
+					.addChoice("RANKED/UNRANKED", 0)
+					.addChoice("CASUAL", 1)
+					.build()),
+			new SlashCommandBuilder()
+				.setName("r6-map-show")
+				.setDescription("Show all my Rainbow Six maps!"),
+			new SlashCommandBuilder()
+				.setName("r6-map-add")
+				.setDescription("Add a new Rainbox Six Siege map [BotOwner only]")
+				.addOption(new SlashCommandOptionBuilder()
+					.setName("NAME")
+					.setDescription("Name of the new map")
+					.setType(SlashCommandOptionType.STRING)
+					.build())
+				.addOption(new SlashCommandOptionBuilder()
+					.setName("IMAGE")
+					.setDescription("ImageURL of the new map")
+					.setType(SlashCommandOptionType.STRING)
+					.build())
+				.addOption(new SlashCommandOptionBuilder()
+					.setName("RANKED-STATUS")
+					.setDescription("Name of the new map")
+					.setType(SlashCommandOptionType.INTEGER)
+					.addChoice("RANKED/UNRANKED", 0)
+					.addChoice("CASUAL", 1)
+					.build()),
+			new SlashCommandBuilder()
+				.setName("r6-map-update")
+				.setDescription("Update a new Rainbox Six Siege map [BotOwner only]")
+				.addOption(new SlashCommandOptionBuilder()
+					.setName("NAME")
+					.setDescription("Name of the map")
+					.setType(SlashCommandOptionType.STRING)
+					.build())))
 			.join();
 	}
 }

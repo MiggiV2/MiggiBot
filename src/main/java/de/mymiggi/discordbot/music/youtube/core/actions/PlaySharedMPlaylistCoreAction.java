@@ -18,6 +18,7 @@ import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbot.music.youtube.ServerPlayer;
 import de.mymiggi.discordbot.tools.database.util.NewMemberPlaylistSong;
 import de.mymiggi.discordbot.tools.util.MessageCoolDown;
+import de.mymiggi.discordbot.tools.util.RemoveResponseAction;
 
 public class PlaySharedMPlaylistCoreAction
 {
@@ -60,11 +61,17 @@ public class PlaySharedMPlaylistCoreAction
 			{
 				List<NewMemberPlaylistSong> currentPlayListSongs = BotMainCore.getMemberPlayListCore().getSharedParty(targetedUser, searchQuery);
 				new PlayMPlaylistCoreAction().run(event, serverPlayer, currentPlayListSongs);
-				interaction.createImmediateResponder().setContent("Have fun ;D").respond();
+				interaction.createImmediateResponder()
+					.setContent("Have fun ;D")
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 			}
 			catch (Exception e)
 			{
-				interaction.createImmediateResponder().setContent("Failed! error:" + e.getClass()).respond();
+				interaction.createImmediateResponder()
+					.setContent("Failed! error:" + e.getClass())
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 			}
 		}
 		else

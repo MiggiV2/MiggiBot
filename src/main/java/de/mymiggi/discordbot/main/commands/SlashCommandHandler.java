@@ -1,12 +1,14 @@
 package de.mymiggi.discordbot.main.commands;
 
 import org.javacord.api.DiscordApi;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.mymiggi.discordbot.commands.simple.CommandHelp;
 import de.mymiggi.discordbot.commands.simple.IPInfoCommand;
+import de.mymiggi.discordbot.commands.simple.PingTest;
 import de.mymiggi.discordbot.commands.simple.PowerOff;
 import de.mymiggi.discordbot.commands.simple.Purger;
 import de.mymiggi.discordbot.commands.simple.ServerInfo;
@@ -16,12 +18,14 @@ import de.mymiggi.discordbot.music.youtube.MusicHelper;
 import de.mymiggi.discordbot.server.member.playlist.MemberPlayListCore;
 import de.mymiggi.discordbot.server.member.playlist.help.MemberPlayListHelper;
 import de.mymiggi.discordbot.server.r6.R6CommandHelper;
+import de.mymiggi.discordbot.server.r6.map.RandomR6MapCore;
 import de.mymiggi.discordbot.server.r6.stats.R6StatsCommandCore;
 
 public class SlashCommandHandler
 {
 	private static Logger logger = LoggerFactory.getLogger(SlashCommandHandler.class.getSimpleName());
 	private R6StatsCommandCore r6StatsCommandCore = new R6StatsCommandCore();
+	private RandomR6MapCore r6MapCore = CommandHandler.R6_MAP_CORE;
 
 	public void run(DiscordApi api)
 	{
@@ -45,13 +49,18 @@ public class SlashCommandHandler
 				case "r6-help":
 					new R6CommandHelper().run(event);
 					break;
+				case "ping":
+					new PingTest().run(event);
+					break;
 				case "off":
 					new PowerOff().run(event, api);
 					break;
 				case "purge":
 					new Purger().clear(event);
 					break;
-
+				case "covid":
+					runCovidCommand(event);
+					break;
 				case "lookup":
 					new IPInfoCommand().run(event);
 					break;
@@ -148,7 +157,34 @@ public class SlashCommandHandler
 				case "r6-rank":
 					r6StatsCommandCore.runRankedStats(event);
 					break;
+				case "r6-link":
+					r6StatsCommandCore.linkDiscordUser(event);
+					break;
+				case "r6-map":
+					r6MapCore.get(event);
+					break;
+				case "r6-map-add":
+					r6MapCore.add(event);
+					break;
+				case "r6-map-update":
+					r6MapCore.update(event);
+					break;
+				case "r6-map-show":
+					r6MapCore.list(event);
+					break;
 			}
 		});
+	}
+
+	private void runCovidCommand(SlashCommandCreateEvent event)
+	{
+		if (!event.getSlashCommandInteraction().getFirstOption().isPresent())
+		{
+			CommandHandler.RKI_PROVINCE.send(event);
+		}
+		else
+		{
+			CommandHandler.RKI_COUNTRY.send(event);
+		}
 	}
 }

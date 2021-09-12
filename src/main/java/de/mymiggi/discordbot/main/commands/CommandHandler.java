@@ -44,9 +44,9 @@ public class CommandHandler
 	public static final MusicCore MUSIC_CORE = new MusicCore();
 	private MemberPlayListCore memberPlayListCore = BotMainCore.getMemberPlayListCore();
 	private NewCovidChannelConfig newCovidChannelConfiger = new NewCovidChannelConfig();
-	private RandomR6MapCore randomR6MapCore = new RandomR6MapCore();
-	private RKICountry rkiCountry = new RKICountry();
-	private RKIProvince rkiProvince = new RKIProvince();
+	public static final RandomR6MapCore R6_MAP_CORE = new RandomR6MapCore();
+	public static final RKICountry RKI_COUNTRY = new RKICountry();
+	public static final RKIProvince RKI_PROVINCE = new RKIProvince();
 	private CoronaAPI coronaAPI = new CoronaAPI();
 	private final String prefix = BotMainCore.prefix;
 	private DiscordApi api;
@@ -156,13 +156,13 @@ public class CommandHandler
 				coronaAPI.get(event);
 				break;
 			case "covid19":
-				rkiProvince.send(event);
+				RKI_PROVINCE.send(event);
 				break;
 			case "country":
-				rkiCountry.send(event, context);
+				RKI_COUNTRY.send(event, context);
 				break;
 			case "countryHelp":
-				rkiCountry.sendHelpEmbed(event);
+				RKI_COUNTRY.sendHelpEmbed(event);
 				break;
 			case "covidChannel":
 				newCovidChannelConfiger.run(event, context);
@@ -243,16 +243,16 @@ public class CommandHandler
 				new DiscordMatchMakerCore().run(event);
 				break;
 			case "randomMap":
-				randomR6MapCore.get(event, context);
+				deprecatedEmbed(event);
 				break;
 			case "listMaps":
-				randomR6MapCore.list(event);
+				deprecatedEmbed(event);
 				break;
 			case "updateMaps":
-				randomR6MapCore.update(event, context);
+				deprecatedEmbed(event);
 				break;
 			case "addNewMap":
-				randomR6MapCore.add(event);
+				deprecatedEmbed(event);
 				break;
 			case "R6Help":
 				deprecatedEmbed(event);

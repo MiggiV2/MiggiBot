@@ -1,16 +1,18 @@
 package de.mymiggi.discordbot.server.r6.map.get;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.Message;
+import org.javacord.api.entity.message.component.ActionRow;
+import org.javacord.api.entity.message.component.Button;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.mymiggi.discordbot.tools.database.UniversalHibernateClient;
+import de.mymiggi.discordbot.music.youtube.util.Emojis;
 import de.mymiggi.discordbot.tools.database.util.R6Map;
 
 public class GetRandomMapAction
@@ -42,26 +44,31 @@ public class GetRandomMapAction
 		});
 	}
 
-	@Deprecated
-	public void initializeDB(MessageCreateEvent event)
+	public void run(SlashCommandCreateEvent event, List<R6Map> mapList)
 	{
-		if (event.getMessageAuthor().isBotOwner())
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		EmbedBuilder embed;
+		boolean isRanedMap;
+		if (interaction.getFirstOptionIntValue().orElse(0) == 0)
 		{
-			List<R6Map> mapList = new ArrayList<R6Map>();
-			for (Maps temp : Maps.values())
-			{
-				R6Map newMap = new R6Map();
-				newMap.setImageURL(temp.getImageURL());
-				newMap.setName(temp.getAliase());
-				newMap.setRankedPool(temp.isRankedPool());
-				mapList.add(newMap);
-			}
-			new UniversalHibernateClient().saveList(mapList);
-			logger.info("Saved!");
+			embed = new MapEmbed(mapList).buildRandomRankedMap();
+			isRanedMap = true;
 		}
 		else
 		{
-			logger.info("Not Bot owner! " + event.getMessageAuthor().getName());
+			embed = new MapEmbed(mapList).buildRandomMap();
+			isRanedMap = false;
 		}
+		interaction.createImmediateResponder()
+			.addEmbed(embed)
+			.addComponents(
+				ActionRow.of(
+					Button.success("update", "New Map", Emojis.LOOP_BUTTON.getEmoji()),
+					Button.danger("remove", "Remove", Emojis.WAVE.getEmoji())))
+			.respond();
+		event.getApi().addMessageComponentCreateListener(eventButton -> {
+			new RandomMapReactionHandler().run(eventButton, isRanedMap, mapEmbed, mapList);
+		});
+		logger.info("@" + interaction.getUser().getName() + " used my Command!");
 	}
 }

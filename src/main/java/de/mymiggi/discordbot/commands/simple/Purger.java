@@ -16,6 +16,7 @@ import org.javacord.api.entity.user.User;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.interaction.SlashCommandInteraction;
+import org.javacord.api.interaction.callback.InteractionOriginalResponseUpdater;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,9 +106,9 @@ public class Purger
 				.setTitle("Succesfuly purged!")
 				.setDescription("Purged messages: " + unPinedMessages.size());
 			interaction.createImmediateResponder()
-				.setContent("Successful!")
 				.addEmbed(respose)
-				.respond();
+				.respond()
+				.thenAccept(message -> removeResponse(message));
 		});
 	}
 
@@ -118,9 +119,29 @@ public class Purger
 			.setDescription("Maybe u can aske the owner?")
 			.setColor(Color.red);
 		interaction.createImmediateResponder()
-			.setContent("You are not an admin!")
 			.addEmbed(respose)
 			.respond();
+	}
+
+	private void removeResponse(InteractionOriginalResponseUpdater message)
+	{
+		Thread thread = new Thread()
+		{
+			@Override
+			public void run()
+			{
+				try
+				{
+					Thread.sleep(3500);
+					message.delete();
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		};
+		thread.start();
 	}
 
 	private void sendSuccesfulEmbed(TextChannel channel, int purgedSize)

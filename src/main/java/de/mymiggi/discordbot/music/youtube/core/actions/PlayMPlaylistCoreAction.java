@@ -16,6 +16,7 @@ import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbot.music.youtube.ServerPlayer;
 import de.mymiggi.discordbot.music.youtube.core.embeds.SendErrorEmbedAction;
 import de.mymiggi.discordbot.tools.database.util.NewMemberPlaylistSong;
+import de.mymiggi.discordbot.tools.util.RemoveResponseAction;
 
 public class PlayMPlaylistCoreAction
 {
@@ -87,13 +88,15 @@ public class PlayMPlaylistCoreAction
 		{
 			interaction.createImmediateResponder()
 				.setContent("Please add songs first!")
-				.respond();
+				.respond()
+				.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 		}
 		else if (!interaction.getServer().isPresent())
 		{
 			interaction.createImmediateResponder()
 				.setContent("You can't user this command in DMs!")
-				.respond();
+				.respond()
+				.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 		}
 		else
 		{
@@ -151,14 +154,16 @@ public class PlayMPlaylistCoreAction
 				interaction.getChannel().ifPresent(channel -> channel.type());
 				interaction.createImmediateResponder()
 					.setContent("Have fun ;D")
-					.respond();
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 			}
 			else
 			{
 				logger.info("User is not in VoicChannel @" + interaction.getUser());
 				interaction.createImmediateResponder()
 					.setContent("Please join a VoicChannel first!")
-					.respond();
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 			}
 		});
 	}
@@ -219,14 +224,16 @@ public class PlayMPlaylistCoreAction
 					interaction.getChannel().ifPresent(channel -> channel.type());
 					interaction.createImmediateResponder()
 						.setContent("Have fun ;D")
-						.respond();
+						.respond()
+						.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 				}
 				else
 				{
 					logger.info("In a different voice channel! @" + interaction.getUser().getName());
 					interaction.createImmediateResponder()
 						.setContent("I'm sorry, but im used in a different voice channel!")
-						.respond();
+						.respond()
+						.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 				}
 			}
 			else
@@ -234,7 +241,8 @@ public class PlayMPlaylistCoreAction
 				logger.info("User is not in VoicChannel @" + interaction.getUser().getName());
 				interaction.createImmediateResponder()
 					.setContent("Please join a VoicChannel first!")
-					.respond();
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 			}
 		});
 	}

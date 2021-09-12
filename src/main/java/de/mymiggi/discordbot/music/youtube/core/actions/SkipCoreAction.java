@@ -13,6 +13,7 @@ import de.mymiggi.discordbot.music.youtube.core.helpers.DMCheckAction;
 import de.mymiggi.discordbot.music.youtube.core.helpers.IsLeagalCheck;
 import de.mymiggi.discordbot.music.youtube.util.Emojis;
 import de.mymiggi.discordbot.tools.util.MessageCoolDown;
+import de.mymiggi.discordbot.tools.util.RemoveResponseAction;
 
 public class SkipCoreAction
 {
@@ -43,11 +44,17 @@ public class SkipCoreAction
 			{
 				ServerPlayer player = serverPlayer.get(server);
 				player.next(skipTo, true);
-				interaction.createImmediateResponder().setContent("No problem!").respond();
+				interaction.createImmediateResponder()
+					.setContent("No problem!")
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 			}
 			else
 			{
-				interaction.createImmediateResponder().setContent("You are not allowed to do this! Join the vc ;D").respond();
+				interaction.createImmediateResponder()
+					.setContent("You are not allowed to do this! Join the vc ;D")
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 			}
 		});
 		new DMCheckAction().run(interaction);

@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.entity.user.User;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.interaction.SlashCommandInteraction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +16,7 @@ import de.mymiggi.discordbot.server.r6.map.update.embeds.NotAuthorisedToUpdateR6
 import de.mymiggi.discordbot.server.r6.matchmaker.NumberEmoji;
 import de.mymiggi.discordbot.tools.database.util.R6Map;
 import de.mymiggi.discordbot.tools.util.MessageCoolDown;
+import de.mymiggi.discordbot.tools.util.RemoveResponseAction;
 
 public class UpdateR6MapAction
 {
@@ -63,6 +66,54 @@ public class UpdateR6MapAction
 				.thenAccept(messageEmbed -> {
 					MessageCoolDown.del(messageEmbed.getLink().toString(), messageEmbed.getChannel(), 12);
 				});
+		}
+	}
+
+	public void run(SlashCommandCreateEvent event, List<R6Map> mapList)
+	{
+		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
+		if (interaction.getUser().isBotOwner())
+		{
+			try
+			{
+				String mapName = interaction.getFirstOptionStringValue().orElse("NO_NAME");
+				R6Map map = new GetMapByNameAction().run(mapList, mapName);
+				ChangeSelectionHandler changeSelectionHandler = new ChangeSelectionHandler(map.getName());
+				interaction.getChannel()
+					.ifPresent(channel -> {
+						channel.sendMessage(new ChangeSelectionEmbed().build(map))
+							.thenAccept(embed -> {
+								embed.addReactions(
+									NumberEmoji.ONE.getEmoji(),
+									NumberEmoji.TOW.getEmoji(),
+									NumberEmoji.THREE.getEmoji(),
+									"✅", "❌", "👋");
+								embed.addReactionAddListener(reactionevent -> {
+									changeSelectionHandler.run(reactionevent, map);
+								});
+							});
+					});
+				interaction.createImmediateResponder()
+					.setContent("Read to update?")
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
+			}
+			catch (Exception e)
+			{
+				logger.error("Failed to find map!", e);
+				interaction.createImmediateResponder()
+					.setContent("Error: " + e.getClass())
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 60));
+			}
+		}
+		else
+		{
+			EmbedBuilder embed = new NotAuthorisedToUpdateR6MapEmbed().build(interaction.getUser());
+			interaction.createImmediateResponder()
+				.addEmbed(embed)
+				.respond()
+				.thenAccept(message -> new RemoveResponseAction().run(message, 30));
 		}
 	}
 }

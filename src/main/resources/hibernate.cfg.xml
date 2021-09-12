@@ -36,6 +36,7 @@
         <mapping class="de.mymiggi.discordbot.tools.database.util.R6Map"/>
         <mapping class="de.mymiggi.discordbot.tools.database.util.MemberPlayListInfoNew"/>
         <mapping class="de.mymiggi.discordbot.tools.database.util.DrivingLesson"/>
+        <mapping class="de.mymiggi.discordbot.tools.database.util.R6AndDiscordUser"/>
 
     </session-factory>
 </hibernate-configuration>

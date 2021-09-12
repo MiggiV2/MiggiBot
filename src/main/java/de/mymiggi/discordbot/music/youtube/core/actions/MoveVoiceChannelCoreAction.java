@@ -9,6 +9,7 @@ import org.javacord.api.interaction.SlashCommandInteraction;
 
 import de.mymiggi.discordbot.music.youtube.ServerPlayer;
 import de.mymiggi.discordbot.music.youtube.core.embeds.SendErrorEmbedAction;
+import de.mymiggi.discordbot.tools.util.RemoveResponseAction;
 
 public class MoveVoiceChannelCoreAction
 {
@@ -62,23 +63,33 @@ public class MoveVoiceChannelCoreAction
 					{
 						interaction.getUser().getConnectedVoiceChannel(server).ifPresent(vc -> {
 							player.moveToVoiceChannel(vc);
-							interaction.createImmediateResponder().setContent("Have fun ;D").respond();
+							interaction.createImmediateResponder()
+								.setContent("Hallo? Where am I? Anyway, nice be be here!")
+								.respond()
+								.thenAccept(message -> new RemoveResponseAction().run(message, 10));
 						});
 						if (!interaction.getUser().getConnectedVoiceChannel(server).isPresent())
 						{
-							interaction.createImmediateResponder().setContent("Please join a voice channel first!").respond();
+							interaction.createImmediateResponder()
+								.setContent("Please join a voice channel first!")
+								.respond()
+								.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 						}
 					}
 					else
 					{
 						interaction.createImmediateResponder()
 							.setContent(String.format("Only %s can move me to your channel!", player.getUserWhoStartedQueue().getName()))
-							.respond();
+							.respond()
+							.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 					}
 				}
 				else
 				{
-					interaction.createImmediateResponder().setContent("Please add songs first!").respond();
+					interaction.createImmediateResponder()
+						.setContent("Please add songs first!")
+						.respond()
+						.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 				}
 			}
 		});

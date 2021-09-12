@@ -19,7 +19,6 @@ public class CommandHelp
 	{
 		EmbedBuilder embed = showAdmin ? adminEmbed() : normalUserEmbed();
 		event.getInteraction().createImmediateResponder()
-			.setContent("Your help :)")
 			.addEmbed(embed)
 			.respond();
 	}
@@ -31,21 +30,18 @@ public class CommandHelp
 
 	private EmbedBuilder normalUserEmbed()
 	{
-		String prefix = BotMainCore.prefix;
+		String prefix = "/";
 		EmbedBuilder embed = new EmbedBuilder()
 			.setTitle(BotMainCore.api.getYourself().getName() + " command help")
 			.setImage("https://cdn.pixabay.com/photo/2017/11/10/16/45/faq-2936798_1280.png")
 			.setDescription("Some useful commands")
 			.addField(prefix + "lookup", "Lookup IPs and Domains")
-			.addField(prefix + "info", "Shows infos about this server")
+			.addField(prefix + "server", "Shows infos about this server")
 			.addField(prefix + "music", "Shows music help")
-			.addField(prefix + "corona", "Shows stats about Corona. Data from Johns Hopkins CSSE")
-			.addField(prefix + "covid19", "Shows stats about Corona. Data from Robert Koch Institute [RECOMMEND]")
-			.addField(prefix + "gif", "After gif enter a search term and get surprised!")
-			.addField(prefix + "countryHelp", "Shows country help. Covid stats for your country")
-			.addField(prefix + "help admin", "Shows the bot help for admins")
-			.addField(prefix + "untisHelp", "Shows help for untis commands")
-			.addField(prefix + "R6Help", "Shows help for all R6 commands");
+			.addField(prefix + "covid", "Shows stats about Corona. Data from Robert Koch Institute")
+			.addField(prefix + "help-admin", "Shows the bot help for admins")
+			.addField("++untisHelp", "Shows help for untis commands")
+			.addField(prefix + "r6-help", "Shows help for all R6 commands");
 		return embed;
 	}
 
@@ -55,7 +51,7 @@ public class CommandHelp
 		embed.setTitle(BotMainCore.api.getYourself().getName() + " command help")
 			.setImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR-1YS-wzk_ePlUQNjxS3D6TT0qNh01UT6Y-w&usqp=CAU")
 			.setDescription("Some useful commands for admins")
-			.addField(BotMainCore.prefix + "purge 10", "Purge / Clear the chat")
+			.addField("/purge 10", "Purge / Clear the chat")
 			.addField(BotMainCore.prefix + "welcome AUTO-ROLE-ID", "Set the current channel  as welcome channel for new users")
 			.addField(BotMainCore.prefix + "counter", "Set the current channel as counter, to see how many useres your server has")
 			.addField(BotMainCore.prefix + "leavingLog", "Set the current channel as leaving Log, to see how left the server");

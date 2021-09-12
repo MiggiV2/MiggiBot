@@ -14,6 +14,7 @@ import de.mymiggi.discordbot.music.youtube.ServerPlayer;
 import de.mymiggi.discordbot.music.youtube.core.helpers.IsLeagalCheck;
 import de.mymiggi.discordbot.music.youtube.util.Emojis;
 import de.mymiggi.discordbot.tools.util.MessageCoolDown;
+import de.mymiggi.discordbot.tools.util.RemoveResponseAction;
 
 public class LoopCoreAction
 {
@@ -65,11 +66,17 @@ public class LoopCoreAction
 					content = "Looping the queue!";
 				}
 				player.loop();
-				interaction.createImmediateResponder().setContent(content).respond();
+				interaction.createImmediateResponder()
+					.setContent(content)
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 			}
 			else
 			{
-				interaction.createImmediateResponder().setContent("You are not allowed to do this! Join the vc ;D").respond();
+				interaction.createImmediateResponder()
+					.setContent("You are not allowed to do this! Join the vc ;D")
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 			}
 		});
 	}

@@ -3,6 +3,7 @@ package de.mymiggi.discordbot.server.r6.map.create;
 import java.awt.Color;
 
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.event.interaction.SlashCommandCreateEvent;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.event.message.reaction.ReactionAddEvent;
 
@@ -20,6 +21,17 @@ public class NotAllowedAction
 			.addReaction("📛");
 		reactionAddEvent.getChannel()
 			.sendMessage(embed);
+	}
+
+	public void run(SlashCommandCreateEvent event)
+	{
+		EmbedBuilder embed = new EmbedBuilder()
+			.setTitle(event.getSlashCommandInteraction().getUser().getName() + " you are not my owner! Sorry")
+			.setColor(Color.RED);
+		event.getSlashCommandInteraction()
+			.createFollowupMessageBuilder()
+			.addEmbed(embed)
+			.send();
 	}
 
 	public void run(MessageCreateEvent messageEvent)

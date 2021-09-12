@@ -19,9 +19,10 @@ public class R6Map implements Serializable
 		return imageURL;
 	}
 
-	public void setImageURL(String imageURL)
+	public R6Map setImageURL(String imageURL)
 	{
 		this.imageURL = imageURL;
+		return this;
 	}
 
 	public String getName()
@@ -29,9 +30,10 @@ public class R6Map implements Serializable
 		return name;
 	}
 
-	public void setName(String name)
+	public R6Map setName(String name)
 	{
 		this.name = name;
+		return this;
 	}
 
 	public boolean isRankedPool()
@@ -39,8 +41,9 @@ public class R6Map implements Serializable
 		return rankedPool;
 	}
 
-	public void setRankedPool(boolean rankedPool)
+	public R6Map setRankedPool(boolean rankedPool)
 	{
 		this.rankedPool = rankedPool;
+		return this;
 	}
 }

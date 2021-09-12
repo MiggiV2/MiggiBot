@@ -15,6 +15,7 @@ import de.mymiggi.discordbot.music.youtube.core.helpers.BuildStringAction;
 import de.mymiggi.discordbot.music.youtube.core.helpers.CheckURLAction;
 import de.mymiggi.discordbot.music.youtube.core.helpers.StartPlayingAction;
 import de.mymiggi.discordbot.music.youtube.util.QueryResponse;
+import de.mymiggi.discordbot.tools.util.MessageCoolDown;
 
 public class PlayCoreAction
 {
@@ -100,6 +101,7 @@ public class PlayCoreAction
 	{
 		interaction.createFollowupMessageBuilder()
 			.setContent(content)
-			.send();
+			.send()
+			.thenAccept(mesasge -> MessageCoolDown.del(mesasge.getLink().toString(), interaction.getChannel().get()));
 	}
 }

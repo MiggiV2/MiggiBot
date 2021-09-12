@@ -9,6 +9,7 @@ import org.javacord.api.interaction.SlashCommandInteraction;
 
 import de.mymiggi.discordbot.music.youtube.ServerPlayer;
 import de.mymiggi.discordbot.music.youtube.core.helpers.IsLeagalCheck;
+import de.mymiggi.discordbot.tools.util.RemoveResponseAction;
 
 public class ClearCoreAction
 {
@@ -31,12 +32,18 @@ public class ClearCoreAction
 			interaction.getServer().ifPresent(server -> {
 				ServerPlayer player = serverPlayer.get(server);
 				player.stop();
-				interaction.createImmediateResponder().setContent("Cleared!").respond();
+				interaction.createImmediateResponder()
+					.setContent("My job is done!")
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 			});
 		}
 		else
 		{
-			interaction.createImmediateResponder().setContent("You are not allowed to do this! Join the vc ;D").respond();
+			interaction.createImmediateResponder()
+				.setContent("You are not allowed to do this! Join the vc ;D")
+				.respond()
+				.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 		}
 	}
 }

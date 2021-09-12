@@ -22,7 +22,7 @@ public class UniversalHibernateClient
 		return session.createQuery(query, objectClass).list();
 	}
 
-	public <T> void save(T object)
+	public <T> boolean save(T object)
 	{
 		checkObject(object.getClass());
 		try
@@ -30,54 +30,96 @@ public class UniversalHibernateClient
 			session.beginTransaction();
 			session.saveOrUpdate(object);
 			session.getTransaction().commit();
+			return true;
 		}
 		catch (Exception e)
 		{
 			LOGGER.error("Cant save object!", e);
 			session.getTransaction().rollback();
+			return false;
 		}
 	}
 
-	public <T> void saveList(List<T> objectList)
+	public <T> boolean saveList(List<T> objectList)
 	{
 		checkObject(objectList.get(0).getClass());
-		session.beginTransaction();
-		for (T temp : objectList)
+		try
 		{
-			session.saveOrUpdate(temp);
+			session.beginTransaction();
+			for (T temp : objectList)
+			{
+				session.saveOrUpdate(temp);
+			}
+			session.getTransaction().commit();
+			return true;
 		}
-		session.getTransaction().commit();
+		catch (Exception e)
+		{
+			LOGGER.error("Cant save object!", e);
+			session.getTransaction().rollback();
+			return false;
+		}
 	}
 
-	public <T> void deleteAll(Class<T> objectClass)
+	public <T> boolean deleteAll(Class<T> objectClass)
 	{
 		checkObject(objectClass);
-		List<T> list = getList(objectClass);
-		session.beginTransaction();
-		for (T temp : list)
+		try
 		{
-			session.delete(temp);
+			List<T> list = getList(objectClass);
+			session.beginTransaction();
+			for (T temp : list)
+			{
+				session.delete(temp);
+			}
+			session.getTransaction().commit();
+			return true;
 		}
-		session.getTransaction().commit();
+		catch (Exception e)
+		{
+			LOGGER.error("Cant save object!", e);
+			session.getTransaction().rollback();
+			return false;
+		}
 	}
 
-	public <T> void delete(T object)
+	public <T> boolean delete(T object)
 	{
-		checkObject(object.getClass());
-		session.beginTransaction();
-		session.delete(object);
-		session.getTransaction().commit();
+		try
+		{
+			checkObject(object.getClass());
+			session.beginTransaction();
+			session.delete(object);
+			session.getTransaction().commit();
+			return true;
+		}
+		catch (Exception e)
+		{
+			LOGGER.error("Cant save object!", e);
+			session.getTransaction().rollback();
+			return false;
+		}
 	}
 
-	public <T> void deleteList(List<T> objectList)
+	public <T> boolean deleteList(List<T> objectList)
 	{
-		checkObject(objectList.get(0).getClass());
-		session.beginTransaction();
-		for (T temp : objectList)
+		try
 		{
-			session.delete(temp);
+			checkObject(objectList.get(0).getClass());
+			session.beginTransaction();
+			for (T temp : objectList)
+			{
+				session.delete(temp);
+			}
+			session.getTransaction().commit();
+			return true;
 		}
-		session.getTransaction().commit();
+		catch (Exception e)
+		{
+			LOGGER.error("Cant save object!", e);
+			session.getTransaction().rollback();
+			return false;
+		}
 	}
 
 	private <T> void checkObject(Class<T> objectClass)

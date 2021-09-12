@@ -11,11 +11,10 @@ import org.javacord.api.interaction.SlashCommandInteraction;
 import org.javacord.api.util.logging.ExceptionLogger;
 
 import de.mymiggi.discordbot.music.youtube.ServerPlayer;
-import de.mymiggi.discordbot.music.youtube.actions.util.embed.SendQueueEmbedAction;
 import de.mymiggi.discordbot.music.youtube.core.helpers.IsLeagalCheck;
 import de.mymiggi.discordbot.music.youtube.util.Emojis;
-import de.mymiggi.discordbot.music.youtube.util.Queue;
 import de.mymiggi.discordbot.tools.util.MessageCoolDown;
+import de.mymiggi.discordbot.tools.util.RemoveResponseAction;
 
 public class SendQueueEmbedCoreAction
 {
@@ -41,18 +40,11 @@ public class SendQueueEmbedCoreAction
 		interaction.getServer().ifPresent(server -> {
 			if (noCheckNeeded || new IsLeagalCheck().run(event, serverPlayer))
 			{
-				Queue queue = serverPlayer.get(server).getQueue();
-				if (sendResponse)
-				{
-					interaction.createImmediateResponder()
-						.setContent("Queue:")
-						.addEmbed(new SendQueueEmbedAction().getEmbed(queue))
-						.respond();
-				}
-				else
-				{
-					serverPlayer.get(server).sendQueueEmbed();
-				}
+				serverPlayer.get(server).sendQueueEmbed();
+				interaction.createImmediateResponder()
+					.setContent("Queue is ready!")
+					.respond()
+					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
 			}
 		});
 	}
