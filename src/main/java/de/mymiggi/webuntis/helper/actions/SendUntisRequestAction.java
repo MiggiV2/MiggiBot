@@ -23,7 +23,7 @@ import de.mymiggi.webuntis.util.WebUntisResponse;
 public class SendUntisRequestAction
 {
 	private String cookieURLPattern = "https://erato.webuntis.com/WebUntis/?school=%s#/basic/timetable";
-	private String dataURLPattern = "https://erato.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=195&date=%s&formatId=3";
+	private String dataURLPattern = "https://erato.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=360&date=%s&formatId=3";
 	private static Logger logger = LoggerFactory.getLogger(SendUntisRequestAction.class.getSimpleName());
 
 	public WebUntisResponse run() throws IOException

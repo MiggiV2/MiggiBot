@@ -13,7 +13,7 @@ public class WebUntisClient
 		{
 			WebUntisResponse response = new SendUntisRequestAction().run();
 			response.getLessonInfos();
-			response.getTimetable();
+			response.getTimetables();
 			return response;
 		}
 		catch (IOException e)

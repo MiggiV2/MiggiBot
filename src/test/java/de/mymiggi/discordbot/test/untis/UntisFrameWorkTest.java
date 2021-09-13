@@ -17,10 +17,10 @@ class UntisFrameWorkTest
 	void test() throws Exception
 	{
 		WebUntisResponse response = new WebUntisClient().getResponse();
-		LessonPeriod[] lessons = response.getTimetable().get("195");
+		LessonPeriod[] lessons = response.getLessons();
 		System.out.println(String.format("Got %s lessons!", lessons.length));
 		assertTrue(response.getLessonInfos().length != 0);
-		assertFalse(response.getTimetable().isEmpty());
+		assertFalse(response.getTimetables().isEmpty());
 		if (lessons.length == 0)
 		{
 			System.out.println("No subjects found!");
@@ -31,7 +31,8 @@ class UntisFrameWorkTest
 			assertNotEquals(getRandomSubject(response), "");
 			for (int i = 0; i < 5; i++)
 			{
-				System.out.println("Random subject: " + getRandomSubject(response));
+				System.out.println("Random subject: " +
+					getRandomSubject(response));
 			}
 		}
 		System.out.println("Test passed!");
@@ -39,7 +40,7 @@ class UntisFrameWorkTest
 
 	private String getRandomSubject(WebUntisResponse response)
 	{
-		LessonPeriod[] lessons = response.getTimetable().get("195");
+		LessonPeriod[] lessons = response.getLessons();
 		int randomIndex = (int)(lessons.length * Math.random());
 		return lessons[randomIndex].getSubjekt(response).getLongName();
 	}

@@ -14,11 +14,11 @@ public class SlashCommandRegisterAction
 {
 	public void run(DiscordApi api)
 	{
-		// long yourDevServer = 743800306827001958L;
-		// api.getServerById(yourDevServer).ifPresent(server -> {
-		// api.bulkOverwriteServerSlashCommands(server, Arrays.asList())
-		// .join();
-		// });
+		long yourDevServer = 743800306827001958L;
+		api.getServerById(yourDevServer).ifPresent(server -> {
+			api.bulkOverwriteServerSlashCommands(server, Arrays.asList())
+				.join();
+		});
 
 		api.bulkOverwriteGlobalSlashCommands(Arrays.asList(
 			new SlashCommandBuilder()
@@ -294,7 +294,16 @@ public class SlashCommandRegisterAction
 					.setName("NAME")
 					.setDescription("Name of the map")
 					.setType(SlashCommandOptionType.STRING)
-					.build())))
+					.build()),
+			new SlashCommandBuilder()
+				.setName("untis-timetable")
+				.setDescription("Show the current timetable"),
+			new SlashCommandBuilder()
+				.setName("untis-next")
+				.setDescription("Get the next lesson"),
+			new SlashCommandBuilder()
+				.setName("untis-help")
+				.setDescription("Show help for untis commands!")))
 			.join();
 	}
 }

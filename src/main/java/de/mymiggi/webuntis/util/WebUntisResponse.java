@@ -5,6 +5,7 @@ import java.util.Map;
 public class WebUntisResponse
 {
 	private Data data;
+	private String elementId = "360";
 
 	public DataValue getData()
 	{
@@ -16,7 +17,7 @@ public class WebUntisResponse
 		return data.getResult().getData().getLessonInfos();
 	}
 
-	public Map<String, LessonPeriod[]> getTimetable()
+	public Map<String, LessonPeriod[]> getTimetables()
 	{
 		return data.getResult().getData().getTimetable();
 	}
@@ -24,5 +25,10 @@ public class WebUntisResponse
 	public void setData(Data data)
 	{
 		this.data = data;
+	}
+
+	public LessonPeriod[] getLessons()
+	{
+		return getTimetables().get(elementId);
 	}
 }

@@ -21,7 +21,7 @@ public class TimeTableEmbed
 	public EmbedBuilder build(LocalDate date)
 	{
 		WebUntisResponse response = BotMainCore.getTimeTableReminderCore().getResponse();
-		LessonPeriod[] timeTable = response.getTimetable().get("195");
+		LessonPeriod[] timeTable = response.getLessons();
 
 		List<LessonPeriod> lessonList = new LessonsManager().getUnsorted(timeTable, date);
 		List<LessonPeriod> sortedLessons = new LessonsManager().getShortedAndSortedWithBrakes(lessonList);
@@ -67,8 +67,8 @@ public class TimeTableEmbed
 	private void addSubject(LessonPeriod temp, EmbedBuilder embed, WebUntisResponse response)
 	{
 		/*
-		 * temp.getElements()[1].getLongName() == null 
-		 * -> Custom Lesson like Break!
+		 * temp.getElements()[1].getLongName() == null -> Custom Lesson like
+		 * Break!
 		 */
 		String formattedStartTime = new FormattedUntisTimeAction().formated(temp.getStartTime());
 		String formattedEndTime = new FormattedUntisTimeAction().formated(temp.getEndTime());

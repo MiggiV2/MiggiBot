@@ -1,7 +1,6 @@
 package de.mymiggi.discordbot.server.untis.timetable;
 
 import java.time.LocalDate;
-import java.util.concurrent.CompletableFuture;
 
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
@@ -14,20 +13,20 @@ public class EmbedUpdaterThread
 	private boolean running = true;
 	private EmbedBuilder embed;
 
-	public void run(CompletableFuture<Message> cMessage, LocalDate date)
+	public void run(Message message, LocalDate date)
 	{
 		Thread thread = new Thread()
 		{
 			@Override
 			public void run()
 			{
-				work(cMessage, date);
+				work(message, date);
 			}
 		};
 		thread.start();
 	}
 
-	private void work(CompletableFuture<Message> cMessage, LocalDate date)
+	private void work(Message message, LocalDate date)
 	{
 		try
 		{
@@ -36,9 +35,7 @@ public class EmbedUpdaterThread
 			{
 				Thread.sleep(60 * 1000);
 				embed = new TimeTableEmbed().build(date);
-				cMessage.thenAccept(message -> {
-					message.edit(embed).toCompletableFuture();
-				});
+				message.edit(embed).toCompletableFuture();
 				counter++;
 				if (counter == 300)
 				{
@@ -46,15 +43,11 @@ public class EmbedUpdaterThread
 				}
 			}
 			Thread.sleep(5 * 60 * 1000);
-			cMessage.thenAccept(message -> {
-				message.edit("https://tenor.com/view/shiba-gif-19210829").toCompletableFuture();
-				message.removeEmbed().toCompletableFuture();
-				message.addReaction("👋");
-			});
+			message.edit("https://tenor.com/view/shiba-gif-19210829").toCompletableFuture();
+			message.removeEmbed().toCompletableFuture();
+			message.addReaction("👋");
 			Thread.sleep(5 * 60 * 1000);
-			cMessage.thenAccept(message -> {
-				message.delete();
-			});
+			message.delete();
 		}
 		catch (InterruptedException e)
 		{

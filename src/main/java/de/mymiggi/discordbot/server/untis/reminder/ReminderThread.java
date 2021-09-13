@@ -37,7 +37,7 @@ public class ReminderThread
 	public void work(WebUntisResponse response, List<UntisReminderChannelNew> untisReminderChannelList)
 	{
 		boolean running = true;
-		LessonPeriod[] timeTabel = response.getTimetable().get("195");
+		LessonPeriod[] timeTabel = response.getLessons();
 		this.currentLesson = new CurrentLessonAction().get(timeTabel, response);
 		while (running)
 		{

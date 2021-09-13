@@ -20,6 +20,8 @@ import de.mymiggi.discordbot.server.member.playlist.help.MemberPlayListHelper;
 import de.mymiggi.discordbot.server.r6.R6CommandHelper;
 import de.mymiggi.discordbot.server.r6.map.RandomR6MapCore;
 import de.mymiggi.discordbot.server.r6.stats.R6StatsCommandCore;
+import de.mymiggi.discordbot.server.untis.UntisCommandHelper;
+import de.mymiggi.discordbot.server.untis.timetable.TimeTableCore;
 
 public class SlashCommandHandler
 {
@@ -48,6 +50,9 @@ public class SlashCommandHandler
 					break;
 				case "r6-help":
 					new R6CommandHelper().run(event);
+					break;
+				case "untis-help":
+					new UntisCommandHelper().run(event);
 					break;
 				case "ping":
 					new PingTest().run(event);
@@ -171,6 +176,12 @@ public class SlashCommandHandler
 					break;
 				case "r6-map-show":
 					r6MapCore.list(event);
+					break;
+				case "untis-next":
+					BotMainCore.getTimeTableReminderCore().nextSubjectEmbed(event);
+					break;
+				case "untis-timetable":
+					new TimeTableCore().run(event);
 					break;
 			}
 		});
