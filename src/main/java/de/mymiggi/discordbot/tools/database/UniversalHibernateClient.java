@@ -22,6 +22,25 @@ public class UniversalHibernateClient
 		return session.createQuery(query, objectClass).list();
 	}
 
+	public <T> boolean update(T object)
+	{
+		checkObject(object.getClass());
+		try
+		{
+			// session.clear();
+			session.beginTransaction();
+			session.update(object);
+			session.getTransaction().commit();
+			return true;
+		}
+		catch (Exception e)
+		{
+			LOGGER.error("Cant save object!", e);
+			session.getTransaction().rollback();
+			return false;
+		}
+	}
+
 	public <T> boolean save(T object)
 	{
 		checkObject(object.getClass());
