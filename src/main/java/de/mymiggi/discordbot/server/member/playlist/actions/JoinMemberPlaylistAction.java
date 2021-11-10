@@ -101,9 +101,20 @@ public class JoinMemberPlaylistAction
 		}
 		catch (Exception e)
 		{
-			interaction.createFollowupMessageBuilder()
-				.setContent("Failed to join your playlist! Error:" + e.getClass())
-				.send();
+			handelErros(event, e);
+		}
+	}
+
+	private void handelErros(SlashCommandCreateEvent event, Exception e)
+	{
+		String content = (e.getMessage() != null) ? e.getMessage() : "Failed to join your playlist!! -> " + e.getClass();
+		event.getSlashCommandInteraction().createFollowupMessageBuilder()
+			.setContent(content)
+			.send()
+			.thenAccept(message -> MessageCoolDown.del(message.getLink().toString(), message.getChannel(), 32));
+		if (!content.equals("Still in this playList!") && !content.equals("No playlist for user found!"))
+		{
+			logger.error("Failed to play sharedparty!", e);
 		}
 	}
 }

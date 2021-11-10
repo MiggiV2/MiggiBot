@@ -111,7 +111,7 @@ public class SlashCommandHandler
 				case "party":
 					musicCore.playMemberPlayList(event);
 					break;
-				case "shardparty":
+				case "sharedparty":
 					musicCore.playSharedPlayList(event);
 					break;
 				case "move":

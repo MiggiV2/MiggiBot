@@ -53,31 +53,33 @@ public class PlaySharedMPlaylistCoreAction
 	public void run(SlashCommandCreateEvent event, Map<Server, ServerPlayer> serverPlayer)
 	{
 		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
-		User targetedUser = interaction.getFirstOptionUserValue().orElse(null);
-		String searchQuery = interaction.getSecondOptionStringValue().orElse("NO_PARAMENTER");
-		if (targetedUser != null)
-		{
-			try
-			{
-				List<NewMemberPlaylistSong> currentPlayListSongs = BotMainCore.getMemberPlayListCore().getSharedParty(targetedUser, searchQuery);
-				new PlayMPlaylistCoreAction().run(event, serverPlayer, currentPlayListSongs);
-				interaction.createImmediateResponder()
-					.setContent("Have fun ;D")
-					.respond()
-					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
-			}
-			catch (Exception e)
-			{
-				interaction.createImmediateResponder()
-					.setContent("Failed! error:" + e.getClass())
-					.respond()
-					.thenAccept(message -> new RemoveResponseAction().run(message, 5));
-			}
-		}
-		else
-		{
-			interaction.createImmediateResponder().setContent("User can't be null! (wtf)").respond();
-		}
+		interaction.getFirstOptionUserValue().ifPresent(targetedUser -> {
+			interaction.getSecondOptionStringValue().ifPresent(searchQuery -> {
+				try
+				{
+					List<NewMemberPlaylistSong> currentPlayListSongs = BotMainCore.getMemberPlayListCore().getSharedParty(targetedUser, searchQuery);
+					new PlayMPlaylistCoreAction().run(event, serverPlayer, currentPlayListSongs);
+					interaction.createImmediateResponder()
+						.setContent("Have fun ;D")
+						.respond()
+						.thenAccept(message -> new RemoveResponseAction().run(message, 5));
+				}
+				catch (Exception e)
+				{
+					handelErros(event, e);
+				}
+			});
+		});
+	}
+
+	private void handelErros(SlashCommandCreateEvent event, Exception e)
+	{
+		String content = (e.getMessage() != null) ? e.getMessage() : "Failed! error:" + e.getClass();
+		event.getSlashCommandInteraction().createImmediateResponder()
+			.setContent(content)
+			.respond()
+			.thenAccept(message -> new RemoveResponseAction().run(message, 30));
+		logger.error("Failed to play sharedparty!", e);
 	}
 
 	private void handelErros(MessageCreateEvent event, Exception e)

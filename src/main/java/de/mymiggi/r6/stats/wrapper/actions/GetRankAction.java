@@ -2,6 +2,9 @@ package de.mymiggi.r6.stats.wrapper.actions;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 
 import de.mymiggi.r6.stats.wrapper.RankedRegions;
@@ -13,6 +16,8 @@ import okhttp3.Response;
 
 public class GetRankAction
 {
+	private Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
+
 	public RankedResponse run(LoginResponse loginResponse, String playerID, RankedRegions region) throws IOException
 	{
 		OkHttpClient client = new OkHttpClient();
@@ -25,6 +30,10 @@ public class GetRankAction
 			.build();
 		Response response = client.newCall(request).execute();
 		String responseJSON = response.body().string();
+		if (response.code() != 200)
+		{
+			logger.info("Status:" + response.code() + " Body:" + responseJSON);
+		}
 		return new Gson().fromJson(responseJSON, RankedResponse.class);
 	}
 }

@@ -26,38 +26,31 @@ public class MPlaylistJoin
 			logger.warn("No playlist for user " + user.getName() + " found!");
 			throw new Exception("No playlist for user found!");
 		}
-		if (userAndPlayListInfo.get(user).size() == 1)
+		MemberPlayListInfoNew result = new MPlaylistGetPlaylistInfoByName().run(usersPlayList, playListInfo);
+		Map<User, MemberPlayListInfoNew> userAndJoinedPlaylistMap = new MPlaylistGetJoinedPlaylistInfo().run(playListInfoList, client);
+		if (userAndJoinedPlaylistMap.containsKey(user))
 		{
-			logger.warn("User " + user.getName() + " has just one! -> cant join");
+			MemberPlayListInfoNew currentlyJoinedPlaylist = userAndJoinedPlaylistMap.get(user);
+			if (currentlyJoinedPlaylist.getPlayListTitle().equalsIgnoreCase(playListInfo))
+			{
+				throw new Exception("Still in this playList!");
+			}
+			playListInfoList.remove(result);
+			playListInfoList.remove(currentlyJoinedPlaylist);
+			result.setJoined(true);
+			currentlyJoinedPlaylist.setJoined(false);
+			client.save(result);
+			client.save(currentlyJoinedPlaylist);
+			playListInfoList.add(currentlyJoinedPlaylist);
+			playListInfoList.add(result);
 		}
 		else
 		{
-			MemberPlayListInfoNew result = new MPlaylistGetPlaylistInfoByName().run(usersPlayList, playListInfo);
-			Map<User, MemberPlayListInfoNew> userAndJoinedPlaylistMap = new MPlaylistGetJoinedPlaylistInfo().run(playListInfoList, client);
-			if (userAndJoinedPlaylistMap.containsKey(user))
-			{
-				MemberPlayListInfoNew currentlyJoinedPlaylist = userAndJoinedPlaylistMap.get(user);
-				if (currentlyJoinedPlaylist.getPlayListTitle().equalsIgnoreCase(playListInfo))
-				{
-					throw new Exception("Still in this playList!");
-				}
-				playListInfoList.remove(result);
-				playListInfoList.remove(currentlyJoinedPlaylist);
-				result.setJoined(true);
-				currentlyJoinedPlaylist.setJoined(false);
-				client.save(result);
-				client.save(currentlyJoinedPlaylist);
-				playListInfoList.add(currentlyJoinedPlaylist);
-				playListInfoList.add(result);
-			}
-			else
-			{
-				playListInfoList.remove(result);
-				result.setJoined(true);
-				client.save(result);
-				playListInfoList.add(result);
-				logger.warn("User " + user.getName() + " has no joined playlist! This shouldn't be!");
-			}
+			playListInfoList.remove(result);
+			result.setJoined(true);
+			client.save(result);
+			playListInfoList.add(result);
+			logger.warn("User " + user.getName() + " has no joined playlist! This shouldn't be!");
 		}
 	}
 }

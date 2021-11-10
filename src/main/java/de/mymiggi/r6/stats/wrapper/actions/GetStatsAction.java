@@ -2,6 +2,9 @@ package de.mymiggi.r6.stats.wrapper.actions;
 
 import java.io.IOException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.Gson;
 
 import de.mymiggi.r6.stats.wrapper.PlatfromType;
@@ -14,6 +17,8 @@ import okhttp3.Response;
 
 public class GetStatsAction
 {
+	private Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
+
 	public SmartStatsResponse run(LoginResponse loginResponse, PlatfromType platfromType, String playerID) throws IOException
 	{
 		OkHttpClient client = new OkHttpClient();
@@ -26,6 +31,10 @@ public class GetStatsAction
 			.build();
 		Response response = client.newCall(request).execute();
 		String responseJSON = response.body().string();
+		if (response.code() != 200)
+		{
+			logger.info("Status:" + response.code() + " Body:" + responseJSON);
+		}
 		return new Gson().fromJson(responseJSON, StatsResponse.class).getSmartResponse();
 	}
 }
