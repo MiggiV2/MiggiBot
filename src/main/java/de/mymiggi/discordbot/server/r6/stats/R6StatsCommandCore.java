@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
@@ -24,16 +25,16 @@ import de.mymiggi.r6.stats.wrapper.WrapperManager;
 
 public class R6StatsCommandCore
 {
-	private WrapperManager wrapperManager;
+	private Optional<WrapperManager> wrapperManager;
 	private Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 	private UniversalHibernateClient client = new UniversalHibernateClient();
 	private Map<Long, R6AndDiscordUser> userMap = new HashMap<Long, R6AndDiscordUser>();
 
 	public R6StatsCommandCore()
 	{
-		if (BotMainCore.config.getEMail() != null && BotMainCore.config.getPassword() != null || BotMainCore.config.getCredential() != null)
+		if (BotMainCore.config.geteMail().isPresent() && BotMainCore.config.getPassword().isPresent() || BotMainCore.config.getCredential().isPresent())
 		{
-			this.wrapperManager = new WrapperManager();
+			this.wrapperManager = Optional.of(new WrapperManager());
 		}
 		else
 		{
@@ -64,12 +65,7 @@ public class R6StatsCommandCore
 	private void runAbstract(SlashCommandCreateEvent event, AbstractUpdateR6MessageAction action)
 	{
 		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
-		if (wrapperManager == null)
-		{
-			sendNoConfig(event);
-		}
-		else
-		{
+		wrapperManager.ifPresent(manager -> {
 			interaction.respondLater();
 			loadUserMap();
 			if (interaction.getFirstOptionStringValue().isPresent() || userMap.containsKey(interaction.getUser().getId()))
@@ -77,18 +73,22 @@ public class R6StatsCommandCore
 				if (interaction.getFirstOptionStringValue().isPresent())
 				{
 					String userName = interaction.getFirstOptionStringValue().orElse("NO_NAME");
-					new AskForPlatformAction().run(interaction, userName, wrapperManager, action);
+					new AskForPlatformAction().run(interaction, userName, manager, action);
 				}
 				else
 				{
 					R6AndDiscordUser user = userMap.get(interaction.getUser().getId());
-					new AskForPlatformAction().skipAsking(interaction, user, wrapperManager, action);
+					new AskForPlatformAction().skipAsking(interaction, user, manager, action);
 				}
 			}
 			else
 			{
 				noR6UserFound(interaction);
 			}
+		});
+		if (!wrapperManager.isPresent())
+		{
+			sendNoConfig(event);
 		}
 	}
 

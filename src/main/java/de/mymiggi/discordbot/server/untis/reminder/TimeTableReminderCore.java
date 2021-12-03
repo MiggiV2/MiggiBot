@@ -3,6 +3,7 @@ package de.mymiggi.discordbot.server.untis.reminder;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.event.interaction.SlashCommandCreateEvent;
@@ -22,28 +23,28 @@ import de.mymiggi.webuntis.util.WebUntisResponse;
 
 public class TimeTableReminderCore
 {
-	private List<UntisReminderChannelNew> channels = new ArrayList<UntisReminderChannelNew>();
-	private WebUntisResponse response;
 	private static Logger logger = LoggerFactory.getLogger(TimeTableReminderCore.class.getSimpleName());
+	private List<UntisReminderChannelNew> channels = new ArrayList<UntisReminderChannelNew>();
+	private Optional<WebUntisResponse> responseOptional = Optional.empty();
+	private String schoolName;
 
 	public TimeTableReminderCore()
 	{
-		if (BotMainCore.config.getUntisSchoolName() != null)
-		{
-			response = new WebUntisClient().getResponse();
-		}
+		BotMainCore.config.getUntisSchoolName().ifPresent(schoolName -> {
+			this.schoolName = schoolName;
+			responseOptional = Optional.of(new WebUntisClient().getResponse(schoolName));
+		});
 	}
 
 	public void run()
 	{
-		if (BotMainCore.config.getUntisSchoolName() != null)
-		{
+		responseOptional.ifPresent(response -> {
 			syncChannels();
 			logger.info("Loaded channels " + channels.size());
-			new UpaterThread().run(response);
+			new UpaterThread().run(response, schoolName);
 			new ReminderThread().run(response, channels);
-		}
-		else
+		});
+		if (!BotMainCore.config.getUntisSchoolName().isPresent())
 		{
 			logger.warn("UntisSchoolName is not in config!");
 		}
@@ -52,8 +53,7 @@ public class TimeTableReminderCore
 	public void nextSubjectEmbed(SlashCommandCreateEvent event)
 	{
 		SlashCommandInteraction interaction = event.getSlashCommandInteraction();
-		if (BotMainCore.config.getUntisSchoolName() != null)
-		{
+		responseOptional.ifPresent(response -> {
 			interaction.respondLater();
 			EmbedBuilder embed = new EmbedBuilder();
 			Elements nextLesson = new NextLessonForToday().getNextSubjectByTime(response);
@@ -74,8 +74,8 @@ public class TimeTableReminderCore
 						MessageCoolDown.del(message.getLink().toString(), channel, 30);
 					});
 				});
-		}
-		else
+		});
+		if (!responseOptional.isPresent())
 		{
 			BotMainCore.api.getOwner().thenAccept(owner -> {
 				EmbedBuilder embed = new EmbedBuilder()
@@ -91,8 +91,7 @@ public class TimeTableReminderCore
 
 	public void nextSubjectEmbed(MessageCreateEvent event)
 	{
-		if (BotMainCore.config.getUntisSchoolName() != null)
-		{
+		responseOptional.ifPresent(response -> {
 			EmbedBuilder embed = new EmbedBuilder();
 			Elements nextLesson = new NextLessonForToday().getNextSubjectByTime(response);
 			if (nextLesson == null)
@@ -109,8 +108,8 @@ public class TimeTableReminderCore
 			event.getChannel().sendMessage(embed).thenAccept(message -> {
 				MessageCoolDown.del(message.getLink().toString(), event.getChannel(), 30);
 			});
-		}
-		else
+		});
+		if (!responseOptional.isPresent())
 		{
 			BotMainCore.api.getOwner().thenAccept(owner -> {
 				EmbedBuilder embed = new EmbedBuilder()
@@ -124,14 +123,16 @@ public class TimeTableReminderCore
 
 	public void startNewThread(UntisReminderChannelNew newChannel)
 	{
-		List<UntisReminderChannelNew> channels = new ArrayList<UntisReminderChannelNew>();
-		channels.add(newChannel);
-		new ReminderThread().run(response, channels);
+		responseOptional.ifPresent(response -> {
+			List<UntisReminderChannelNew> channels = new ArrayList<UntisReminderChannelNew>();
+			channels.add(newChannel);
+			new ReminderThread().run(response, channels);
+		});
 	}
 
-	public WebUntisResponse getResponse()
+	public Optional<WebUntisResponse> getResponse()
 	{
-		return this.response;
+		return this.responseOptional;
 	}
 
 	public void syncChannels()

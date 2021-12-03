@@ -10,7 +10,11 @@ public class TenorClientCore
 {
 	public TenorResponse run(String searchQuerry) throws Exception
 	{
-		String apiKey = BotMainCore.config.getTenorAPIKey();
+		if (!BotMainCore.config.getTenorAPIKey().isPresent())
+		{
+			throw new Exception("No tenor API-Key in config!");
+		}
+		String apiKey = BotMainCore.config.getTenorAPIKey().orElse("");
 		String json = new SendTenorRequest().run(apiKey, searchQuerry);
 		TenorResponse response = new Gson().fromJson(json, TenorResponse.class);
 		return response;

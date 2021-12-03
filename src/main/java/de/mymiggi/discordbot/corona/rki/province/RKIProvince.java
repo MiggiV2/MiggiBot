@@ -56,7 +56,7 @@ public class RKIProvince
 			.addEmbed(buildEmbed())
 			.addEmbed(highestEmbed())
 			.send();
-		logger.info(interaction.getUser() + " used command!");
+		logger.info(interaction.getUser().getName() + " used command!");
 
 	}
 

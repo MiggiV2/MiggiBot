@@ -23,6 +23,7 @@ import okhttp3.Route;
 public class LoginAction
 {
 	private Logger logger = LoggerFactory.getLogger(LoginAction.class);
+	private String credential;
 
 	public LoginResponse run() throws IOException
 	{
@@ -33,7 +34,7 @@ public class LoginAction
 			@Override
 			public Request authenticate(Route route, Response response) throws IOException
 			{
-				String credential = getCredential();
+				setCredential();
 				return response.request().newBuilder().header("Authorization", credential).build();
 			}
 		});
@@ -64,24 +65,29 @@ public class LoginAction
 		}
 	}
 
-	private String getCredential() throws IOException
+	private void setCredential() throws IOException
 	{
 		try
 		{
-			String credential;
-			if (BotMainCore.config.getCredential() == null)
+			BotMainCore.config.getCredential().ifPresent(credentialConfig -> {
+				credential = credentialConfig;
+			});
+			if (!BotMainCore.config.getCredential().isPresent())
 			{
-				credential = Credentials.basic(BotMainCore.config.getEMail(), BotMainCore.config.getPassword());
+				BotMainCore.config.geteMail().ifPresent(mail -> {
+					BotMainCore.config.getPassword().ifPresent(pw -> {
+						credential = Credentials.basic(mail, pw);
+					});
+				});
 			}
-			else
+			if (credential == null)
 			{
-				credential = BotMainCore.config.getCredential();
+				throw new IOException("No ubisoft account in config!");
 			}
-			return credential;
 		}
 		catch (Exception e)
 		{
-			logger.error("Failed to read config!", e);
+			logger.error("Failed to create credential!", e);
 			throw new IOException(e);
 		}
 	}

@@ -11,19 +11,19 @@ public class UpaterThread
 {
 	private static Logger logger = LoggerFactory.getLogger(UpaterThread.class.getSimpleName());
 
-	public void run(WebUntisResponse response)
+	public void run(WebUntisResponse response, String schoolName)
 	{
 		Thread thread = new Thread()
 		{
 			public void run()
 			{
-				work(response);
+				work(response, schoolName);
 			}
 		};
 		thread.start();
 	}
 
-	public void work(WebUntisResponse response)
+	public void work(WebUntisResponse response, String schoolName)
 	{
 		try
 		{
@@ -33,7 +33,7 @@ public class UpaterThread
 		{
 			logger.warn("Sleep till 6 failed!", e);
 		}
-		response = new WebUntisClient().getResponse();
+		response = new WebUntisClient().getResponse(schoolName);
 		boolean running = true;
 		while (running)
 		{
@@ -47,7 +47,7 @@ public class UpaterThread
 				logger.warn("Stopping thread!");
 				running = false;
 			}
-			response = new WebUntisClient().getResponse();
+			response = new WebUntisClient().getResponse(schoolName);
 		}
 	}
 }

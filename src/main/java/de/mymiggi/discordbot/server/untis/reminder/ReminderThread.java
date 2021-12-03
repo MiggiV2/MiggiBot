@@ -16,6 +16,7 @@ import de.mymiggi.webuntis.actions.CurrentLessonAction;
 import de.mymiggi.webuntis.util.Elements;
 import de.mymiggi.webuntis.util.LessonPeriod;
 import de.mymiggi.webuntis.util.WebUntisResponse;
+import io.smallrye.common.constraint.NotNull;
 
 public class ReminderThread
 {
@@ -34,7 +35,7 @@ public class ReminderThread
 		thread.start();
 	}
 
-	public void work(WebUntisResponse response, List<UntisReminderChannelNew> untisReminderChannelList)
+	public void work(@NotNull WebUntisResponse response, List<UntisReminderChannelNew> untisReminderChannelList)
 	{
 		boolean running = true;
 		LessonPeriod[] timeTabel = response.getLessons();

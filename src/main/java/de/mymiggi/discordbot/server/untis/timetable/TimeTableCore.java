@@ -15,7 +15,7 @@ public class TimeTableCore
 {
 	public void run(MessageCreateEvent event)
 	{
-		if (BotMainCore.config.getUntisSchoolName() == null)
+		if (BotMainCore.config.getUntisSchoolName().isEmpty())
 		{
 			sendNotInConfig(event);
 		}
@@ -27,7 +27,7 @@ public class TimeTableCore
 
 	public void run(SlashCommandCreateEvent event)
 	{
-		if (BotMainCore.config.getUntisSchoolName() == null)
+		if (BotMainCore.config.getUntisSchoolName().isEmpty())
 		{
 			sendNotInConfig(event);
 		}
@@ -41,8 +41,8 @@ public class TimeTableCore
 	{
 		BotMainCore.api.getOwner().thenAccept(owner -> {
 			EmbedBuilder embed = new EmbedBuilder()
-				.setTitle("Sorry, but UntisSchoolName is not in my config!")
-				.setDescription(String.format("Ask %s to set this in my config!", owner.getName()))
+				.setTitle("Sorry, but this command is disabled!")
+				.setDescription(String.format("Ask %s to set UntisSchoolName in my config!", owner.getName()))
 				.setColor(Color.RED);
 			event.getSlashCommandInteraction()
 				.createImmediateResponder()
@@ -55,8 +55,8 @@ public class TimeTableCore
 	{
 		BotMainCore.api.getOwner().thenAccept(owner -> {
 			EmbedBuilder embed = new EmbedBuilder()
-				.setTitle("Sorry, but UntisSchoolName is not in my config!")
-				.setDescription(String.format("Ask %s to set this in my config!", owner.getName()))
+				.setTitle("Sorry, but this command is disabled!")
+				.setDescription(String.format("Ask %s to set UntisSchoolName in my config!", owner.getName()))
 				.setColor(Color.RED);
 			event.getChannel().sendMessage(embed);
 		});

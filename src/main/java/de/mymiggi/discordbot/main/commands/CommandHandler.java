@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import de.mymiggi.discordbot.bitcoin.BitCoinCommand;
 import de.mymiggi.discordbot.commands.constructor.Command;
 import de.mymiggi.discordbot.commands.simple.CommandHelp;
-import de.mymiggi.discordbot.commands.simple.IPInfoCommand;
 import de.mymiggi.discordbot.commands.simple.PingTest;
 import de.mymiggi.discordbot.commands.simple.PowerOff;
 import de.mymiggi.discordbot.commands.simple.Purger;
@@ -84,7 +83,7 @@ public class CommandHandler
 				new PowerOff().run(event, api);
 				break;
 			case "lookup":
-				new IPInfoCommand().send(event, context);
+				deprecatedEmbed(event);
 				break;
 			case "purge":
 				new Purger().clear(event, context);
@@ -297,11 +296,6 @@ public class CommandHandler
 	public void setCommandList(ArrayList<Command> list)
 	{
 		this.list = list;
-	}
-
-	public void prefixHint()
-	{
-		System.out.println("Prefix " + prefix + " can be found in Class CommandHandler");
 	}
 
 	public void deprecatedEmbed(MessageCreateEvent event)

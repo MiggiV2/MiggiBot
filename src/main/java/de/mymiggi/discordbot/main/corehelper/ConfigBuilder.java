@@ -42,6 +42,10 @@ public class ConfigBuilder
 		{
 			config.setCredential(configMap.get("ubisoft-credential"));
 		}
+		if (configMap.containsKey("ip-info"))
+		{
+			config.setIpInfoToken(configMap.get("ip-info"));
+		}
 		return config;
 	}
 
@@ -62,15 +66,7 @@ public class ConfigBuilder
 					logger.error("Error in line: " + line);
 					break;
 				}
-				if (keyAndValue.length > 2)
-				{
-					combineValue(keyAndValue);
-				}
-				if (keyAndValue[0].equals("ubisoft-credential"))
-				{
-					keyAndValue[1] += "==";
-				}
-				configMap.put(keyAndValue[0], keyAndValue[1]);
+				addToMap(configMap, line, keyAndValue);
 			}
 			myReader.close();
 		}
@@ -79,6 +75,22 @@ public class ConfigBuilder
 			throw new RuntimeException("Please fill out target/bot.config!");
 		}
 		return configMap;
+	}
+
+	private void addToMap(Map<String, String> configMap, String line, String[] keyAndValue)
+	{
+		if (keyAndValue.length > 2)
+		{
+			combineValue(keyAndValue);
+		}
+		if (keyAndValue[0].equals("ubisoft-credential"))
+		{
+			keyAndValue[1] += "==";
+		}
+		if (!line.startsWith("#"))
+		{
+			configMap.put(keyAndValue[0], keyAndValue[1]);
+		}
 	}
 
 	private String[] combineValue(String[] keyAndValue)

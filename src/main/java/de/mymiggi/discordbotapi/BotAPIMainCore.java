@@ -15,12 +15,21 @@ import javax.ws.rs.core.Response.Status;
 import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbotapi.util.DiscordServerResponse;
 import de.mymiggi.discordbotapi.webhook.WebHookTask;
+import io.quarkus.runtime.Quarkus;
+import io.quarkus.runtime.annotations.QuarkusMain;
 
 @Path("/bot")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@QuarkusMain
 public class BotAPIMainCore
 {
+	public static void main(String... args)
+	{
+		BotMainCore.run();
+		Quarkus.run(args);
+	}
+
 	@GET
 	@Path("start")
 	public Response start()

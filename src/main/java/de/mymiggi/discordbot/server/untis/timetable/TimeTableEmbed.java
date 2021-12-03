@@ -20,20 +20,22 @@ public class TimeTableEmbed
 {
 	public EmbedBuilder build(LocalDate date)
 	{
-		WebUntisResponse response = BotMainCore.getTimeTableReminderCore().getResponse();
-		LessonPeriod[] timeTable = response.getLessons();
-
-		List<LessonPeriod> lessonList = new LessonsManager().getUnsorted(timeTable, date);
-		List<LessonPeriod> sortedLessons = new LessonsManager().getShortedAndSortedWithBrakes(lessonList);
-
-		SimpleDateFormat formatter = new SimpleDateFormat("dd.M.yyyy hh:mm:ss");
-		String strDate = formatter.format(new Date());
 		EmbedBuilder embed = new EmbedBuilder();
-
-		embed.setTitle("Time table " + date.getDayOfWeek().toString())
-			.setColor(Color.orange)
-			.setFooter(strDate);
-		buildEmbed(sortedLessons, response, embed);
+		BotMainCore.getTimeTableReminderCore().getResponse().ifPresent(response -> {
+			LessonPeriod[] timeTable = response.getLessons();
+			List<LessonPeriod> lessonList = new LessonsManager().getUnsorted(timeTable, date);
+			List<LessonPeriod> sortedLessons = new LessonsManager().getShortedAndSortedWithBrakes(lessonList);
+			SimpleDateFormat formatter = new SimpleDateFormat("dd.M.yyyy hh:mm:ss");
+			String strDate = formatter.format(new Date());
+			embed.setTitle("Time table " + date.getDayOfWeek().toString())
+				.setColor(Color.orange)
+				.setFooter(strDate);
+			buildEmbed(sortedLessons, response, embed);
+		});
+		if (!BotMainCore.getTimeTableReminderCore().getResponse().isPresent())
+		{
+			embed.setTitle("No SchoolName in config!").setColor(Color.RED);
+		}
 		return embed;
 	}
 

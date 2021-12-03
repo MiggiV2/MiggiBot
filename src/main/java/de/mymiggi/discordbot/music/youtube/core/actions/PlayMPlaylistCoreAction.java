@@ -45,7 +45,14 @@ public class PlayMPlaylistCoreAction
 		}
 		catch (Exception e)
 		{
-			logger.warn("Getting Memeberplaylist failed!", e);
+			if (e.getMessage() == null || (e.getMessage() != null && !e.getMessage().equals("No playlist created yet!")))
+			{
+				logger.warn("Getting Memeberplaylist failed!", e);
+			}
+			interaction.createImmediateResponder()
+				.setContent("Please create a playlist first!")
+				.respond()
+				.thenAccept(message -> new RemoveResponseAction().run(message, 15));
 		}
 	}
 

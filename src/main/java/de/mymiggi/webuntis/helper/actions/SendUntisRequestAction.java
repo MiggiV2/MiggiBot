@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
-import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.webuntis.util.WebUntisResponse;
 
 public class SendUntisRequestAction
@@ -26,10 +25,9 @@ public class SendUntisRequestAction
 	private String dataURLPattern = "https://erato.webuntis.com/WebUntis/api/public/timetable/weekly/data?elementType=1&elementId=360&date=%s&formatId=3";
 	private static Logger logger = LoggerFactory.getLogger(SendUntisRequestAction.class.getSimpleName());
 
-	public WebUntisResponse run() throws IOException
+	public WebUntisResponse run(String untisSchoolName) throws IOException
 	{
 		LocalDate currentTime = LocalDate.now();
-		String untisSchoolName = BotMainCore.config.getUntisSchoolName();
 		String dataURL = String.format(dataURLPattern, currentTime.toString());
 		String cookieURL = String.format(cookieURLPattern, untisSchoolName);
 		HttpClientContext context = HttpClientContext.create();

@@ -7,11 +7,11 @@ import de.mymiggi.webuntis.util.WebUntisResponse;
 
 public class WebUntisClient
 {
-	public WebUntisResponse getResponse()
+	public WebUntisResponse getResponse(String untisSchoolName)
 	{
 		try
 		{
-			WebUntisResponse response = new SendUntisRequestAction().run();
+			WebUntisResponse response = new SendUntisRequestAction().run(untisSchoolName);
 			response.getLessonInfos();
 			response.getTimetables();
 			return response;
