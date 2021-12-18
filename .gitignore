@@ -1,18 +1,43 @@
-*.bot
-*.properties
-Commands/
+#Maven
 target/
-JavaDiscordBottest
-test.xml
-test1.xml
-src/main/resources/hibernate.cfg.xml
-log.txt
-src/main/resources/s.hibernate.cfg.xml
-src/main/resources/keystore.jks
-src/main/resources/pss.txt
-src/main/resources/application.properties
-application.properties
-src/main/resources/fullchain.pem
-src/main/resources/privkey.pem
-bot.config
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+
+# Eclipse
+.project
+.classpath
 .settings/
+bin/
+
+# IntelliJ
+.idea
+*.ipr
+*.iml
+*.iws
+
+# NetBeans
+nb-configuration.xml
+
+# Visual Studio Code
+.vscode
+.factorypath
+
+# OSX
+.DS_Store
+
+# Vim
+*.swp
+*.swo
+
+# patch
+*.orig
+*.rej
+
+# Local environment
+.env
+
+#Bot
+*.config
+log.txt
