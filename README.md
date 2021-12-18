@@ -1,56 +1,62 @@
-# code-with-quarkus Project
-
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
-
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
-
-## Running the application in dev mode
-
-You can run your application in dev mode that enables live coding using:
-```shell script
-./mvnw compile quarkus:dev
-```
-
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
-
-## Packaging and running the application
-
-The application can be packaged using:
-```shell script
-./mvnw package
-```
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
-
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-```shell script
-./mvnw package -Dquarkus.package.type=uber-jar
-```
-
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using: 
-```shell script
-./mvnw package -Pnative
-```
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
-```shell script
-./mvnw package -Pnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/code-with-quarkus-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
-
-## Provided Code
-
-### RESTEasy JAX-RS
-
-Easily start your RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started#the-jax-rs-resources)
+<h2>MiggiBot</h2>
+<p>The MiggiBot is not just a simple bot!</p>
+<p>Our DiscordServer -> https://discord.gg/aSJJwn9</p>
+<p>My Bot invite -> https://discord.com/oauth2/authorize?client_id=732152444787753002&scope=bot&permissions=0</p>
+<p>The MiggiBot is not just a simple bot!</p>
+<h3>Core commands</h3>
+<ul>
+    <li>lookup -> Lookup IPs and Domains</li>
+    <li>info -> Shows infos about this server</li>
+    <li>music -> Shows music help</li>
+    <li>covid19 -> Shows stats about Corona [GERMANY]</li>
+    <li>gif -> search a gif on tenor</li>
+    <li>help admin -> Shows the bot help for admins</li>
+    <li>R6Help -> a lot of R6 Comamnds!</li>
+</ul>
+<h3>Music commands</h3>
+<p>The bot can also play music from youtube!</p>
+<ul>
+    <li>play -> Play song title or Youtube link</li>
+    <li>pause -> Pause current song</li>
+    <li>skip -> </li>
+    <li>shuffle -> Mix the current playlist</li>
+    <li>stop -> Stop the current song</li>
+    <li>loop -> Loop the current queue</li>
+    <li>queue -> Show the current queue</li>
+    <li>party -> Play your own create playlist! [PREFIX]helpPlaylist</li>
+</ul>
+<h3>Party commands</h3>
+<p>Create/Play/See your playlists</p>
+<ul>
+    <li>create [PlayListName] -> Create a new playlist</li>
+    <li>add [SongeTitle] -> Add a song to your current playlist</li>
+    <li>join [PlaylistName] -> Select one of your playlists, to join</li>
+    <li>see -> See all your songs, in your current playlist</li>
+    <li>rm -> Delete a song by title or track number (Also: del, delete)</li>
+    <li>rmPlayList -> Delete the entire playlist (current playlist) (Also: delPlayList, deletePlayList)</li>
+    <li>playlists -> List all your playlists</li>
+    <li>publish -> Publish your current playlist. Every user can then, see & play your playlist</li>
+    <li>hide -> Hide your playlist, from other users [Default]</li>
+    <li>check @USER -> See all published playlists from a specific user. MUST BE AN ANNOUNCEMENT!</li>
+</ul>
+<h3>R6 commands</h3>
+<p>A lot of R6 commands!</p>
+<ul>
+    <li>randomMap -> Get a random R6 map</li>
+    <li>listMaps -> See all maps in by database</li>
+    <li>match -> Create tow teams with players in your voice channel</li>
+    <li>r6Stats -> See your R6 stats!</li>
+    <li>r6Highlight -> See your R6 last highlight!</li>
+    <li>newPlayer [ADMIN ONLY] -> Register new R6 player from your server for matchmaking</li>
+    <li>updateMaps [BOTOWNER ONLY] -> Only onwer can update maps</li>
+    <li>addNewMap [BOTOWNER ONLY] -> Only owner can add new maps</li>
+</ul>
+<h2>You need:</h2>
+<ul>
+    <li>POSTGRES Database -> Config in src/main/resources/hibernate.cfg.xml</li>
+    <li>Maven installed</li>
+</ul>
+<p>You can configur this bot in target/bot.config!</p>
+<p>POSTGRES Database help!</p>
+<p>Config in src/main/resources/hibernate.cfg.xml</p>
+<p>RECOMMEND -> https://wkrzywiec.medium.com/database-in-a-docker-container-how-to-start-and-whats-it-about-5e3ceea77e50</p>
