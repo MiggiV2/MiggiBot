@@ -15,11 +15,14 @@ import de.mymiggi.discordbot.commands.simple.ServerInfo;
 import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbot.music.youtube.MusicCore;
 import de.mymiggi.discordbot.music.youtube.MusicHelper;
+import de.mymiggi.discordbot.server.counter.NewCounterAction;
+import de.mymiggi.discordbot.server.logs.NewLoggerCreater;
 import de.mymiggi.discordbot.server.member.playlist.MemberPlayListCore;
 import de.mymiggi.discordbot.server.member.playlist.help.MemberPlayListHelper;
 import de.mymiggi.discordbot.server.r6.R6CommandHelper;
 import de.mymiggi.discordbot.server.r6.map.RandomR6MapCore;
 import de.mymiggi.discordbot.server.r6.stats.R6StatsCommandCore;
+import de.mymiggi.discordbot.server.reaction.role.newconfig.slash.SaveReactionRoleAction;
 import de.mymiggi.discordbot.server.untis.UntisCommandHelper;
 import de.mymiggi.discordbot.server.untis.timetable.TimeTableCore;
 
@@ -48,6 +51,17 @@ public class SlashCommandHandler
 				case "help-playlist":
 					new MemberPlayListHelper().run(event);
 					break;
+				case "reaction-role":
+					new SaveReactionRoleAction().run(event);
+					break;
+				case "welcomer":
+					new NewLoggerCreater(event).addWelcomer();
+					break;
+				case "leaving-log":
+					new NewLoggerCreater(event).addLeavingLog();
+					break;
+				case "counter":
+					new NewCounterAction().run(event);
 				case "r6-help":
 					new R6CommandHelper().run(event);
 					break;

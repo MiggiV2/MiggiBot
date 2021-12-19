@@ -45,7 +45,7 @@ public class ReactionRoleSync
 					catch (InterruptedException | ExecutionException e)
 					{
 						client.delete(setting);
-						logger.info("Error", e);
+						logger.warn("Failed to start reaction role for messageLink " + setting.getMessageLink() + "! Removed this reaction role!");
 					}
 				});
 			}
@@ -71,6 +71,11 @@ public class ReactionRoleSync
 		{
 			client.save(setting);
 		}
+	}
+
+	public boolean save(ReactionRoleSetting reactionRoleSetting)
+	{
+		return client.save(reactionRoleSetting);
 	}
 
 	public boolean checkObjPassed(ReactionRoleSetting data)

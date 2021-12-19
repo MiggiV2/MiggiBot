@@ -52,7 +52,7 @@ public class ServerAndChannelsLoader
 			{
 				newWelcomer.notFoundServer(event);
 			}
-			logger.error("[ServerAndChannelsLoader] Server not found!");
+			logger.error("Server not found!");
 			throw new Exception("Server not found!");
 		}
 		if (!BotMainCore.api.getChannelById(ChannelID).isPresent())
@@ -61,7 +61,7 @@ public class ServerAndChannelsLoader
 			{
 				newWelcomer.notFoundChannel(event);
 			}
-			logger.error("[ServerAndChannelsLoader] Channel not found!");
+			logger.error("Channel not found!");
 			throw new Exception("Channel not found!");
 		}
 		if (!BotMainCore.api.getRoleById(RoleID).isPresent())
@@ -70,7 +70,7 @@ public class ServerAndChannelsLoader
 			{
 				newWelcomer.notFoundChannel(event);
 			}
-			logger.error("[ServerAndChannelsLoader] Role not found!");
+			logger.error("Role not found!");
 			throw new Exception("Role not found!");
 		}
 		client.save(temp);
@@ -78,6 +78,11 @@ public class ServerAndChannelsLoader
 		{
 			newWelcomer.done(event, event.getChannel().asServerTextChannel().get().getName());
 		}
+	}
+
+	public boolean save(WelcomerSetting setting)
+	{
+		return client.save(setting);
 	}
 
 	public void buildJsonFile(MessageCreateEvent event, String RoleID) throws Exception

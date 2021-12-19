@@ -31,7 +31,7 @@ public class MemberCounterCore
 		list = sync.load();
 	}
 
-	public void runNewAddedCounter()
+	public void runLatestCounter()
 	{
 		int listSize = list.size();
 		if (listSize > 0)
@@ -40,6 +40,11 @@ public class MemberCounterCore
 			Counter newCounter = new Counter(counterSetting.getServerID(), counterSetting.getChannelID(), counterSetting.getMessageID());
 			newCounter.run();
 		}
+	}
+
+	public boolean add(CounterSetting counterSetting)
+	{
+		return sync.save(counterSetting);
 	}
 
 	public void sendStarEmbed(MessageCreateEvent event)

@@ -2,6 +2,7 @@ package de.mymiggi.discordbot.tools.database.util;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+
 @Entity
 public class ReactionRoleSetting
 {
@@ -18,9 +19,10 @@ public class ReactionRoleSetting
 		return ServerID;
 	}
 
-	public void setServerID(long serverID)
+	public ReactionRoleSetting setServerID(long serverID)
 	{
 		ServerID = serverID;
+		return this;
 	}
 
 	public String getMessageLink()
@@ -28,19 +30,21 @@ public class ReactionRoleSetting
 		return MessageLink;
 	}
 
-	public void setMessageLink(String messageLink)
+	public ReactionRoleSetting setMessageLink(String messageLink)
 	{
 		MessageLink = messageLink;
+		return this;
 	}
-	
+
 	public long getTimeStamp()
 	{
 		return timeStamp;
 	}
 
-	public void setTimeStamp(long timeStamp)
+	public ReactionRoleSetting setTimeStamp(long timeStamp)
 	{
 		this.timeStamp = timeStamp;
+		return this;
 	}
 
 	public String getRoleID()
@@ -48,9 +52,10 @@ public class ReactionRoleSetting
 		return roleID;
 	}
 
-	public void setRoleID(String roleID)
+	public ReactionRoleSetting setRoleID(String roleID)
 	{
 		this.roleID = roleID;
+		return this;
 	}
 
 	public String getReaction()
@@ -58,8 +63,9 @@ public class ReactionRoleSetting
 		return reaction;
 	}
 
-	public void setReaction(String reaction)
+	public ReactionRoleSetting setReaction(String reaction)
 	{
 		this.reaction = reaction;
+		return this;
 	}
 }

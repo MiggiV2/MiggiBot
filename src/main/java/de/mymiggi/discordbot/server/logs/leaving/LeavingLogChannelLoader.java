@@ -40,6 +40,7 @@ public class LeavingLogChannelLoader
 		return map;
 	}
 
+	@Deprecated
 	public void saveSettingInBD(long ServerID, long ChannelID, MessageCreateEvent event) throws Exception
 	{
 		LeavingLogSetting temp = new LeavingLogSetting();
@@ -53,7 +54,7 @@ public class LeavingLogChannelLoader
 			{
 				newLeavingLoger.notFoundServer(event);
 			}
-			System.err.println("[ServerAndChannelsLoader] Server not found!");
+			System.err.println("Server not found!");
 			throw new Exception("Server not found!");
 		}
 
@@ -63,7 +64,7 @@ public class LeavingLogChannelLoader
 			{
 				newLeavingLoger.notFoundChannel(event);
 			}
-			System.err.println("[ServerAndChannelsLoader] Channel not found!");
+			System.err.println("Channel not found!");
 			throw new Exception("Channel not found!");
 		}
 
@@ -75,6 +76,12 @@ public class LeavingLogChannelLoader
 		}
 	}
 
+	public boolean save(LeavingLogSetting leavingLogSetting)
+	{
+		return client.save(leavingLogSetting);
+	}
+
+	@Deprecated
 	public void buildJsonFile(MessageCreateEvent event) throws Exception
 	{
 		long channelID = event.getChannel().getId();
@@ -82,6 +89,7 @@ public class LeavingLogChannelLoader
 		saveSettingInBD(serverID, channelID, event);
 	}
 
+	@Deprecated
 	public void buildJsonFile(String ServerID, String ChannelID) throws Exception
 	{
 		MessageCreateEvent event = null;

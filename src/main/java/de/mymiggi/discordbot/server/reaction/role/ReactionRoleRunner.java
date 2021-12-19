@@ -78,7 +78,7 @@ public class ReactionRoleRunner
 								if (event.getUser().get().getId() != BotMainCore.api.getYourself().getId())
 								{
 									event.getUser().get().removeRole(role);
-									logger.info("Added role to @" + event.getUser().get().getName() + " role " + role.getName());
+									logger.info("Removed role to @" + event.getUser().get().getName() + " role " + role.getName());
 								}
 							}
 						}
@@ -90,7 +90,7 @@ public class ReactionRoleRunner
 								if (event.getUser().get().getId() != BotMainCore.api.getYourself().getId())
 								{
 									event.getUser().get().removeRole(role);
-									logger.info("Added role to @" + event.getUser().get().getName() + " role " + role.getName());
+									logger.info("Removed role to @" + event.getUser().get().getName() + " role " + role.getName());
 								}
 							}
 						}

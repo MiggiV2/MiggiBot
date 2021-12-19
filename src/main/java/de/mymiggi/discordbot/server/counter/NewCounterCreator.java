@@ -13,6 +13,7 @@ import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbot.tools.util.MessageCoolDown;
 import de.mymiggi.discordbot.tools.util.Permissions;
 
+@Deprecated
 public class NewCounterCreator
 {
 	private Logger logger = LoggerFactory.getLogger(NewCounterCreator.class.getSimpleName());
@@ -34,7 +35,7 @@ public class NewCounterCreator
 		}
 		counter.sendStarEmbed(event);
 		counter.syncList();
-		counter.runNewAddedCounter();
+		counter.runLatestCounter();
 	}
 
 	private void badInput(MessageCreateEvent event)

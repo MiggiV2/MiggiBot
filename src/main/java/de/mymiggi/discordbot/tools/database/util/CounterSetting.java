@@ -20,9 +20,10 @@ public class CounterSetting implements Serializable
 		return messageID;
 	}
 
-	public void setMessageID(long messageID)
+	public CounterSetting setMessageID(long messageID)
 	{
 		this.messageID = messageID;
+		return this;
 	}
 
 	public long getServerID()
@@ -30,9 +31,10 @@ public class CounterSetting implements Serializable
 		return serverID;
 	}
 
-	public void setServerID(long serverID)
+	public CounterSetting setServerID(long serverID)
 	{
 		this.serverID = serverID;
+		return this;
 	}
 
 	public long getChannelID()
@@ -40,9 +42,10 @@ public class CounterSetting implements Serializable
 		return channelID;
 	}
 
-	public void setChannelID(long channelID)
+	public CounterSetting setChannelID(long channelID)
 	{
 		this.channelID = channelID;
+		return this;
 	}
 
 	public long getTimeStamp()
@@ -50,8 +53,9 @@ public class CounterSetting implements Serializable
 		return timeStamp;
 	}
 
-	public void setTimeStamp(long timeStamp)
+	public CounterSetting setTimeStamp(long timeStamp)
 	{
 		this.timeStamp = timeStamp;
+		return this;
 	}
 }

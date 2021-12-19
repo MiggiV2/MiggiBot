@@ -17,9 +17,10 @@ public class WelcomerSetting
 		return ServerID;
 	}
 
-	public void setServerID(long serverID)
+	public WelcomerSetting setServerID(long serverID)
 	{
 		ServerID = serverID;
+		return this;
 	}
 
 	public long getChannelID()
@@ -27,9 +28,10 @@ public class WelcomerSetting
 		return ChannelID;
 	}
 
-	public void setChannelID(long channelID)
+	public WelcomerSetting setChannelID(long channelID)
 	{
 		ChannelID = channelID;
+		return this;
 	}
 
 	public long getRoleID()
@@ -37,19 +39,21 @@ public class WelcomerSetting
 		return RoleID;
 	}
 
-	public void setRoleID(long roleID)
+	public WelcomerSetting setRoleID(long roleID)
 	{
 		RoleID = roleID;
+		return this;
 	}
-	
+
 	public long getTimeStamp()
 	{
 		return timeStamp;
 	}
 
-	public void setTimeStamp(long timeStamp)
+	public WelcomerSetting setTimeStamp(long timeStamp)
 	{
 		this.timeStamp = timeStamp;
+		return this;
 	}
 
 }

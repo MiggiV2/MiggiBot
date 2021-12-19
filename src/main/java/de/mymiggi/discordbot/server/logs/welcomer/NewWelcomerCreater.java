@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
+import org.javacord.api.entity.user.User;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,16 +14,16 @@ import de.mymiggi.discordbot.main.BotMainCore;
 import de.mymiggi.discordbot.tools.util.MessageCoolDown;
 import de.mymiggi.discordbot.tools.util.Permissions;
 
+@Deprecated
 public class NewWelcomerCreater
 {
-	private Logger logger = LoggerFactory.getLogger("NewWelcomerCreater");
+	private Logger logger = LoggerFactory.getLogger(NewWelcomerCreater.class);
 
 	public void add(MessageCreateEvent event, String[] context)
 	{
 		ServerAndChannelsLoader loader = new ServerAndChannelsLoader();
 		WelcomerRunner welcomer = BotMainCore.getWelcomer();
 		MessageCoolDown.del(event.getMessageLink().toString(), event.getChannel(), 5);
-
 		if (!Permissions.isAdmin(event))
 		{
 			notAdminEmbed(event);
@@ -117,13 +118,18 @@ public class NewWelcomerCreater
 		}
 	}
 
+	private EmbedBuilder getNotAdminEmbed(User user)
+	{
+		return new EmbedBuilder()
+			.setTitle("You are not an admin " + user.getName() + "!")
+			.setFooter("Maybe u can aske the owner?")
+			.setColor(Color.RED);
+	}
+
 	private void notAdminEmbed(MessageCreateEvent event)
 	{
 		MessageBuilder m = new MessageBuilder()
-			.setEmbed(new EmbedBuilder()
-				.setTitle("You are not an admin " + event.getMessageAuthor().getName() + "!")
-				.setFooter("Maybe u can aske the owner?")
-				.setColor(Color.RED));
+			.setEmbed(getNotAdminEmbed(event.getMessageAuthor().asUser().get()));
 		try
 		{
 			String lastBotMessageLink = m.send(event.getChannel()).get().getLink().toString();

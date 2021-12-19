@@ -2,6 +2,7 @@ package de.mymiggi.discordbot.tools.database.util;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+
 @Entity
 public class LeavingLogSetting
 {
@@ -15,9 +16,10 @@ public class LeavingLogSetting
 		return ServerID;
 	}
 
-	public void setServerID(long serverID)
+	public LeavingLogSetting setServerID(long serverID)
 	{
 		ServerID = serverID;
+		return this;
 	}
 
 	public long getChannelID()
@@ -25,18 +27,20 @@ public class LeavingLogSetting
 		return ChannelID;
 	}
 
-	public void setChannelID(long channelID)
+	public LeavingLogSetting setChannelID(long channelID)
 	{
 		ChannelID = channelID;
+		return this;
 	}
-	
+
 	public long getTimeStamp()
 	{
 		return timeStamp;
 	}
 
-	public void setTimeStamp(long timeStamp)
+	public LeavingLogSetting setTimeStamp(long timeStamp)
 	{
 		this.timeStamp = timeStamp;
+		return this;
 	}
 }

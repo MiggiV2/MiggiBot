@@ -40,11 +40,13 @@ public class CounterSync
 		return checkedList;
 	}
 
+	@Deprecated
 	public void saveObjInDB(long MessageID, MessageCreateEvent event) throws Exception
 	{
 		saveObjInDB(MessageID, event.getServer().get().getId(), event.getChannel().getId(), event);
 	}
 
+	@Deprecated
 	public void saveObjInDB(long MessageID, long ServerID, long ChannelID, MessageCreateEvent event) throws Exception
 	{
 		CounterSetting temp = new CounterSetting();
@@ -63,6 +65,11 @@ public class CounterSync
 		client.save(temp);
 	}
 
+	public boolean save(CounterSetting toSave)
+	{
+		return client.save(toSave);
+	}
+
 	private void checkObj(CounterSetting setting, List<CounterSetting> checkedList) throws Exception
 	{
 		if (!BotMainCore.api.getServerById(setting.getServerID()).isPresent())
@@ -70,21 +77,19 @@ public class CounterSync
 			throw new Exception("ServerID is outdated! ID: " + setting.getServerID());
 		}
 		Server server = BotMainCore.api.getServerById(setting.getServerID()).get();
-
 		if (!BotMainCore.api.getChannelById(setting.getChannelID()).isPresent())
 		{
-			throw new Exception("Eror in File: " + server.getName() + ", channelID is outdated! ID: " + setting.getChannelID());
+			throw new Exception("ChannelID is outdated! ID: " + setting.getChannelID() + " - Server: " + server.getName());
 		}
-		try
+		if (setting.getMessageID() != 0)
 		{
 			TextChannel channel = BotMainCore.api.getChannelById(setting.getChannelID()).get().asTextChannel().get();
 			BotMainCore.api.getMessageById(setting.getMessageID(), channel).get();
 			checkedList.add(setting);
 		}
-		catch (Exception e)
+		else
 		{
-			logger.warn("Deleted one outdated config from DB");
-			client.delete(setting);
+			checkedList.add(setting);
 		}
 	}
 }

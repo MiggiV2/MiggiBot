@@ -56,7 +56,7 @@ class MemberCounterTest
 		}
 		countrySync.saveObjInDB(messageID, serverID, channelID, null);
 		counter.syncList();
-		counter.runNewAddedCounter();
+		counter.runLatestCounter();
 
 		logger.info("Passed!");
 	}
@@ -77,7 +77,7 @@ class MemberCounterTest
 		{
 			countrySync.saveObjInDB(messageID, serverID, channelID, null);
 			counter.syncList();
-			counter.runNewAddedCounter();
+			counter.runLatestCounter();
 			fail();
 		}
 		catch (Exception e)
