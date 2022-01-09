@@ -82,7 +82,7 @@ public class SaveReactionRoleAction
 		responseEmbed = new ReactionRoleSync().save(roleSetting)
 			? getDoneEmbed()
 			: getFailedEmbed();
-		message.addReaction(emoji);
+		message.addReaction(emoji).join();
 		responseMessage.addEmbed(responseEmbed).update();
 		BotMainCore.getReactionRole().syncHashMap();
 	}

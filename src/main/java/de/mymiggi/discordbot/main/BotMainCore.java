@@ -12,7 +12,6 @@ import de.mymiggi.discordbot.main.commands.CommandHandler;
 import de.mymiggi.discordbot.main.commands.SlashCommandHandler;
 import de.mymiggi.discordbot.main.commands.SlashCommandRegisterAction;
 import de.mymiggi.discordbot.main.corehelper.ConfigBuilder;
-import de.mymiggi.discordbot.main.statusmessage.HelpStatusThread;
 import de.mymiggi.discordbot.server.counter.MemberCounterCore;
 import de.mymiggi.discordbot.server.logs.leaving.LeavingLogCore;
 import de.mymiggi.discordbot.server.logs.welcomer.WelcomerRunner;
@@ -65,7 +64,7 @@ public class BotMainCore
 			printLoadedListSize();
 
 			logger.info("Invite via Url: " + api.createBotInvite());
-			HelpStatusThread.run(api);
+			// HelpStatusThread.run(api);
 		}
 		isRunning = true;
 	}

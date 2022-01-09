@@ -363,12 +363,12 @@ public class SlashCommandRegisterAction
 				.setName("untis-help")
 				.setDescription("Show help for untis commands!"));
 
-		long yourDevServer = 743800306827001958L;
+		long yourDevServer = 917364147254087720L;
 		applyOnTestServer(api, commands, yourDevServer);
-		api.bulkOverwriteGlobalSlashCommands(Arrays.asList()).join();
+		api.bulkOverwriteGlobalSlashCommands(commands).join();
 	}
 
-	private void applyOnTestServer(DiscordApi api, List<SlashCommandBuilder> commands, long yourDevServer)
+	void applyOnTestServer(DiscordApi api, List<SlashCommandBuilder> commands, long yourDevServer)
 	{
 		api.getServerById(yourDevServer).ifPresent(server -> {
 			api.bulkOverwriteServerSlashCommands(server, commands).join();

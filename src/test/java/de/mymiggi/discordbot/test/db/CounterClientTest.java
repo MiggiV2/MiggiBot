@@ -25,8 +25,8 @@ class CounterClientTest
 		System.out.println("");
 		logger.info("List CounterSettings!");
 		printCounterSettings(client);
-		// logger.info("Delete CounterSettings!");
-		// deleteTest(client);
+		logger.info("Delete CounterSettings!");
+		deleteTest(client);
 	}
 
 	private void printCounterSettings(UniversalHibernateClient client)
