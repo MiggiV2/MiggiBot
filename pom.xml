@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.mymiggi</groupId>
 	<artifactId>miggi-bot</artifactId>
-	<version>2.0.7</version>
+	<version>2.0.7.1</version>
 	<properties>
 		<compiler-plugin.version>3.8.1</compiler-plugin.version>
 		<maven.compiler.parameters>true</maven.compiler.parameters>
